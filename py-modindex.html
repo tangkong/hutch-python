@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Yaml Files &mdash; hutch-python 0+untagged.119.g1f5e814 documentation</title>
+  <title>Python Module Index &mdash; hutch-python 0+untagged.119.g1f5e814 documentation</title>
   
 
   
@@ -36,8 +36,9 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="hutch-python 0+untagged.119.g1f5e814 documentation" href="index.html"/>
-        <link rel="next" title="Load" href="load.html"/>
-        <link rel="prev" title="Hutch Setup" href="hutch_setup.html"/> 
+ 
+
+
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -97,11 +98,8 @@
 <li class="toctree-l1"><a class="reference internal" href="hutch_setup.html">Hutch Setup</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Configuration</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Yaml Files</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-hutch_python.plugins.happi">Loading devices from Happi</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="yaml_files.html">Yaml Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="load.html">Load</a></li>
 <li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="namespace.html">Namespace</a></li>
@@ -155,14 +153,12 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Yaml Files</li>
+      <li>Python Module Index</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/yaml_files.rst.txt" rel="nofollow"> View page source</a>
-          
         
       </li>
     
@@ -174,27 +170,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="yaml-files">
-<h1>Yaml Files<a class="headerlink" href="#yaml-files" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-hutch_python.plugins.happi">
-<span id="loading-devices-from-happi"></span><h2>Loading devices from Happi<a class="headerlink" href="#module-hutch_python.plugins.happi" title="Permalink to this headline">¶</a></h2>
-<p>This plugin depends on a JSON happi database stored somewhere in the file
-system. The path of this file is supplied in the YAML as <code class="docutils literal"><span class="pre">filename</span></code>.
-Finally, if a smaller subsection of the databse is desired, a requirements
-specification can be used to limit the number of devices that are loaded.</p>
-<p>The plugin then handles; initalizing the <code class="docutils literal"><span class="pre">happi.Client</span></code>, finding the
-containers that match the specified requirements, then using the device
-loading utilities from happi to create instantiated devices</p>
-<p class="rubric">Example</p>
-<div class="code YAML highlight-default"><div class="highlight"><pre><span></span><span class="n">happi</span><span class="p">:</span>
-    <span class="n">filename</span><span class="p">:</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">my_db</span><span class="o">.</span><span class="n">json</span>
-    <span class="n">requirements</span><span class="p">:</span>
-        <span class="n">active</span><span class="p">:</span> <span class="kc">True</span>
-        <span class="n">beamline</span><span class="p">:</span> <span class="n">MFX</span>
-</pre></div>
-</div>
-</div>
-</div>
+
+   <h1>Python Module Index</h1>
+
+   <div class="modindex-jumpbox">
+   <a href="#cap-h"><strong>h</strong></a>
+   </div>
+
+   <table class="indextable modindextable">
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-h"><td></td><td>
+       <strong>h</strong></td><td></td></tr>
+     <tr>
+       <td><img src="_static/minus.png" class="toggler"
+              id="toggle-1" style="display: none" alt="-" /></td>
+       <td>
+       <code class="xref">hutch_python</code></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="yaml_files.html#module-hutch_python.plugins.happi"><code class="xref">hutch_python.plugins.happi</code></a></td><td>
+       <em></em></td></tr>
+   </table>
 
 
            </div>
@@ -203,15 +201,6 @@ loading utilities from happi to create instantiated devices</p>
            </div>
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="load.html" class="btn btn-neutral float-right" title="Load" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="hutch_setup.html" class="btn btn-neutral" title="Hutch Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
