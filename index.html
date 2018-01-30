@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hutch Python &mdash; hutch-python 0+untagged.138.ga90c04e documentation</title>
+  <title>Hutch Python &mdash; hutch-python 0+untagged.143.gb5e9661 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0+untagged.138.ga90c04e documentation" href="#"/>
+    <link rel="top" title="hutch-python 0+untagged.143.gb5e9661 documentation" href="#"/>
         <link rel="next" title="Installation" href="installation.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.138.ga90c04e
+                0+untagged.143.gb5e9661
               </div>
             
           
@@ -181,27 +181,22 @@ sessions. This will replace the existing Python 2 <code class="docutils literal"
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <p>This module is intended to be run using the latest pcds release in the
-<a class="reference external" href="https://github.com/pcdshub/pcds-envs">pcds-envs</a> package, but this is not
-strictly required. Other than Python 3.6+, there are few requirements for
-running this module. These are small utilities:</p>
+<a class="reference external" href="https://github.com/pcdshub/pcds-envs">pcds-envs</a> package.</p>
+<p>This module requires Python 3.6+ and the following utilities:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">ipython</span></code>, for improved interactive sessions</li>
 <li><code class="docutils literal"><span class="pre">pyyaml</span></code>, for reading config files</li>
 <li><code class="docutils literal"><span class="pre">coloredlogs</span></code>, for colored logging</li>
-</ul>
-<p>At LCLS, there is little point to running this module without:</p>
-<ul class="simple">
 <li><a class="reference external" href="https://github.com/pcdshub/pcdsdevices">pcdsdevices</a> for our Device abstraction layers</li>
 <li><code class="docutils literal"><span class="pre">pydaq</span></code> for running the DAQ</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="https://github.com/slaclab/happi">happi</a> will enable device loading from a</dt>
+<dd>happi database, and from the experiment questionaire.</dd>
+</dl>
+</li>
 <li><a class="reference external" href="https://github.com/nsls-ii/bluesky">bluesky</a> for scanning</li>
 </ul>
-<p>If present, some modules will enable extra features, which will be listed
-below:</p>
-<ul class="simple">
-<li><a class="reference external" href="https://github.com/slaclab/happi">happi</a> will enable device loading from a
-happi database, and from the experiment questionaire.</li>
-</ul>
-<p>In the future, I plan to support the following extra features:</p>
+<p>In the future, we plan to support the following extra features:</p>
 <ul class="simple">
 <li><a class="reference external" href="https://github.com/slaclab/lightpath">lightpath</a> will enable specification of a path object to include (requires happi).</li>
 <li><code class="docutils literal"><span class="pre">pyfiglet</span></code> will enable hutch banners (think big <code class="docutils literal"><span class="pre">xpppython</span></code> on startup)</li>
@@ -265,7 +260,7 @@ this will be installable via conda channel.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0+untagged.138.ga90c04e',
+            VERSION:'0+untagged.143.gb5e9661',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
