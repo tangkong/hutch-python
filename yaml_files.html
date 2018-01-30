@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Yaml Files &mdash; hutch-python 0+untagged.130.g36de740 documentation</title>
+  <title>Yaml Files &mdash; hutch-python 0+untagged.138.ga90c04e documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0+untagged.130.g36de740 documentation" href="index.html"/>
+    <link rel="top" title="hutch-python 0+untagged.138.ga90c04e documentation" href="index.html"/>
         <link rel="next" title="Load" href="load.html"/>
         <link rel="prev" title="Hutch Setup" href="hutch_setup.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0+untagged.130.g36de740
+                0+untagged.138.ga90c04e
               </div>
             
           
@@ -100,6 +100,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Yaml Files</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-hutch_python.plugins.happi">Loading devices from Happi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-hutch_python.plugins.questionnaire">Including the Questionnaire</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="load.html">Load</a></li>
@@ -194,6 +195,14 @@ loading utilities from happi to create instantiated devices</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="module-hutch_python.plugins.questionnaire">
+<span id="including-the-questionnaire"></span><h2>Including the Questionnaire<a class="headerlink" href="#module-hutch_python.plugins.questionnaire" title="Permalink to this headline">¶</a></h2>
+<p>This plugin depends on the QSBackend in <cite>happi</cite>. Not intended to be run
+individually, it is expected that the requisite information is passed in the
+<cite>experiment</cite> section. This includes the proposal id and run.</p>
+<p>A connection to the Questionnaire webservice is made and the devices that have
+enough information to be turned into Python objects are instantiated.</p>
+</div>
 </div>
 
 
@@ -240,7 +249,7 @@ loading utilities from happi to create instantiated devices</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0+untagged.130.g36de740',
+            VERSION:'0+untagged.138.ga90c04e',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
