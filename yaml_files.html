@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Yaml Files &mdash; hutch-python 0.1.0rc1+73.gbbfe371 documentation</title>
+  <title>Yaml Files &mdash; hutch-python 0.1.0rc1+108.g85b860e documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.1.0rc1+73.gbbfe371 documentation" href="index.html"/>
+    <link rel="top" title="hutch-python 0.1.0rc1+108.g85b860e documentation" href="index.html"/>
         <link rel="next" title="Load" href="load.html"/>
         <link rel="prev" title="Hutch Setup" href="hutch_setup.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0rc1+73.gbbfe371
+                0.1.0rc1+108.g85b860e
               </div>
             
           
@@ -99,8 +99,8 @@
 <p class="caption"><span class="caption-text">Configuration</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Yaml Files</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-hutch_python.plugins.happi">Loading devices from Happi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-hutch_python.plugins.questionnaire">Including the Questionnaire</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-devices-from-happi">Loading devices from Happi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#including-the-questionnaire">Including the Questionnaire</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="load.html">Load</a></li>
@@ -177,43 +177,11 @@
             
   <div class="section" id="yaml-files">
 <h1>Yaml Files<a class="headerlink" href="#yaml-files" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-hutch_python.plugins.happi">
-<span id="loading-devices-from-happi"></span><h2>Loading devices from Happi<a class="headerlink" href="#module-hutch_python.plugins.happi" title="Permalink to this headline">¶</a></h2>
-<p>This plugin depends on a JSON happi database stored somewhere in the file
-system. The path of this file is supplied in the YAML as <code class="docutils literal"><span class="pre">filename</span></code>.
-Finally, if a smaller subsection of the databse is desired, a requirements
-specification can be used to limit the number of devices that are loaded.</p>
-<p>The plugin then handles; initalizing the <code class="docutils literal"><span class="pre">happi.Client</span></code>, finding the
-containers that match the specified requirements, then using the device
-loading utilities from happi to create instantiated devices</p>
-<p class="rubric">Example</p>
-<div class="code YAML highlight-default"><div class="highlight"><pre><span></span><span class="n">happi</span><span class="p">:</span>
-    <span class="n">filename</span><span class="p">:</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">my_db</span><span class="o">.</span><span class="n">json</span>
-    <span class="n">requirements</span><span class="p">:</span>
-        <span class="n">active</span><span class="p">:</span> <span class="kc">True</span>
-        <span class="n">beamline</span><span class="p">:</span> <span class="n">MFX</span>
-</pre></div>
+<div class="section" id="loading-devices-from-happi">
+<h2>Loading devices from Happi<a class="headerlink" href="#loading-devices-from-happi" title="Permalink to this headline">¶</a></h2>
 </div>
-</div>
-<div class="section" id="module-hutch_python.plugins.questionnaire">
-<span id="including-the-questionnaire"></span><h2>Including the Questionnaire<a class="headerlink" href="#module-hutch_python.plugins.questionnaire" title="Permalink to this headline">¶</a></h2>
-<p>This plugin depends on the QSBackend in <cite>happi</cite>. Not intended to be run
-individually, it is expected that the requisite information is passed in the
-<cite>experiment</cite> section. This includes the proposal id and run.</p>
-<p>A connection to the Questionnaire webservice is made and the devices that have
-enough information to be turned into Python objects are instantiated. There are
-two possible methods of authentication to the QuestionnaireClient, Kerberos and
-WS-Auth. The first is simpler but is not possible for all users, we therefore
-search for a configuration file named <cite>qs.cfg</cite>, either hidden in the current
-directory or the users home directory. This should contain the user and
-password needed to authenticate into the QuestionnaireClient. The format of
-this configuration file is the standard .ini structure and should define the
-username and password like:</p>
-<div class="code highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">DEFAULT</span><span class="p">]</span>
-<span class="n">user</span> <span class="o">=</span> <span class="n">MY_USERNAME</span>
-<span class="n">pw</span> <span class="o">=</span> <span class="n">MY_PASSWORD</span>
-</pre></div>
-</div>
+<div class="section" id="including-the-questionnaire">
+<h2>Including the Questionnaire<a class="headerlink" href="#including-the-questionnaire" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -261,7 +229,7 @@ username and password like:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.0rc1+73.gbbfe371',
+            VERSION:'0.1.0rc1+108.g85b860e',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

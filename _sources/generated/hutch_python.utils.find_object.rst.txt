@@ -1,5 +1,5 @@
-hutch\_python\.utils\.find\_object
-==================================
+hutch\_python.utils.find\_object
+================================
 
 .. currentmodule:: hutch_python.utils
 

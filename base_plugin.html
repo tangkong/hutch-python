@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Plugin Spec &mdash; hutch-python 0.1.0rc1+73.gbbfe371 documentation</title>
+  <title>Plugin Spec &mdash; hutch-python 0.1.0rc1+108.g85b860e documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.1.0rc1+73.gbbfe371 documentation" href="index.html"/>
+    <link rel="top" title="hutch-python 0.1.0rc1+108.g85b860e documentation" href="index.html"/>
         <link rel="next" title="Logging Configuration" href="log_setup.html"/>
         <link rel="prev" title="Namespace" href="namespace.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0rc1+73.gbbfe371
+                0.1.0rc1+108.g85b860e
               </div>
             
           
@@ -173,103 +173,11 @@
             
   <div class="section" id="plugin-spec">
 <h1>Plugin Spec<a class="headerlink" href="#plugin-spec" title="Permalink to this headline">¶</a></h1>
-<p>A <code class="docutils literal"><span class="pre">Plugin</span></code> class tells the loader how to interpret a segment of the yaml file.
-All plugins will be stored in the <code class="docutils literal"><span class="pre">hutch_python.plugins</span></code> directory in a file
-with the name <code class="docutils literal"><span class="pre">pluginname.py</span></code> containing a <code class="docutils literal"><span class="pre">Plugin</span></code> class that inherits from
-<code class="docutils literal"><span class="pre">hutch_python.base_plugin.BasePlugin</span></code>. The specificatin for <code class="docutils literal"><span class="pre">BasePlugin</span></code> is
+<p>A <code class="docutils literal notranslate"><span class="pre">Plugin</span></code> class tells the loader how to interpret a segment of the yaml file.
+All plugins will be stored in the <code class="docutils literal notranslate"><span class="pre">hutch_python.plugins</span></code> directory in a file
+with the name <code class="docutils literal notranslate"><span class="pre">pluginname.py</span></code> containing a <code class="docutils literal notranslate"><span class="pre">Plugin</span></code> class that inherits from
+<code class="docutils literal notranslate"><span class="pre">hutch_python.base_plugin.BasePlugin</span></code>. The specificatin for <code class="docutils literal notranslate"><span class="pre">BasePlugin</span></code> is
 included below.</p>
-<dl class="class">
-<dt id="hutch_python.base_plugin.BasePlugin">
-<em class="property">class </em><code class="descclassname">hutch_python.base_plugin.</code><code class="descname">BasePlugin</code><span class="sig-paren">(</span><em>conf=None</em>, <em>info=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.base_plugin.BasePlugin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Interface for each top-level entry in the conf.yaml file.</p>
-<dl class="attribute">
-<dt id="hutch_python.base_plugin.BasePlugin.priority">
-<code class="descname">priority</code><a class="headerlink" href="#hutch_python.base_plugin.BasePlugin.priority" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – Plugins with a larger priority number will be executed first. Plugins
-with the same priority number will be executed in the order they appear
-in the configuration file.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="hutch_python.base_plugin.BasePlugin.name">
-<code class="descname">name</code><a class="headerlink" href="#hutch_python.base_plugin.BasePlugin.name" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – Convenience attribute that is the name of the Plugin. Should match the
-filename, without the extension.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="hutch_python.base_plugin.BasePlugin.future_object_hook">
-<code class="descname">future_object_hook</code><span class="sig-paren">(</span><em>name</em>, <em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.base_plugin.BasePlugin.future_object_hook" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method will be called on every object that is created afterwards
-by other plugins. Please do not mutate the incoming objects.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>str</em>) – Global reference name</li>
-<li><strong>obj</strong> (<em>object</em>) – Any object</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hutch_python.base_plugin.BasePlugin.future_plugin_hook">
-<code class="descname">future_plugin_hook</code><span class="sig-paren">(</span><em>source</em>, <em>objs</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.base_plugin.BasePlugin.future_plugin_hook" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provided to be overridden if the plugin needs to treat the incoming
-objects as a group.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>source</strong> (<em>str</em>) – Top-level yaml config string that built the objs</li>
-<li><strong>objs</strong> (<em>dict{str: object}</em>) – The return value from a previous plugin’s get_objects call</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hutch_python.base_plugin.BasePlugin.get_objects">
-<code class="descname">get_objects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.base_plugin.BasePlugin.get_objects" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build the Python objects specified by the plugin and config.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>objects</strong> – Mapping from final global reference name to object</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict{str: object}</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="hutch_python.base_plugin.BasePlugin.pre_plugins">
-<code class="descname">pre_plugins</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.base_plugin.BasePlugin.pre_plugins" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of instantiated plugins that must be run before running
-this plugin.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>plugins</strong></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -316,7 +224,7 @@ this plugin.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.0rc1+73.gbbfe371',
+            VERSION:'0.1.0rc1+108.g85b860e',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

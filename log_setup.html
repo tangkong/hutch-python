@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Logging Configuration &mdash; hutch-python 0.1.0rc1+73.gbbfe371 documentation</title>
+  <title>Logging Configuration &mdash; hutch-python 0.1.0rc1+108.g85b860e documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.1.0rc1+73.gbbfe371 documentation" href="index.html"/>
+    <link rel="top" title="hutch-python 0.1.0rc1+108.g85b860e documentation" href="index.html"/>
         <link rel="next" title="Utility Functions" href="utils.html"/>
         <link rel="prev" title="Plugin Spec" href="base_plugin.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.1.0rc1+73.gbbfe371
+                0.1.0rc1+108.g85b860e
               </div>
             
           
@@ -177,39 +177,35 @@
   <div class="section" id="logging-configuration">
 <h1>Logging Configuration<a class="headerlink" href="#logging-configuration" title="Permalink to this headline">¶</a></h1>
 <p>The logging configuration is specified in the
-top-level <code class="docutils literal"><span class="pre">logging.yaml</span></code> file using the
+top-level <code class="docutils literal notranslate"><span class="pre">logging.yaml</span></code> file using the
 <a class="reference external" href="https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig">dictConfig</a>
 spec. There is also a testing logger that is set up directly in the
-<code class="docutils literal"><span class="pre">run_tests.py</span></code> file.</p>
+<code class="docutils literal notranslate"><span class="pre">run_tests.py</span></code> file.</p>
 <p>As a summary, the logger is set up to:</p>
 <ul class="simple">
 <li>Use coloredlogs default colors to print INFO log level and message</li>
 <li>Create rotating file handlers for each log level (and above)</li>
-<li>Store logs in the user’s launch directory’s <code class="docutils literal"><span class="pre">logs</span></code> folder</li>
+<li>Store logs in the user’s launch directory’s <code class="docutils literal notranslate"><span class="pre">logs</span></code> folder</li>
 </ul>
 <p>The tests logger is set up to:</p>
 <ul class="simple">
-<li>Log with level DEBUG to the directory’s <code class="docutils literal"><span class="pre">logs</span></code> folder</li>
+<li>Log with level DEBUG to the directory’s <code class="docutils literal notranslate"><span class="pre">logs</span></code> folder</li>
 <li>Rotate the file such that each testing run has its own log file</li>
 </ul>
-<p>There is a helper module <code class="docutils literal"><span class="pre">log_setup</span></code> that is used internally to set up the
+<p>There is a helper module <code class="docutils literal notranslate"><span class="pre">log_setup</span></code> that is used internally to set up the
 logger for interactive sessions.</p>
 <div class="section" id="log-setup-py">
 <h2>log_setup.py<a class="headerlink" href="#log-setup-py" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="hutch_python.log_setup.setup_logging">
-<code class="descclassname">hutch_python.log_setup.</code><code class="descname">setup_logging</code><span class="sig-paren">(</span><em>path_yaml=None</em>, <em>dir_logs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.log_setup.setup_logging" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">hutch_python.log_setup.</code><code class="descname">setup_logging</code><span class="sig-paren">(</span><em>dir_logs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.log_setup.setup_logging" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets up the logging module to make a properly configured logger using the
-<code class="docutils literal"><span class="pre">logging.yml</span></code> configuration.</p>
+<code class="docutils literal notranslate"><span class="pre">logging.yml</span></code> configuration.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>path_yaml</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to the yaml file.</li>
-<li><strong>dir_logs</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to the log directory.</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dir_logs</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to the log directory. If omitted, we won’t use a log file.</td>
 </tr>
 </tbody>
 </table>
@@ -262,7 +258,7 @@ logger for interactive sessions.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1.0rc1+73.gbbfe371',
+            VERSION:'0.1.0rc1+108.g85b860e',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
