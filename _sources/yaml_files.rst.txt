@@ -39,6 +39,7 @@ The file path can be either relative to the ``conf.yml`` file or absolute.
 In practice, you would only change this string for development purposes.
 
 This key is used to:
+
 - load objects from ``happi``
 - set up the ``xxx_beampath`` object
 
