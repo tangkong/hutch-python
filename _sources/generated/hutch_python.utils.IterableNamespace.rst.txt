@@ -1,0 +1,16 @@
+hutch\_python.utils.IterableNamespace
+=====================================
+
+.. currentmodule:: hutch_python.utils
+
+.. autoclass:: IterableNamespace
+
+   
+   .. automethod:: __init__
+
+   
+   
+
+   
+   
+   

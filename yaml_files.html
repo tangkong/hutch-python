@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Yaml Files &mdash; hutch-python 0.2.0+2.gd0d3ae5 documentation</title>
+  <title>Yaml Files &mdash; hutch-python 0.2.0+12.g84e29c7 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.2.0+2.gd0d3ae5 documentation" href="index.html"/>
-        <link rel="next" title="Load" href="load.html"/>
+    <link rel="top" title="hutch-python 0.2.0+12.g84e29c7 documentation" href="index.html"/>
+        <link rel="next" title="Debug" href="debug.html"/>
         <link rel="prev" title="Hutch Setup" href="hutch_setup.html"/> 
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.0+2.gd0d3ae5
+                0.2.0+12.g84e29c7
               </div>
             
           
@@ -92,26 +92,42 @@
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="invokation.html">Invokation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hutch_setup.html">Hutch Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="start.html">Starting a Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Configuration</span></p>
+<p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="startup.html">Startup Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="beamline.html">Beamline File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_utils.html">Useful Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other_modules.html">Related Modules</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hutch_setup.html">Hutch Setup</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Yaml Files</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#loading-devices-from-happi">Loading devices from Happi</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#including-the-questionnaire">Including the Questionnaire</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hutch">hutch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#db">db</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#load">load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#experiment">experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#full-file-example">Full File Example</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="load.html">Load</a></li>
-<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="namespace.html">Namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">Debug</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Developer API</span></p>
+<p class="caption"><span class="caption-text">Internal API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="base_plugin.html">Plugin Spec</a></li>
-<li class="toctree-l1"><a class="reference internal" href="log_setup.html">Logging Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cache.html">cache.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipython_log.html">ipython_log.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="load_conf.html">load_conf.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="load_parts.html">load submodules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="log_setup.html">log_setup.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="namespace.html">namespace.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils.py</a></li>
 </ul>
 
             
@@ -177,11 +193,75 @@
             
   <div class="section" id="yaml-files">
 <h1>Yaml Files<a class="headerlink" href="#yaml-files" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="loading-devices-from-happi">
-<h2>Loading devices from Happi<a class="headerlink" href="#loading-devices-from-happi" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> uses a <code class="docutils literal notranslate"><span class="pre">conf.yml</span></code> file for basic configuration. This is a
+standard yaml file with four valid keys:
+<code class="docutils literal notranslate"><span class="pre">hutch</span></code>, <code class="docutils literal notranslate"><span class="pre">db</span></code>, <code class="docutils literal notranslate"><span class="pre">load</span></code>, and <code class="docutils literal notranslate"><span class="pre">experiment</span></code>.</p>
+<div class="section" id="hutch">
+<h2>hutch<a class="headerlink" href="#hutch" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">hutch</span></code> key expects a single string, the hutch name.</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">hutch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">xpp</span>
+</pre></div>
 </div>
-<div class="section" id="including-the-questionnaire">
-<h2>Including the Questionnaire<a class="headerlink" href="#including-the-questionnaire" title="Permalink to this headline">¶</a></h2>
+<p>This key is used to:</p>
+<ul class="simple">
+<li>pick objects to load from <code class="docutils literal notranslate"><span class="pre">happi</span></code></li>
+<li>automatically select the active experiment</li>
+<li>create the correct <code class="docutils literal notranslate"><span class="pre">daq</span></code> object</li>
+<li>create the <code class="docutils literal notranslate"><span class="pre">xxx.db</span></code> module</li>
+<li>display the hutch banner</li>
+</ul>
+</div>
+<div class="section" id="db">
+<h2>db<a class="headerlink" href="#db" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">db</span></code> key expects a single string, the file path.</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">db</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/reg/g/pcds/pyps/apps/hutch-python/device_config/db.json</span>
+</pre></div>
+</div>
+<p>The file path can be either relative to the <code class="docutils literal notranslate"><span class="pre">conf.yml</span></code> file or absolute.
+In practice, you would only change this string for development purposes.</p>
+<p>This key is used to:
+- load objects from <code class="docutils literal notranslate"><span class="pre">happi</span></code>
+- set up the <code class="docutils literal notranslate"><span class="pre">xxx_beampath</span></code> object</p>
+</div>
+<div class="section" id="load">
+<h2>load<a class="headerlink" href="#load" title="Permalink to this headline">¶</a></h2>
+<p>The load key expects a string or a list of strings, the modules to load.</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">load</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">xpp.beamline</span>
+</pre></div>
+</div>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">load</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">xpp.beamline</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">xpp.random_stuff</span>
+</pre></div>
+</div>
+<p>Both of these formats are valid.</p>
+<p>This key is used to include hutch-specific code.
+<code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> will attempt to do a
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">module</span> <span class="pre">import</span> <span class="pre">*</span></code> for each of these modules.</p>
+</div>
+<div class="section" id="experiment">
+<h2>experiment<a class="headerlink" href="#experiment" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">experiment</span></code> key expects a dictionary with proposal and run, both
+strings. It is not needed to provide an experiment key unless you would like
+to load an experiment other than the active experiment; handy for debugging.</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">experiment</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">proposal</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ls25</span>
+  <span class="l l-Scalar l-Scalar-Plain">run</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+</pre></div>
+</div>
+<p>This key is used to force the questionnaire and experiment file to be from a
+particular experiment.</p>
+</div>
+<div class="section" id="full-file-example">
+<h2>Full File Example<a class="headerlink" href="#full-file-example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">hutch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">xpp</span>
+
+<span class="l l-Scalar l-Scalar-Plain">db</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/reg/g/pcds/pyps/apps/hutch-python/device_config/db.json</span>
+
+<span class="l l-Scalar l-Scalar-Plain">load</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">xpp.beamline</span>
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -195,7 +275,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="load.html" class="btn btn-neutral float-right" title="Load" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="debug.html" class="btn btn-neutral float-right" title="Debug" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="hutch_setup.html" class="btn btn-neutral" title="Hutch Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -229,7 +309,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0+2.gd0d3ae5',
+            VERSION:'0.2.0+12.g84e29c7',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

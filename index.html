@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hutch Python &mdash; hutch-python 0.2.0+2.gd0d3ae5 documentation</title>
+  <title>Hutch Python &mdash; hutch-python 0.2.0+12.g84e29c7 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.2.0+2.gd0d3ae5 documentation" href="#"/>
-        <link rel="next" title="Installation" href="installation.html"/> 
+    <link rel="top" title="hutch-python 0.2.0+12.g84e29c7 documentation" href="#"/>
+        <link rel="next" title="Starting a Session" href="start.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.0+2.gd0d3ae5
+                0.2.0+12.g84e29c7
               </div>
             
           
@@ -91,22 +91,35 @@
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="invokation.html">Invokation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="start.html">Starting a Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+</ul>
+<p class="caption"><span class="caption-text">User Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="startup.html">Startup Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="beamline.html">Beamline File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_utils.html">Useful Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other_modules.html">Related Modules</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hutch_setup.html">Hutch Setup</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Configuration</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="yaml_files.html">Yaml Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="load.html">Load</a></li>
-<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="namespace.html">Namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">Debug</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Developer API</span></p>
+<p class="caption"><span class="caption-text">Internal API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="base_plugin.html">Plugin Spec</a></li>
-<li class="toctree-l1"><a class="reference internal" href="log_setup.html">Logging Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cache.html">cache.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipython_log.html">ipython_log.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="load_conf.html">load_conf.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="load_parts.html">load submodules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="log_setup.html">log_setup.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="namespace.html">namespace.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils.py</a></li>
 </ul>
 
             
@@ -174,9 +187,8 @@
 <h1>Hutch Python<a class="headerlink" href="#hutch-python" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="https://travis-ci.org/pcdshub/hutch-python"><img alt="Build Status" src="https://travis-ci.org/pcdshub/hutch-python.svg?branch=master" /></a>
 <a class="reference external image-reference" href="https://codecov.io/gh/pcdshub/hutch-python"><img alt="Code Coverage" src="https://codecov.io/gh/pcdshub/hutch-python/branch/master/graph/badge.svg" /></a>
-<p>Hutch Python is the launcher and config reader for LCLS interactive IPython
-sessions. This will replace the existing Python 2 <code class="docutils literal notranslate"><span class="pre">pyhutch</span></code> modules
-(blbase/blutil/blinst) for scripting during experiments.</p>
+<p><code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> is the launcher and config reader for LCLS interactive IPython
+sessions. The documentation is hosted at <a class="reference external" href="pcdshub.github.io/hutch-python">pcdshub.github.io/hutch-python</a>.</p>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <p>This module is intended to be run using the latest pcds release in the
@@ -184,28 +196,36 @@ sessions. This will replace the existing Python 2 <code class="docutils literal 
 <p>This module requires Python 3.6+ and the following utilities:</p>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">ipython</span></code>, for improved interactive sessions</li>
+<li><a class="reference external" href="https://github.com/pcdshub/pcdsdaq">pcdsdaq</a>
+for using the daq in scans</li>
+<li><a class="reference external" href="https://github.com/pcdshub/pcdsdevices">pcdsdevices</a>
+for our Device abstraction layers</li>
+<li><a class="reference external" href="https://github.com/pcdshub/happi">happi</a>
+to enable device loading from a happi database</li>
+<li><a class="reference external" href="https://github.com/slaclab/psdm_qs_cli">psdm_qs_cli</a>
+as an optional happi dependency for loading from the experiment
+questionnaire</li>
+<li><a class="reference external" href="https://github.com/pcdshub/lightpath">lightpath</a>
+organizes devices to provide a summarized state of the beamline as a whole</li>
 <li><code class="docutils literal notranslate"><span class="pre">pyyaml</span></code>, for reading config files</li>
 <li><code class="docutils literal notranslate"><span class="pre">coloredlogs</span></code>, for colored logging</li>
-<li><a class="reference external" href="https://github.com/pcdshub/pcdsdevices">pcdsdevices</a> for our Device abstraction layers</li>
-<li><code class="docutils literal notranslate"><span class="pre">pydaq</span></code> for running the DAQ</li>
-<li><dl class="first docutils">
-<dt><a class="reference external" href="https://github.com/pcdshub/happi">happi</a> to enable device loading from a</dt>
-<dd>happi database, and from the experiment questionaire.</dd>
-</dl>
-</li>
-<li><a class="reference external" href="https://github.com/nsls-ii/bluesky">bluesky</a> for scanning</li>
 <li><code class="docutils literal notranslate"><span class="pre">pyfiglet</span></code> for hutch banners (think big <code class="docutils literal notranslate"><span class="pre">xpppython</span></code> on startup)</li>
-<li><a class="reference external" href="https://github.com/pcdshub/lightpath">lightpath</a> organizes devices
-devices to provide a summarized state of the beamline as a whole</li>
+<li><a class="reference external" href="https://github.com/audreyr/cookiecutter">cookiecutter</a>
+for starting new hutch repos</li>
 </ul>
+<p>To connect to the LCLS DAQ, your environment must have access to</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">pydaq</span></code> for connecting to and running the daq</li>
+<li><code class="docutils literal notranslate"><span class="pre">pycdb</span></code> for changing daq object configurations</li>
+<li><code class="docutils literal notranslate"><span class="pre">pyami</span></code> for viewing data from the daq</li>
+</ul>
+<p>These are not available outside of the slac intranet, and in some cases
+must be sync’d with the active DAQ versions, independent of all other
+packages.</p>
+<p>To automatically select the current experiment, you must run with access to
+the LCLS NFS directories.</p>
+<div class="toctree-wrapper compound">
 </div>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>This module is not yet ready for users. When completed, the included conda
-recipe will install all optional requirements by default. It is assumed that
-every user will want all of the features. It is up to you to install this
-module differently if you do not want the added dependencies. In the future,
-this will be installable via conda channel.</p>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -225,7 +245,7 @@ this will be installable via conda channel.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="start.html" class="btn btn-neutral float-right" title="Starting a Session" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
@@ -257,7 +277,7 @@ this will be installable via conda channel.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0+2.gd0d3ae5',
+            VERSION:'0.2.0+12.g84e29c7',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

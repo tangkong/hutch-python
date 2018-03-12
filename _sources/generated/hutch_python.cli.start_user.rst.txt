@@ -1,0 +1,6 @@
+hutch\_python.cli.start\_user
+=============================
+
+.. currentmodule:: hutch_python.cli
+
+.. autofunction:: start_user

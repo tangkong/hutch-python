@@ -10,25 +10,41 @@
    :caption: Getting Started
    :hidden:
 
-   installation
-   invokation
-   hutch_setup
+   start
+   tutorial
 
 .. toctree::
    :maxdepth: 1
-   :caption: Configuration
+   :caption: User Documentation
    :hidden:
 
-   yaml_files
-   load
+   startup
+   database
+   beamline
    experiment
-   namespace
+   user_utils
+   other_modules
 
 .. toctree::
    :maxdepth: 1
-   :caption: Developer API
+   :caption: Developer Documentation
    :hidden:
 
-   base_plugin
+   environment
+   hutch_setup
+   yaml_files
+   debug
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Internal API Reference
+   :hidden:
+
+   cache
+   cli
+   ipython_log
+   load_conf
+   load_parts
    log_setup
+   namespace
    utils

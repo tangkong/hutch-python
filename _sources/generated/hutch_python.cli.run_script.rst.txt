@@ -1,0 +1,6 @@
+hutch\_python.cli.run\_script
+=============================
+
+.. currentmodule:: hutch_python.cli
+
+.. autofunction:: run_script

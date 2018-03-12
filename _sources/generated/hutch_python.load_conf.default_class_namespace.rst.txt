@@ -1,0 +1,6 @@
+hutch\_python.load\_conf.default\_class\_namespace
+==================================================
+
+.. currentmodule:: hutch_python.load_conf
+
+.. autofunction:: default_class_namespace

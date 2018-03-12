@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Logging Configuration &mdash; hutch-python 0.2.0+2.gd0d3ae5 documentation</title>
+  <title>log_setup.py &mdash; hutch-python 0.2.0+12.g84e29c7 documentation</title>
   
 
   
@@ -35,9 +35,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.2.0+2.gd0d3ae5 documentation" href="index.html"/>
-        <link rel="next" title="Utility Functions" href="utils.html"/>
-        <link rel="prev" title="Plugin Spec" href="base_plugin.html"/> 
+    <link rel="top" title="hutch-python 0.2.0+12.g84e29c7 documentation" href="index.html"/>
+        <link rel="next" title="hutch_python.log_setup.setup_logging" href="generated/hutch_python.log_setup.setup_logging.html"/>
+        <link rel="prev" title="hutch_python.exp_load.get_exp_objs" href="generated/hutch_python.exp_load.get_exp_objs.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.0+2.gd0d3ae5
+                0.2.0+12.g84e29c7
               </div>
             
           
@@ -92,25 +92,44 @@
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="invokation.html">Invokation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hutch_setup.html">Hutch Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="start.html">Starting a Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Configuration</span></p>
+<p class="caption"><span class="caption-text">User Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="yaml_files.html">Yaml Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="load.html">Load</a></li>
-<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="namespace.html">Namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="startup.html">Startup Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="beamline.html">Beamline File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_utils.html">Useful Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other_modules.html">Related Modules</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Developer API</span></p>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hutch_setup.html">Hutch Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="yaml_files.html">Yaml Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">Debug</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Internal API Reference</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="base_plugin.html">Plugin Spec</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Logging Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#log-setup-py">log_setup.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cache.html">cache.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipython_log.html">ipython_log.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="load_conf.html">load_conf.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="load_parts.html">load submodules</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">log_setup.py</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/hutch_python.log_setup.setup_logging.html">hutch_python.log_setup.setup_logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/hutch_python.log_setup.get_console_handler.html">hutch_python.log_setup.get_console_handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/hutch_python.log_setup.get_console_level.html">hutch_python.log_setup.get_console_level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/hutch_python.log_setup.set_console_level.html">hutch_python.log_setup.set_console_level</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/hutch_python.log_setup.debug_mode.html">hutch_python.log_setup.debug_mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/hutch_python.log_setup.debug_context.html">hutch_python.log_setup.debug_context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/hutch_python.log_setup.debug_wrapper.html">hutch_python.log_setup.debug_wrapper</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="namespace.html">namespace.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils.py</a></li>
 </ul>
 
             
@@ -155,7 +174,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Logging Configuration</li>
+      <li>log_setup.py</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -174,44 +193,39 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="logging-configuration">
-<h1>Logging Configuration<a class="headerlink" href="#logging-configuration" title="Permalink to this headline">¶</a></h1>
-<p>The logging configuration is specified in the
-top-level <code class="docutils literal notranslate"><span class="pre">logging.yaml</span></code> file using the
-<a class="reference external" href="https://docs.python.org/3/library/logging.config.html#logging.config.dictConfig">dictConfig</a>
-spec. There is also a testing logger that is set up directly in the
-<code class="docutils literal notranslate"><span class="pre">run_tests.py</span></code> file.</p>
-<p>As a summary, the logger is set up to:</p>
-<ul class="simple">
-<li>Use coloredlogs default colors to print INFO log level and message</li>
-<li>Create rotating file handlers for each log level (and above)</li>
-<li>Store logs in the user’s launch directory’s <code class="docutils literal notranslate"><span class="pre">logs</span></code> folder</li>
-</ul>
-<p>The tests logger is set up to:</p>
-<ul class="simple">
-<li>Log with level DEBUG to the directory’s <code class="docutils literal notranslate"><span class="pre">logs</span></code> folder</li>
-<li>Rotate the file such that each testing run has its own log file</li>
-</ul>
-<p>There is a helper module <code class="docutils literal notranslate"><span class="pre">log_setup</span></code> that is used internally to set up the
-logger for interactive sessions.</p>
-<div class="section" id="log-setup-py">
-<h2>log_setup.py<a class="headerlink" href="#log-setup-py" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="hutch_python.log_setup.setup_logging">
-<code class="descclassname">hutch_python.log_setup.</code><code class="descname">setup_logging</code><span class="sig-paren">(</span><em>dir_logs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.log_setup.setup_logging" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets up the logging module to make a properly configured logger using the
-<code class="docutils literal notranslate"><span class="pre">logging.yml</span></code> configuration.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
+  <div class="section" id="module-hutch_python.log_setup">
+<span id="log-setup-py"></span><h1>log_setup.py<a class="headerlink" href="#module-hutch_python.log_setup" title="Permalink to this headline">¶</a></h1>
+<p>This module is used to set up and manipulate the <code class="docutils literal notranslate"><span class="pre">logging</span></code> configuration for
+utilities like debug mode.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dir_logs</strong> (<em>str</em><em> or </em><em>Path</em><em>, </em><em>optional</em>) – Path to the log directory. If omitted, we won’t use a log file.</td>
+<tr class="row-odd"><td><a class="reference internal" href="generated/hutch_python.log_setup.setup_logging.html#hutch_python.log_setup.setup_logging" title="hutch_python.log_setup.setup_logging"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_logging</span></code></a></td>
+<td>Sets up the <code class="docutils literal notranslate"><span class="pre">logging</span></code> configuration.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/hutch_python.log_setup.get_console_handler.html#hutch_python.log_setup.get_console_handler" title="hutch_python.log_setup.get_console_handler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_console_handler</span></code></a></td>
+<td>Helper function to find the console <code class="docutils literal notranslate"><span class="pre">StreamHandler</span></code>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/hutch_python.log_setup.get_console_level.html#hutch_python.log_setup.get_console_level" title="hutch_python.log_setup.get_console_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_console_level</span></code></a></td>
+<td>Helper function to get the console’s log level.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/hutch_python.log_setup.set_console_level.html#hutch_python.log_setup.set_console_level" title="hutch_python.log_setup.set_console_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_console_level</span></code></a></td>
+<td>Helper function to set the console’s log level.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/hutch_python.log_setup.debug_mode.html#hutch_python.log_setup.debug_mode" title="hutch_python.log_setup.debug_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug_mode</span></code></a></td>
+<td>Enable, disable, or check if we’re in debug mode.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="generated/hutch_python.log_setup.debug_context.html#hutch_python.log_setup.debug_context" title="hutch_python.log_setup.debug_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug_context</span></code></a></td>
+<td>Context manager for running a block of code in <a class="reference internal" href="generated/hutch_python.log_setup.debug_mode.html#hutch_python.log_setup.debug_mode" title="hutch_python.log_setup.debug_mode"><code class="xref any py py-func docutils literal notranslate"><span class="pre">debug_mode</span></code></a>.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="generated/hutch_python.log_setup.debug_wrapper.html#hutch_python.log_setup.debug_wrapper" title="hutch_python.log_setup.debug_wrapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug_wrapper</span></code></a></td>
+<td>Wrapper for running a function in <a class="reference internal" href="generated/hutch_python.log_setup.debug_mode.html#hutch_python.log_setup.debug_mode" title="hutch_python.log_setup.debug_mode"><code class="xref any py py-func docutils literal notranslate"><span class="pre">debug_mode</span></code></a>.</td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-</div>
 </div>
 
 
@@ -224,10 +238,10 @@ logger for interactive sessions.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="utils.html" class="btn btn-neutral float-right" title="Utility Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="generated/hutch_python.log_setup.setup_logging.html" class="btn btn-neutral float-right" title="hutch_python.log_setup.setup_logging" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="base_plugin.html" class="btn btn-neutral" title="Plugin Spec" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="generated/hutch_python.exp_load.get_exp_objs.html" class="btn btn-neutral" title="hutch_python.exp_load.get_exp_objs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -258,7 +272,7 @@ logger for interactive sessions.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0+2.gd0d3ae5',
+            VERSION:'0.2.0+12.g84e29c7',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

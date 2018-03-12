@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hutch_python.utils.extract_objs &mdash; hutch-python 0.2.0+2.gd0d3ae5 documentation</title>
+  <title>hutch_python.utils.extract_objs &mdash; hutch-python 0.2.0+12.g84e29c7 documentation</title>
   
 
   
@@ -35,10 +35,10 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="hutch-python 0.2.0+2.gd0d3ae5 documentation" href="../index.html"/>
-        <link rel="up" title="Utility Functions" href="../utils.html"/>
+    <link rel="top" title="hutch-python 0.2.0+12.g84e29c7 documentation" href="../index.html"/>
+        <link rel="up" title="utils.py" href="../utils.html"/>
         <link rel="next" title="hutch_python.utils.find_object" href="hutch_python.utils.find_object.html"/>
-        <link rel="prev" title="Utility Functions" href="../utils.html"/> 
+        <link rel="prev" title="hutch_python.utils.IterableNamespace" href="hutch_python.utils.IterableNamespace.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.2.0+2.gd0d3ae5
+                0.2.0+12.g84e29c7
               </div>
             
           
@@ -93,28 +93,43 @@
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../invokation.html">Invokation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../hutch_setup.html">Hutch Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start.html">Starting a Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Configuration</span></p>
+<p class="caption"><span class="caption-text">User Documentation</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../startup.html">Startup Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../database.html">Database Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../beamline.html">Beamline File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../experiment.html">Experiment File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_utils.html">Useful Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../other_modules.html">Related Modules</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hutch_setup.html">Hutch Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../yaml_files.html">Yaml Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../load.html">Load</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../experiment.html">Experiment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../namespace.html">Namespace</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../debug.html">Debug</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Developer API</span></p>
+<p class="caption"><span class="caption-text">Internal API Reference</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../base_plugin.html">Plugin Spec</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../log_setup.html">Logging Configuration</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../utils.html">Utility Functions</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../utils.html#utils-py">utils.py</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">hutch_python.utils.extract_objs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hutch_python.utils.find_object.html">hutch_python.utils.find_object</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hutch_python.utils.find_class.html">hutch_python.utils.find_class</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../cache.html">cache.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">cli.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ipython_log.html">ipython_log.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load_conf.html">load_conf.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../load_parts.html">load submodules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../log_setup.html">log_setup.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../namespace.html">namespace.py</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../utils.html">utils.py</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hutch_python.utils.safe_load.html">hutch_python.utils.safe_load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hutch_python.utils.get_current_experiment.html">hutch_python.utils.get_current_experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hutch_python.utils.IterableNamespace.html">hutch_python.utils.IterableNamespace</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">hutch_python.utils.extract_objs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hutch_python.utils.find_object.html">hutch_python.utils.find_object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hutch_python.utils.find_class.html">hutch_python.utils.find_class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hutch_python.utils.strip_prefix.html">hutch_python.utils.strip_prefix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hutch_python.utils.hutch_banner.html">hutch_python.utils.hutch_banner</a></li>
 </ul>
 </li>
 </ul>
@@ -161,7 +176,7 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="../utils.html">Utility Functions</a> &raquo;</li>
+          <li><a href="../utils.html">utils.py</a> &raquo;</li>
         
       <li>hutch_python.utils.extract_objs</li>
     
@@ -187,28 +202,29 @@
 <dl class="function">
 <dt id="hutch_python.utils.extract_objs">
 <code class="descclassname">hutch_python.utils.</code><code class="descname">extract_objs</code><span class="sig-paren">(</span><em>scope=None</em>, <em>skip_hidden=True</em>, <em>stack_offset=0</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.utils.extract_objs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return all objects within scope without a _ prefix. If an __all__
-keyword exists, follow that keyword’s instructions instead.</p>
+<dd><p>Return all objects with the <code class="docutils literal notranslate"><span class="pre">scope</span></code>.</p>
+<p>This can be though of as a <code class="docutils literal notranslate"><span class="pre">*</span></code> import, and it obeys the <code class="docutils literal notranslate"><span class="pre">__all__</span></code>
+keyword functionality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>scope</strong> (<em>module</em><em>, </em><em>namespace</em><em>, or </em><em>list of these</em><em>, </em><em>optional</em>) – If this is omitted, we’ll include all objects that have been loaded by
+<li><strong>scope</strong> (<code class="docutils literal notranslate"><span class="pre">module</span></code>, <code class="docutils literal notranslate"><span class="pre">namespace</span></code>, or <code class="docutils literal notranslate"><span class="pre">list</span></code> of these, optional) – If provided, we’ll import from this object.
+If omitted, we’ll include all objects that have been loaded by
 hutch_python and everything in the caller’s global frame.</li>
-<li><strong>skip_hidden</strong> (<em>bool</em><em>, </em><em>optional</em>) – If changed from True to False, we’ll include objects with leading
-underscores.</li>
-<li><strong>stack_offset</strong> (<em>int</em><em>, </em><em>optional</em>) – If scope was not provided, we’ll use stack_offset to determine which
-frame is the user’s frame. Leave this at zero if you want the objects
-in the caller’s frame, and increase it by one for each level up the
-stack your frame is.</li>
+<li><strong>skip_hidden</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>, optional) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, we’ll omit objects with leading underscores.</li>
+<li><strong>stack_offset</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>, optional) – If <code class="docutils literal notranslate"><span class="pre">scope</span></code> was not provided, we’ll use <code class="docutils literal notranslate"><span class="pre">stack_offset</span></code> to determine
+which frame is the user’s frame. Leave this at zero if you want the
+objects in the caller’s frame, and increase it by one for each level
+up the stack your frame is.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>objs</strong> – Mapping from name in scope to object</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="docutils literal notranslate"><span class="pre">dict</span></code></p>
 </td>
 </tr>
 </tbody>
@@ -230,7 +246,7 @@ stack your frame is.</li>
         <a href="hutch_python.utils.find_object.html" class="btn btn-neutral float-right" title="hutch_python.utils.find_object" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../utils.html" class="btn btn-neutral" title="Utility Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="hutch_python.utils.IterableNamespace.html" class="btn btn-neutral" title="hutch_python.utils.IterableNamespace" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -261,7 +277,7 @@ stack your frame is.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.2.0+2.gd0d3ae5',
+            VERSION:'0.2.0+12.g84e29c7',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

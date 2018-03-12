@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Namespace &mdash; hutch-python 0.2.0+2.gd0d3ae5 documentation</title>
+  <title>namespace.py &mdash; hutch-python 0.2.0+12.g84e29c7 documentation</title>
   
 
   
@@ -35,9 +35,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.2.0+2.gd0d3ae5 documentation" href="index.html"/>
-        <link rel="next" title="Plugin Spec" href="base_plugin.html"/>
-        <link rel="prev" title="Experiment" href="experiment.html"/> 
+    <link rel="top" title="hutch-python 0.2.0+12.g84e29c7 documentation" href="index.html"/>
+        <link rel="next" title="utils.py" href="utils.html"/>
+        <link rel="prev" title="hutch_python.log_setup.debug_wrapper" href="generated/hutch_python.log_setup.debug_wrapper.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.0+2.gd0d3ae5
+                0.2.0+12.g84e29c7
               </div>
             
           
@@ -92,22 +92,35 @@
             
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="invokation.html">Invokation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hutch_setup.html">Hutch Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="start.html">Starting a Session</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Configuration</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="yaml_files.html">Yaml Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="load.html">Load</a></li>
-<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Namespace</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Developer API</span></p>
+<p class="caption"><span class="caption-text">User Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="base_plugin.html">Plugin Spec</a></li>
-<li class="toctree-l1"><a class="reference internal" href="log_setup.html">Logging Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utility Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="startup.html">Startup Sequence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">Database Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="beamline.html">Beamline File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_utils.html">Useful Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other_modules.html">Related Modules</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hutch_setup.html">Hutch Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="yaml_files.html">Yaml Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="debug.html">Debug</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Internal API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cache.html">cache.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">cli.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ipython_log.html">ipython_log.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="load_conf.html">load_conf.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="load_parts.html">load submodules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="log_setup.html">log_setup.py</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">namespace.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">utils.py</a></li>
 </ul>
 
             
@@ -152,7 +165,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Namespace</li>
+      <li>namespace.py</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -171,8 +184,63 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="namespace">
-<h1>Namespace<a class="headerlink" href="#namespace" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-hutch_python.namespace">
+<span id="namespace-py"></span><h1>namespace.py<a class="headerlink" href="#module-hutch_python.namespace" title="Permalink to this headline">¶</a></h1>
+<p>This module provides utilities for grouping objects into namespaces.</p>
+<dl class="function">
+<dt id="hutch_python.namespace.class_namespace">
+<code class="descclassname">hutch_python.namespace.</code><code class="descname">class_namespace</code><span class="sig-paren">(</span><em>cls</em>, <em>scope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.namespace.class_namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a <code class="docutils literal notranslate"><span class="pre">namespace</span></code> that contains objects of a specific type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cls</strong> (<code class="docutils literal notranslate"><span class="pre">type</span></code> or <code class="docutils literal notranslate"><span class="pre">str</span></code>) – </li>
+<li><strong>scope</strong> (<code class="docutils literal notranslate"><span class="pre">module</span></code>, <code class="docutils literal notranslate"><span class="pre">namespace</span></code>, or <code class="docutils literal notranslate"><span class="pre">list</span></code> of these) – Every object attached to the given modules will be considered for the
+<a class="reference internal" href="#hutch_python.namespace.class_namespace" title="hutch_python.namespace.class_namespace"><code class="xref any py py-func docutils literal notranslate"><span class="pre">class_namespace</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">scope</span></code> is omitted, we’ll check all objects
+loaded by <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> and everything in the caller’s global frame.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>namespace</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="generated/hutch_python.utils.IterableNamespace.html#hutch_python.utils.IterableNamespace" title="hutch_python.utils.IterableNamespace"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IterableNamespace</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="hutch_python.namespace.metadata_namespace">
+<code class="descclassname">hutch_python.namespace.</code><code class="descname">metadata_namespace</code><span class="sig-paren">(</span><em>md</em>, <em>scope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.namespace.metadata_namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a <code class="docutils literal notranslate"><span class="pre">namespace</span></code> that accumulates objects and creates a tree based on
+their metadata.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>md</strong> (<code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code>) – Each of the metadata categories to group objects by, in order from the
+root of the tree to the leaves.</li>
+<li><strong>scope</strong> (<code class="docutils literal notranslate"><span class="pre">module</span></code>, <code class="docutils literal notranslate"><span class="pre">namespace</span></code>, or <code class="docutils literal notranslate"><span class="pre">list</span></code> of these) – Every object attached to the given modules will be considered for the
+<a class="reference internal" href="#hutch_python.namespace.metadata_namespace" title="hutch_python.namespace.metadata_namespace"><code class="xref any py py-func docutils literal notranslate"><span class="pre">metadata_namespace</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">scope</span></code> is omitted, we’ll check all objects
+loaded by <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> and everything in the caller’s global frame.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>namespace</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="generated/hutch_python.utils.IterableNamespace.html#hutch_python.utils.IterableNamespace" title="hutch_python.utils.IterableNamespace"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IterableNamespace</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
@@ -185,10 +253,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="base_plugin.html" class="btn btn-neutral float-right" title="Plugin Spec" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="utils.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="experiment.html" class="btn btn-neutral" title="Experiment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="generated/hutch_python.log_setup.debug_wrapper.html" class="btn btn-neutral" title="hutch_python.log_setup.debug_wrapper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -219,7 +287,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0+2.gd0d3ae5',
+            VERSION:'0.2.0+12.g84e29c7',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
