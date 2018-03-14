@@ -43,7 +43,7 @@
 ./_sources/other_modules.rst.txt
 ./_sources/start.rst.txt
 ./_sources/startup.rst.txt
-./_sources/tutorial.rst.txt
+./_sources/tutorial.ipynb.txt
 ./_sources/user_utils.rst.txt
 ./_sources/utils.rst.txt
 ./_sources/yaml_files.rst.txt

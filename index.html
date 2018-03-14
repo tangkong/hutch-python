@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hutch Python &mdash; hutch-python 0.2.0+24.g4fe6b94 documentation</title>
+  <title>Hutch Python &mdash; hutch-python 0.2.1+4.g3f927e5 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.2.0+24.g4fe6b94 documentation" href="#"/>
+    <link rel="top" title="hutch-python 0.2.1+4.g3f927e5 documentation" href="#"/>
         <link rel="next" title="Starting a Session" href="start.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.0+24.g4fe6b94
+                0.2.1+4.g3f927e5
               </div>
             
           
@@ -92,7 +92,7 @@
               <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="start.html">Starting a Session</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">What to Expect When You are Expecting a New Hutch Python</a></li>
 </ul>
 <p class="caption"><span class="caption-text">User Documentation</span></p>
 <ul>
@@ -183,7 +183,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="hutch-python">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+/* nice headers on first paragraph of info/warning boxes */
+.admonition .first {
+    margin: -12px;
+    padding: 6px 12px;
+    margin-bottom: 12px;
+    color: #fff;
+    line-height: 1;
+    display: block;
+}
+.admonition.warning .first {
+    background: #f0b37e;
+}
+.admonition.note .first {
+    background: #6ab0de;
+}
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="hutch-python">
 <h1>Hutch Python<a class="headerlink" href="#hutch-python" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="https://travis-ci.org/pcdshub/hutch-python"><img alt="Build Status" src="https://travis-ci.org/pcdshub/hutch-python.svg?branch=master" /></a>
 <a class="reference external image-reference" href="https://codecov.io/gh/pcdshub/hutch-python"><img alt="Code Coverage" src="https://codecov.io/gh/pcdshub/hutch-python/branch/master/graph/badge.svg" /></a>
@@ -278,7 +312,7 @@ the LCLS NFS directories.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0+24.g4fe6b94',
+            VERSION:'0.2.1+4.g3f927e5',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -288,6 +322,7 @@ the LCLS NFS directories.</p>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
