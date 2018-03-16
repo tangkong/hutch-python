@@ -28,6 +28,27 @@ Replacing ``hutchname`` with your hutch's name:
    home area. Follow the specification of `get_qs_objs` to ensure we can load
    user objects from the questionnaire.
 
+Adding devices to the database
+------------------------------
+The default ``conf.yml`` file created will point to the main ``device_config``
+database located in ``/reg/g/pcds/pyps/apps/hutch-python/device_config``. If
+you would like to make large changes to the database it is best practice to to
+clone this repository from `<https://github.com/pcdshub/device_config>`_ and
+make the changes on a non-deployed version. For more information about how to
+modify the database beyond the short example below see
+`<https://pcdshub.github.io/happi>`_
+
+.. code:: python
+
+    # Create your client
+    import happi
+    client = happi.Client(path='my/clone/device_config/db.json')
+
+    # Add your devices
+    from happi.containers import Slits
+    my_slits = Slits(name='my_slits', prefix='MY:SLITS:01', beamline='TST')
+    client.add_device(my_slits)
+
 Updating a Hutch's Launch Scripts
 ---------------------------------
 

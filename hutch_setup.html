@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hutch Setup &mdash; hutch-python 0.2.1+8.gb1ea286 documentation</title>
+  <title>Hutch Setup &mdash; hutch-python 0.2.1+10.gcf1c0d9 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.2.1+8.gb1ea286 documentation" href="index.html"/>
+    <link rel="top" title="hutch-python 0.2.1+10.gcf1c0d9 documentation" href="index.html"/>
         <link rel="next" title="Yaml Files" href="yaml_files.html"/>
         <link rel="prev" title="Environments" href="environment.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.1+8.gb1ea286
+                0.2.1+10.gcf1c0d9
               </div>
             
           
@@ -109,6 +109,7 @@
 <li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Hutch Setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#steps-to-set-up-a-hutch">Steps to set up a Hutch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-devices-to-the-database">Adding devices to the database</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#updating-a-hutch-s-launch-scripts">Updating a Hutch’s Launch Scripts</a></li>
 </ul>
 </li>
@@ -249,6 +250,26 @@ home area. Follow the specification of <a class="reference internal" href="gener
 user objects from the questionnaire.</li>
 </ol>
 </div>
+<div class="section" id="adding-devices-to-the-database">
+<h2>Adding devices to the database<a class="headerlink" href="#adding-devices-to-the-database" title="Permalink to this headline">¶</a></h2>
+<p>The default <code class="docutils literal notranslate"><span class="pre">conf.yml</span></code> file created will point to the main <code class="docutils literal notranslate"><span class="pre">device_config</span></code>
+database located in <code class="docutils literal notranslate"><span class="pre">/reg/g/pcds/pyps/apps/hutch-python/device_config</span></code>. If
+you would like to make large changes to the database it is best practice to to
+clone this repository from <a class="reference external" href="https://github.com/pcdshub/device_config">https://github.com/pcdshub/device_config</a> and
+make the changes on a non-deployed version. For more information about how to
+modify the database beyond the short example below see
+<a class="reference external" href="https://pcdshub.github.io/happi">https://pcdshub.github.io/happi</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create your client</span>
+<span class="kn">import</span> <span class="nn">happi</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">happi</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;my/clone/device_config/db.json&#39;</span><span class="p">)</span>
+
+<span class="c1"># Add your devices</span>
+<span class="kn">from</span> <span class="nn">happi.containers</span> <span class="kn">import</span> <span class="n">Slits</span>
+<span class="n">my_slits</span> <span class="o">=</span> <span class="n">Slits</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;my_slits&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;MY:SLITS:01&#39;</span><span class="p">,</span> <span class="n">beamline</span><span class="o">=</span><span class="s1">&#39;TST&#39;</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">add_device</span><span class="p">(</span><span class="n">my_slits</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="updating-a-hutch-s-launch-scripts">
 <h2>Updating a Hutch’s Launch Scripts<a class="headerlink" href="#updating-a-hutch-s-launch-scripts" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
@@ -306,7 +327,7 @@ user objects from the questionnaire.</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.1+8.gb1ea286',
+            VERSION:'0.2.1+10.gcf1c0d9',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
