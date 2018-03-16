@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Startup Sequence &mdash; hutch-python 0.2.1+4.g3f927e5 documentation</title>
+  <title>Startup Sequence &mdash; hutch-python 0.2.1+8.gb1ea286 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.2.1+4.g3f927e5 documentation" href="index.html"/>
+    <link rel="top" title="hutch-python 0.2.1+8.gb1ea286 documentation" href="index.html"/>
         <link rel="next" title="Database Objects" href="database.html"/>
         <link rel="prev" title="What to Expect When You are Expecting a New Hutch Python" href="tutorial.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.1+4.g3f927e5
+                0.2.1+8.gb1ea286
               </div>
             
           
@@ -251,8 +251,11 @@ to a list of modules.</li>
 provided in the <code class="docutils literal notranslate"><span class="pre">cfg.yml</span></code>.</li>
 <li>Create user objects from the experiment questionnaire
 using <code class="docutils literal notranslate"><span class="pre">happi</span></code> and <code class="docutils literal notranslate"><span class="pre">psdm_qs_cli</span></code>.</li>
-<li>Import <code class="docutils literal notranslate"><span class="pre">User</span></code> class from experiment file and instantiate <code class="docutils literal notranslate"><span class="pre">User()</span></code>.
-Set this object to be <code class="docutils literal notranslate"><span class="pre">x</span></code>.</li>
+<li>Import <code class="docutils literal notranslate"><span class="pre">User</span></code> class from experiment file and instantiate <code class="docutils literal notranslate"><span class="pre">User()</span></code>.</li>
+<li>Attach all questionnaire objects to the <code class="docutils literal notranslate"><span class="pre">User()</span></code> object</li>
+<li>If there was no experiment file, make a <code class="docutils literal notranslate"><span class="pre">SimpleNamespace()</span></code> object
+instead</li>
+<li>Set this object to be <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">user</span></code>.</li>
 </ul>
 </li>
 <li>Groups Load<ul>
@@ -318,7 +321,7 @@ e.g. <code class="docutils literal notranslate"><span class="pre">xxx.dg1.name</
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.1+4.g3f927e5',
+            VERSION:'0.2.1+8.gb1ea286',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

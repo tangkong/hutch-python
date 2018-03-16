@@ -15,7 +15,8 @@ The import rules for this file can be thought of as:
 .. code-block:: python
 
    from experiments.ls2516 import User
-   x = User()
+   user = User()
+   x = user
 
 
 So, you are expected to organize your experiment-specific objects, plans, and
@@ -41,3 +42,6 @@ Questionnaire
 The CDS section of the questionnaire is read by ``hutch-python``, and objects
 with defined python names are created. Links to the questionnaire for each run
 can be found at `<https://pswww.slac.stanford.edu>`_.
+
+These questionnaire objects will make it into the main namespace like all the
+other objects, and will also be attached to the ``User()`` object.
