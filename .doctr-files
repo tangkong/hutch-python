@@ -26,6 +26,7 @@
 ./_sources/generated/hutch_python.qs_load.get_qs_objs.rst.txt
 ./_sources/generated/hutch_python.user_load.get_user_objs.rst.txt
 ./_sources/generated/hutch_python.utils.IterableNamespace.rst.txt
+./_sources/generated/hutch_python.utils.count_ns_leaves.rst.txt
 ./_sources/generated/hutch_python.utils.extract_objs.rst.txt
 ./_sources/generated/hutch_python.utils.find_class.rst.txt
 ./_sources/generated/hutch_python.utils.find_object.rst.txt
@@ -110,6 +111,7 @@
 ./generated/hutch_python.qs_load.get_qs_objs.html
 ./generated/hutch_python.user_load.get_user_objs.html
 ./generated/hutch_python.utils.IterableNamespace.html
+./generated/hutch_python.utils.count_ns_leaves.html
 ./generated/hutch_python.utils.extract_objs.html
 ./generated/hutch_python.utils.find_class.html
 ./generated/hutch_python.utils.find_object.html
