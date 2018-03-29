@@ -22,6 +22,7 @@
    database
    beamline
    experiment
+   report
    user_utils
    other_modules
 
@@ -40,6 +41,7 @@
    :caption: Internal API Reference
    :hidden:
 
+   bug
    cache
    cli
    ipython_log

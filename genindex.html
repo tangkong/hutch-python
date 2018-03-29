@@ -9,7 +9,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; hutch-python 0.2.1+12.g4ab1d18 documentation</title>
+  <title>Index &mdash; hutch-python 0.2.1+46.gac9d8f7 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
         <link rel="index" title="Index"
               href="#"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.2.1+12.g4ab1d18 documentation" href="index.html"/> 
+    <link rel="top" title="hutch-python 0.2.1+46.gac9d8f7 documentation" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.1+12.g4ab1d18
+                0.2.1+46.gac9d8f7
               </div>
             
           
@@ -100,6 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="database.html">Database Objects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="beamline.html">Beamline File</a></li>
 <li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report.html">Reporting Issues</a></li>
 <li class="toctree-l1"><a class="reference internal" href="user_utils.html">Useful Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="other_modules.html">Related Modules</a></li>
 </ul>
@@ -112,6 +113,7 @@
 </ul>
 <p class="caption"><span class="caption-text">Internal API Reference</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="bug.html">bug.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">cache.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">cli.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ipython_log.html">ipython_log.py</a></li>
@@ -196,6 +198,7 @@
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#W"><strong>W</strong></a>
@@ -268,19 +271,27 @@
 </li>
       <li><a href="generated/hutch_python.log_setup.get_console_level.html#hutch_python.log_setup.get_console_level">get_console_level() (in module hutch_python.log_setup)</a>
 </li>
+      <li><a href="generated/hutch_python.bug.get_current_environment.html#hutch_python.bug.get_current_environment">get_current_environment() (in module hutch_python.bug)</a>
+</li>
       <li><a href="generated/hutch_python.utils.get_current_experiment.html#hutch_python.utils.get_current_experiment">get_current_experiment() (in module hutch_python.utils)</a>
 </li>
       <li><a href="generated/hutch_python.daq.get_daq_objs.html#hutch_python.daq.get_daq_objs">get_daq_objs() (in module hutch_python.daq)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/hutch_python.exp_load.get_exp_objs.html#hutch_python.exp_load.get_exp_objs">get_exp_objs() (in module hutch_python.exp_load)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/hutch_python.happi.get_happi_objs.html#hutch_python.happi.get_happi_objs">get_happi_objs() (in module hutch_python.happi)</a>
+</li>
+      <li><a href="generated/hutch_python.bug.get_last_n_commands.html#hutch_python.bug.get_last_n_commands">get_last_n_commands() (in module hutch_python.bug)</a>
 </li>
       <li><a href="generated/hutch_python.happi.get_lightpath.html#hutch_python.happi.get_lightpath">get_lightpath() (in module hutch_python.happi)</a>
 </li>
       <li><a href="generated/hutch_python.qs_load.get_qs_objs.html#hutch_python.qs_load.get_qs_objs">get_qs_objs() (in module hutch_python.qs_load)</a>
+</li>
+      <li><a href="generated/hutch_python.log_setup.get_session_logfiles.html#hutch_python.log_setup.get_session_logfiles">get_session_logfiles() (in module hutch_python.log_setup)</a>
+</li>
+      <li><a href="generated/hutch_python.bug.get_text_from_editor.html#hutch_python.bug.get_text_from_editor">get_text_from_editor() (in module hutch_python.bug)</a>
 </li>
       <li><a href="generated/hutch_python.user_load.get_user_objs.html#hutch_python.user_load.get_user_objs">get_user_objs() (in module hutch_python.user_load)</a>
 </li>
@@ -293,6 +304,8 @@
       <li><a href="generated/hutch_python.utils.hutch_banner.html#hutch_python.utils.hutch_banner">hutch_banner() (in module hutch_python.utils)</a>
 </li>
       <li><a href="generated/hutch_python.cli.hutch_ipython_embed.html#hutch_python.cli.hutch_ipython_embed">hutch_ipython_embed() (in module hutch_python.cli)</a>
+</li>
+      <li><a href="bug.html#module-hutch_python.bug">hutch_python.bug (module)</a>
 </li>
       <li><a href="cache.html#module-hutch_python.cache">hutch_python.cache (module)</a>
 </li>
@@ -359,8 +372,20 @@
   </ul></td>
 </tr></table>
 
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/hutch_python.bug.post_to_github.html#hutch_python.bug.post_to_github">post_to_github() (in module hutch_python.bug)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="generated/hutch_python.bug.report_bug.html#hutch_python.bug.report_bug">report_bug() (in module hutch_python.bug)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/hutch_python.cli.run_script.html#hutch_python.cli.run_script">run_script() (in module hutch_python.cli)</a>
 </li>
@@ -431,7 +456,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.1+12.g4ab1d18',
+            VERSION:'0.2.1+46.gac9d8f7',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

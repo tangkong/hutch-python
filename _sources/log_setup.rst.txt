@@ -8,6 +8,7 @@ log_setup.py
    :nosignatures:
 
    setup_logging
+   get_session_logfiles
    get_console_handler
    get_console_level
    set_console_level

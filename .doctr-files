@@ -1,10 +1,16 @@
 ./_sources/beamline.rst.txt
+./_sources/bug.rst.txt
 ./_sources/cache.rst.txt
 ./_sources/cli.rst.txt
 ./_sources/database.rst.txt
 ./_sources/debug.rst.txt
 ./_sources/environment.rst.txt
 ./_sources/experiment.rst.txt
+./_sources/generated/hutch_python.bug.get_current_environment.rst.txt
+./_sources/generated/hutch_python.bug.get_last_n_commands.rst.txt
+./_sources/generated/hutch_python.bug.get_text_from_editor.rst.txt
+./_sources/generated/hutch_python.bug.post_to_github.rst.txt
+./_sources/generated/hutch_python.bug.report_bug.rst.txt
 ./_sources/generated/hutch_python.cli.hutch_ipython_embed.rst.txt
 ./_sources/generated/hutch_python.cli.run_script.rst.txt
 ./_sources/generated/hutch_python.cli.setup_cli_env.rst.txt
@@ -21,6 +27,7 @@
 ./_sources/generated/hutch_python.log_setup.debug_wrapper.rst.txt
 ./_sources/generated/hutch_python.log_setup.get_console_handler.rst.txt
 ./_sources/generated/hutch_python.log_setup.get_console_level.rst.txt
+./_sources/generated/hutch_python.log_setup.get_session_logfiles.rst.txt
 ./_sources/generated/hutch_python.log_setup.set_console_level.rst.txt
 ./_sources/generated/hutch_python.log_setup.setup_logging.rst.txt
 ./_sources/generated/hutch_python.qs_load.get_qs_objs.rst.txt
@@ -42,6 +49,7 @@
 ./_sources/log_setup.rst.txt
 ./_sources/namespace.rst.txt
 ./_sources/other_modules.rst.txt
+./_sources/report.rst.txt
 ./_sources/start.rst.txt
 ./_sources/startup.rst.txt
 ./_sources/tutorial.ipynb.txt
@@ -84,12 +92,18 @@
 ./_static/up.png
 ./_static/websupport.js
 ./beamline.html
+./bug.html
 ./cache.html
 ./cli.html
 ./database.html
 ./debug.html
 ./environment.html
 ./experiment.html
+./generated/hutch_python.bug.get_current_environment.html
+./generated/hutch_python.bug.get_last_n_commands.html
+./generated/hutch_python.bug.get_text_from_editor.html
+./generated/hutch_python.bug.post_to_github.html
+./generated/hutch_python.bug.report_bug.html
 ./generated/hutch_python.cli.hutch_ipython_embed.html
 ./generated/hutch_python.cli.run_script.html
 ./generated/hutch_python.cli.setup_cli_env.html
@@ -106,6 +120,7 @@
 ./generated/hutch_python.log_setup.debug_wrapper.html
 ./generated/hutch_python.log_setup.get_console_handler.html
 ./generated/hutch_python.log_setup.get_console_level.html
+./generated/hutch_python.log_setup.get_session_logfiles.html
 ./generated/hutch_python.log_setup.set_console_level.html
 ./generated/hutch_python.log_setup.setup_logging.html
 ./generated/hutch_python.qs_load.get_qs_objs.html
@@ -130,6 +145,7 @@
 ./objects.inv
 ./other_modules.html
 ./py-modindex.html
+./report.html
 ./search.html
 ./searchindex.js
 ./start.html
