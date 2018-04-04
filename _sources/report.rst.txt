@@ -30,7 +30,8 @@ If you call `report_bug` as a regular function you can specify a number of past
 commands you want to include in the overall report. This allows you to
 posthumously report issues without running the actual function again.
 
-   .. autofunction:: report_bug
+   .. autofunction:: hutch_python.bug.report_bug
+      :noindex:
 
 Issue Lifecyle
 ^^^^^^^^^^^^^^

@@ -26,7 +26,8 @@ Replacing ``hutchname`` with your hutch's name:
 #. ``git push origin master``
 #. As the hutch operator account, create a file named ``.qs.cfg`` in the opr's
    home area. Follow the specification of `get_qs_objs` to ensure we can load
-   user objects from the questionnaire.
+   user objects from the questionnaire. Also include the necessary information
+   for reporting issues to GitHub specified in `post_to_github`
 
 Adding devices to the database
 ------------------------------
