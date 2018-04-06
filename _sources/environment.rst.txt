@@ -14,8 +14,10 @@ It is managed using the `pcds-envs <https://github.com/pcdshub/pcds-envs>`_
 module.
 
 You can activate the base environment by calling
-``source /reg/g/pcds/pyps/conda/py36env.sh pcds-0.6.0``, matching the
-environment version number appropriately if this page is out of date.
+``source /reg/g/pcds/pyps/conda/py36env.sh``.
+This will give you the latest, you can pick an older environment with
+``source /reg/g/pcds/pyps/conda/py36env.sh $ENVNAME``. If you take latest and
+run ``conda env list``, you'll see all of the options.
 
 Personal Install
 ----------------
