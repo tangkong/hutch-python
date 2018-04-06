@@ -24,7 +24,7 @@ Replacing ``hutchname`` with your hutch's name:
 #. Click ``New`` to make a new repo, name it ``hutchname``, do not
    initialize with README, gitignore, or license.
 #. ``git push origin master``
-#. As the hutch operator account, create a file named ``.qs.cfg`` in the opr's
+#. As the hutch operator account, create a file named ``.web.cfg`` in the opr's
    home area. Follow the specification of `get_qs_objs` to ensure we can load
    user objects from the questionnaire. Also include the necessary information
    for reporting issues to GitHub specified in `post_to_github`
