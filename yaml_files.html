@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Yaml Files &mdash; hutch-python 0.2.1+74.g6feef92 documentation</title>
+  <title>Yaml Files &mdash; hutch-python 0.2.1+88.g6044411 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.2.1+74.g6feef92 documentation" href="index.html"/>
+    <link rel="top" title="hutch-python 0.2.1+88.g6044411 documentation" href="index.html"/>
         <link rel="next" title="Debug" href="debug.html"/>
         <link rel="prev" title="Hutch Setup" href="hutch_setup.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.1+74.g6feef92
+                0.2.1+88.g6044411
               </div>
             
           
@@ -114,6 +114,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#db">db</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#load">load</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#experiment">experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#daq-platform">daq_platform</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#full-file-example">Full File Example</a></li>
 </ul>
 </li>
@@ -230,8 +231,8 @@
 <div class="section" id="yaml-files">
 <h1>Yaml Files<a class="headerlink" href="#yaml-files" title="Permalink to this headline">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> uses a <code class="docutils literal notranslate"><span class="pre">conf.yml</span></code> file for basic configuration. This is a
-standard yaml file with four valid keys:
-<code class="docutils literal notranslate"><span class="pre">hutch</span></code>, <code class="docutils literal notranslate"><span class="pre">db</span></code>, <code class="docutils literal notranslate"><span class="pre">load</span></code>, and <code class="docutils literal notranslate"><span class="pre">experiment</span></code>.</p>
+standard yaml file with five valid keys:
+<code class="docutils literal notranslate"><span class="pre">hutch</span></code>, <code class="docutils literal notranslate"><span class="pre">db</span></code>, <code class="docutils literal notranslate"><span class="pre">load</span></code>, <code class="docutils literal notranslate"><span class="pre">experiment</span></code>, and <code class="docutils literal notranslate"><span class="pre">daq_platform</span></code>.</p>
 <div class="section" id="hutch">
 <h2>hutch<a class="headerlink" href="#hutch" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">hutch</span></code> key expects a single string, the hutch name.</p>
@@ -290,6 +291,20 @@ to load an experiment other than the active experiment; handy for debugging.</p>
 <p>This key is used to force the questionnaire and experiment file to be from a
 particular experiment.</p>
 </div>
+<div class="section" id="daq-platform">
+<h2>daq_platform<a class="headerlink" href="#daq-platform" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">daq_platform</span></code> is another optional key that can be used to configure
+which <code class="docutils literal notranslate"><span class="pre">platform</span></code> your running daq uses on a per-hutch or per-host basis.
+The default <code class="docutils literal notranslate"><span class="pre">platform</span></code> is zero, but you can set a different <code class="docutils literal notranslate"><span class="pre">platform</span></code>
+for your hutch by using the <code class="docutils literal notranslate"><span class="pre">default</span></code> key as shown below. You can set a
+platform for a particular host by using that host’s name as a key as shown
+below.</p>
+<div class="highlight-YMAL notranslate"><div class="highlight"><pre><span></span>daq_platform:
+  default: 4
+  cxi-control: 5
+</pre></div>
+</div>
+</div>
 <div class="section" id="full-file-example">
 <h2>Full File Example<a class="headerlink" href="#full-file-example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">hutch</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">xpp</span>
@@ -298,6 +313,9 @@ particular experiment.</p>
 
 <span class="l l-Scalar l-Scalar-Plain">load</span><span class="p p-Indicator">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">xpp.beamline</span>
+
+<span class="l l-Scalar l-Scalar-Plain">daq_platform</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">default</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
 </pre></div>
 </div>
 </div>
@@ -347,7 +365,7 @@ particular experiment.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.1+74.g6feef92',
+            VERSION:'0.2.1+88.g6044411',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

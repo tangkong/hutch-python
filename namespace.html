@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>namespace.py &mdash; hutch-python 0.2.1+74.g6feef92 documentation</title>
+  <title>namespace.py &mdash; hutch-python 0.2.1+88.g6044411 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="hutch-python 0.2.1+74.g6feef92 documentation" href="index.html"/>
+    <link rel="top" title="hutch-python 0.2.1+88.g6044411 documentation" href="index.html"/>
         <link rel="next" title="utils.py" href="utils.html"/>
         <link rel="prev" title="hutch_python.log_setup.debug_wrapper" href="generated/hutch_python.log_setup.debug_wrapper.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.1+74.g6feef92
+                0.2.1+88.g6044411
               </div>
             
           
@@ -235,7 +235,11 @@
 <li><strong>cls</strong> (<code class="docutils literal notranslate"><span class="pre">type</span></code> or <code class="docutils literal notranslate"><span class="pre">str</span></code>) – </li>
 <li><strong>scope</strong> (<code class="docutils literal notranslate"><span class="pre">module</span></code>, <code class="docutils literal notranslate"><span class="pre">namespace</span></code>, or <code class="docutils literal notranslate"><span class="pre">list</span></code> of these) – Every object attached to the given modules will be considered for the
 <a class="reference internal" href="#hutch_python.namespace.class_namespace" title="hutch_python.namespace.class_namespace"><code class="xref any py py-func docutils literal notranslate"><span class="pre">class_namespace</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">scope</span></code> is omitted, we’ll check all objects
-loaded by <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> and everything in the caller’s global frame.</li>
+loaded by <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> and everything in the caller’s global frame.
+If anything is an instance of <code class="docutils literal notranslate"><span class="pre">ophyd.Device</span></code>, we’ll also include the
+object’s components as part of the scope, using the <code class="docutils literal notranslate"><span class="pre">name</span></code> attribute
+to identify them rather than the attribute name on the device. This
+will continue recursively.</li>
 </ul>
 </td>
 </tr>
@@ -323,7 +327,7 @@ loaded by <code class="docutils literal notranslate"><span class="pre">hutch-pyt
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.1+74.g6feef92',
+            VERSION:'0.2.1+88.g6044411',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

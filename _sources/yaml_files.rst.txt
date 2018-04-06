@@ -2,8 +2,8 @@ Yaml Files
 ==========
 
 ``hutch-python`` uses a ``conf.yml`` file for basic configuration. This is a
-standard yaml file with four valid keys:
-``hutch``, ``db``, ``load``, and ``experiment``.
+standard yaml file with five valid keys:
+``hutch``, ``db``, ``load``, ``experiment``, and ``daq_platform``.
 
 
 hutch
@@ -86,6 +86,23 @@ This key is used to force the questionnaire and experiment file to be from a
 particular experiment.
 
 
+daq_platform
+------------
+
+The ``daq_platform`` is another optional key that can be used to configure
+which ``platform`` your running daq uses on a per-hutch or per-host basis.
+The default ``platform`` is zero, but you can set a different ``platform``
+for your hutch by using the ``default`` key as shown below. You can set a
+platform for a particular host by using that host's name as a key as shown
+below.
+
+.. code-block:: YMAL
+
+   daq_platform:
+     default: 4
+     cxi-control: 5
+
+
 Full File Example
 -----------------
 
@@ -97,3 +114,6 @@ Full File Example
 
    load:
      - xpp.beamline
+
+   daq_platform:
+     default: 1

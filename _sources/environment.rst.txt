@@ -28,9 +28,6 @@ development purposes. This can be achieved trivially if your environment is in
 highly suggest downloading `miniconda <https://conda.io/miniconda.html>`_
 and giving it a try.
 
-The requirements have not yet been consolidated into one conda channel, but we
-plan to place everything in the ``pcds-tag`` channel in the future. Currently,
-to pick up all dependencies, run this command:
+To pick up all dependencies, run this command:
 
-``conda install hutch-python -c pcds-tag -c pydm-tag -c lightsource2-tag
--c defaults -c conda-forge``
+``conda install hutch-python -c pcds-tag -c defaults -c conda-forge``
