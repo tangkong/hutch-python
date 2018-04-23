@@ -23,6 +23,7 @@
    beamline
    experiment
    report
+   presets
    user_utils
    other_modules
 

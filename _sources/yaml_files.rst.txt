@@ -96,7 +96,7 @@ for your hutch by using the ``default`` key as shown below. You can set a
 platform for a particular host by using that host's name as a key as shown
 below.
 
-.. code-block:: YMAL
+.. code-block:: YAML
 
    daq_platform:
      default: 4

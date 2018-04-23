@@ -49,6 +49,7 @@
 ./_sources/log_setup.rst.txt
 ./_sources/namespace.rst.txt
 ./_sources/other_modules.rst.txt
+./_sources/presets.rst.txt
 ./_sources/report.rst.txt
 ./_sources/start.rst.txt
 ./_sources/startup.rst.txt
@@ -147,6 +148,7 @@
 ./namespace.html
 ./objects.inv
 ./other_modules.html
+./presets.html
 ./py-modindex.html
 ./report.html
 ./search.html
