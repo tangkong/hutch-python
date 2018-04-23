@@ -24,6 +24,7 @@
    experiment
    report
    presets
+   tips
    user_utils
    other_modules
 

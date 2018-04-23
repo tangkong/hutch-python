@@ -53,6 +53,7 @@
 ./_sources/report.rst.txt
 ./_sources/start.rst.txt
 ./_sources/startup.rst.txt
+./_sources/tips.rst.txt
 ./_sources/tutorial.ipynb.txt
 ./_sources/user_utils.rst.txt
 ./_sources/utils.rst.txt
@@ -155,6 +156,7 @@
 ./searchindex.js
 ./start.html
 ./startup.html
+./tips.html
 ./tutorial.html
 ./user_utils.html
 ./utils.html
