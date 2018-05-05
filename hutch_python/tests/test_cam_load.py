@@ -1,24 +1,18 @@
 import logging
-from pathlib import Path
 
 import pytest
-
-from ophyd.device import Component as Cpt
-from ophyd.signal import Signal
 
 from pcdsdevices.areadetector.detectors import PCDSDetector
 from pcdsdevices.sim.pv import using_fake_epics_pv
 
-from hutch_python.cam_load import (read_cfg, interpret_lines, build_cam,
-                                   UnsupportedConfig, MalformedConfig)
+from hutch_python.cam_load import (read_camviewer_cfg, interpret_lines,
+                                   build_cam, UnsupportedConfig,
+                                   MalformedConfig)
+
+from .conftest import TST_CAM_CFG
 
 logger = logging.getLogger(__name__)
-
-CFG = str(Path(__file__).parent / 'camviewer.cfg')
-
-for plugin in ('image', 'stats'):
-    plugin_class = getattr(PCDSDetector, plugin).cls
-    plugin_class.plugin_type = Cpt(Signal, value=plugin_class._plugin_type)
+CFG = TST_CAM_CFG.format('')
 
 
 @using_fake_epics_pv
@@ -41,10 +35,10 @@ def test_build_cam_errors():
 
 
 @using_fake_epics_pv
-def test_read_cfg():
-    logger.debug('test_read_cfg')
+def test_read_camviewer_cfg():
+    logger.debug('test_read_camviewer_cfg')
     # Basic functionality test
-    objs = read_cfg(CFG)
+    objs = read_camviewer_cfg(CFG)
     assert isinstance(objs['my_cam'], PCDSDetector)
     assert len(objs) == 1
 
