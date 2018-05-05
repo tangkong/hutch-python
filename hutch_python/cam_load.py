@@ -8,7 +8,7 @@ from pcdsdevices.areadetector.detectors import PCDSDetector
 logger = logging.getLogger(__name__)
 
 
-def read_cfg(filename):
+def read_camviewer_cfg(filename):
     """
     Read camviewer.cfg file and create detector objects.
 
@@ -54,7 +54,7 @@ def interpret_lines(lines):
 
         if parts[0].startswith('include'):
             try:
-                objs.update(read_cfg(parts[0].split(' ')[1]))
+                objs.update(read_camviewer_cfg(parts[0].split(' ')[1]))
             except IndexError:
                 err = 'Malformed include line "%s" in camviewer cfg, skipping.'
                 logger.error(err, line)
