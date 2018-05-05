@@ -62,6 +62,7 @@ def interpret_lines(lines):
             try:
                 new_obj = build_cam(*parts)
                 objs[new_obj.name] = new_obj
+                logger.debug('Loaded %s', new_obj.name)
             except UnsupportedConfig as exc:
                 logger.debug('Skip non area detector cam %s',
                              exc.name, exc_info=True)
