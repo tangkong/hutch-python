@@ -17,7 +17,8 @@ from pcdsdevices.mv_interface import setup_preset_paths
 
 from . import plan_defaults
 from .cache import LoadCache
-from .constants import VALID_KEYS
+from .cam_load import read_camviewer_cfg
+from .constants import VALID_KEYS, CAMVIEWER_CFG
 from .exp_load import get_exp_objs
 from .happi import get_happi_objs, get_lightpath
 from .namespace import class_namespace, tree_namespace
@@ -76,8 +77,12 @@ def load_conf(conf, hutch_dir=None):
     - Create a ``daq`` object with ``RE`` registered, using ``daq_platform``
       to define the ``platform`` argument if provided. The default value if
       ``daq_platform`` was not defined is 0.
+    - Use ``hutch`` and ``daq_platform`` keys to create the ``elog`` object
+      and configure it to match the correct experiment.
     - Use ``db`` key to load devices from the ``happi`` beamline database
       and create a ``hutch_beampath`` object from ``lightpath``
+    - Use ``hutch`` key to load detector objects from the ``camviewer``
+      configuration file.
     - Use ``load`` key to bring up the user's ``beamline`` modules
     - Use ``experiment`` key to select the current experiment
 
@@ -129,7 +134,8 @@ def load_conf(conf, hutch_dir=None):
             hutch = None
     except KeyError:
         hutch = None
-        logger.info('Missing hutch from conf. Will skip DAQ.')
+        logger.info(('Missing hutch from conf. Will skip DAQ, elog, '
+                     'and cameras.'))
 
     # Display the banner
     if hutch is None:
@@ -217,6 +223,19 @@ def load_conf(conf, hutch_dir=None):
     with safe_load('daq'):
         cache(daq=Daq(RE=RE))
 
+    # Elog
+    if hutch is not None:
+        with safe_load('elog'):
+            # Use the fact if we we used the default_platform or not to decide
+            # whether we are in a specialty station or not
+            if default_platform:
+                logger.debug("Using primary experiment ELog")
+                kwargs = dict()
+            else:
+                logger.info("Configuring ELog to post to secondary experiment")
+                kwargs = {'station': '1'}
+            cache(elog=HutchELog.from_conf(hutch.upper(), **kwargs))
+
     # Happi db and Lightpath
     if db is not None:
         with safe_load('database'):
@@ -226,17 +245,11 @@ def load_conf(conf, hutch_dir=None):
             if bp.devices:
                 cache(**{"{}_beampath".format(hutch.lower()): bp})
 
-    # Elog
-    with safe_load('elog'):
-        # Use the fact if we we used the default_platform or not to decide
-        # whether we are in a specialty station or not
-        if default_platform:
-            logger.debug("Using primary experiment ELog")
-            kwargs = dict()
-        else:
-            logger.info("Configuring ELog to post to secondary experiment")
-            kwargs = {'station': '1'}
-        cache(elog=HutchELog.from_conf(hutch.upper(), **kwargs))
+    # Camviewer
+    if hutch is not None:
+        with safe_load('Cameras'):
+            objs = read_camviewer_cfg(CAMVIEWER_CFG.format(hutch))
+            cache(**objs)
 
     # Load user files
     if load is not None:
