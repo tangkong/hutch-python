@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>namespace.py &mdash; hutch-python 0.4.0+8.gd749122 documentation</title>
+  <title>namespace.py &mdash; hutch-python 0.4.0+12.g695c6b7 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.4.0+8.gd749122
+                0.4.0+12.g695c6b7
               </div>
             
           
@@ -235,28 +235,23 @@ will continue recursively, skipping lazy and dynamic components.</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="hutch_python.namespace.metadata_namespace">
-<code class="descclassname">hutch_python.namespace.</code><code class="descname">metadata_namespace</code><span class="sig-paren">(</span><em>md</em>, <em>scope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.namespace.metadata_namespace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a <code class="docutils literal notranslate"><span class="pre">namespace</span></code> that accumulates objects and creates a tree based on
-their metadata.</p>
+<dt id="hutch_python.namespace.tree_namespace">
+<code class="descclassname">hutch_python.namespace.</code><code class="descname">tree_namespace</code><span class="sig-paren">(</span><em>scope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.namespace.tree_namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a <code class="docutils literal notranslate"><span class="pre">namespace</span></code> that accumulates objects and creates a tree.</p>
+<p>This tree is a nested set of <a class="reference internal" href="generated/hutch_python.utils.IterableNamespace.html#hutch_python.utils.IterableNamespace" title="hutch_python.utils.IterableNamespace"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IterableNamespace</span></code></a> objects based on the
+object names as defined in scope. We will split on underscores and use the
+splits to create the tree.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>md</strong> (<code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">str</span></code>) – Each of the metadata categories to group objects by, in order from the
-root of the tree to the leaves.</li>
-<li><strong>scope</strong> (<code class="docutils literal notranslate"><span class="pre">module</span></code>, <code class="docutils literal notranslate"><span class="pre">namespace</span></code>, or <code class="docutils literal notranslate"><span class="pre">list</span></code> of these) – Every object attached to the given modules will be considered for the
-<a class="reference internal" href="#hutch_python.namespace.metadata_namespace" title="hutch_python.namespace.metadata_namespace"><code class="xref any py py-func docutils literal notranslate"><span class="pre">metadata_namespace</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">scope</span></code> is omitted, we’ll check all objects
-loaded by <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> and everything in the caller’s global frame.</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scope</strong> (<code class="docutils literal notranslate"><span class="pre">module</span></code>, <code class="docutils literal notranslate"><span class="pre">namespace</span></code>, or <code class="docutils literal notranslate"><span class="pre">list</span></code> of these) – Every object attached to the given modules will be considered for the
+<a class="reference internal" href="#hutch_python.namespace.tree_namespace" title="hutch_python.namespace.tree_namespace"><code class="xref any py py-func docutils literal notranslate"><span class="pre">tree_namespace</span></code></a>. If <code class="docutils literal notranslate"><span class="pre">scope</span></code> is omitted, we’ll check all objects
+loaded by <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> and everything in the caller’s global frame.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>namespace</strong></p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>namespace</strong></td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="generated/hutch_python.utils.IterableNamespace.html#hutch_python.utils.IterableNamespace" title="hutch_python.utils.IterableNamespace"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IterableNamespace</span></code></a></p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="generated/hutch_python.utils.IterableNamespace.html#hutch_python.utils.IterableNamespace" title="hutch_python.utils.IterableNamespace"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IterableNamespace</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -306,7 +301,7 @@ loaded by <code class="docutils literal notranslate"><span class="pre">hutch-pyt
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.0+8.gd749122',
+            VERSION:'0.4.0+12.g695c6b7',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
