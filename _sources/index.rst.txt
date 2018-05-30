@@ -37,6 +37,7 @@
    hutch_setup
    yaml_files
    debug
+   releases
 
 .. toctree::
    :maxdepth: 1

@@ -50,6 +50,7 @@
 ./_sources/namespace.rst.txt
 ./_sources/other_modules.rst.txt
 ./_sources/presets.rst.txt
+./_sources/releases.rst.txt
 ./_sources/report.rst.txt
 ./_sources/start.rst.txt
 ./_sources/startup.rst.txt
@@ -151,6 +152,7 @@
 ./other_modules.html
 ./presets.html
 ./py-modindex.html
+./releases.html
 ./report.html
 ./search.html
 ./searchindex.js
