@@ -128,8 +128,14 @@ def hutch_ipython_embed(stack_offset=0):
     # + stack_offset for extra levels between this call and user space
     shell = InteractiveShellEmbed.instance()
     init_ipython_logger(shell)
-    shell.enable_matplotlib()
-    plt.ion()
+    # Only enable matplotlib Qt backend if we have a DISPLAY
+    if os.getenv("DISPLAY"):
+        shell.enable_matplotlib()
+        plt.ion()
+    else:
+        logger.warning("No DISPLAY enviornment variable detected. "
+                       "Methods that create graphics will not "
+                       "function properly.")
     # Add our Bug Reporting Magic
     logger.debug('Registering bug_report magics')
     shell.register_magics(BugMagics)
