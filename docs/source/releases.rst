@@ -11,6 +11,9 @@ Bugfixes
   a missing experiment file. (#126)
 - Prevent duplicate names in `tree_namespace` from breaking the tree.
   Show a relevant warning message. (#128)
+- Do not configure the ``matplotlib`` backend for IPython if a user does not
+  have a valid ``$DISPLAY`` environment variable. The most common case of this
+  is if X-Forwarding is disabled. (#132)
 
 v0.5.0 (2018-05-08)
 ===================
