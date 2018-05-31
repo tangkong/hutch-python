@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Release History &mdash; hutch-python 0.5.0+9.g0c0c897 documentation</title>
+  <title>Release History &mdash; hutch-python 0.5.0+12.g5e3aa36 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.5.0+9.g0c0c897
+                0.5.0+12.g5e3aa36
               </div>
             
           
@@ -237,6 +237,9 @@ experiment file. This previously assumed the <code class="docutils literal notra
 a missing experiment file. (#126)</li>
 <li>Prevent duplicate names in <a class="reference internal" href="namespace.html#hutch_python.namespace.tree_namespace" title="hutch_python.namespace.tree_namespace"><code class="xref any py py-func docutils literal notranslate"><span class="pre">tree_namespace</span></code></a> from breaking the tree.
 Show a relevant warning message. (#128)</li>
+<li>Do not configure the <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> backend for IPython if a user does not
+have a valid <code class="docutils literal notranslate"><span class="pre">$DISPLAY</span></code> environment variable. The most common case of this
+is if X-Forwarding is disabled. (#132)</li>
 </ul>
 </div>
 </div>
@@ -355,7 +358,7 @@ through <code class="docutils literal notranslate"><span class="pre">conf.yml</s
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.0+9.g0c0c897',
+            VERSION:'0.5.0+12.g5e3aa36',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
