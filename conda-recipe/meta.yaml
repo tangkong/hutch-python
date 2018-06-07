@@ -23,7 +23,7 @@ requirements:
     - pyfiglet
     - happi >=1.1.1
     - pcdsdevices >=0.6.0
-    - pcdsdaq >=1.1.0
+    - pcdsdaq >1.2.0
     - psdm_qs_cli >=0.2.0
     - lightpath >=0.3.0
     - elog
