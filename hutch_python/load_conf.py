@@ -12,12 +12,12 @@ from bluesky import RunEngine
 from bluesky.callbacks.best_effort import BestEffortCallback
 from bluesky.utils import install_kicker
 from elog import HutchELog
+from pcdsdaq.daq import Daq
 from pcdsdevices.mv_interface import setup_preset_paths
 
 from . import plan_defaults
 from .cache import LoadCache
 from .constants import VALID_KEYS
-from .daq import get_daq_objs
 from .exp_load import get_exp_objs
 from .happi import get_happi_objs, get_lightpath
 from .namespace import class_namespace, tree_namespace
@@ -209,13 +209,13 @@ def load_conf(conf, hutch_dir=None):
         pass
 
     # Collect Plans
-    cache(plans=plan_defaults)
-    cache(p=plan_defaults)
+    cache(bp=plan_defaults.plans)
+    cache(bps=plan_defaults.plan_stubs)
+    cache(bpp=plan_defaults.preprocessors)
 
     # Daq
     with safe_load('daq'):
-        daq_objs = get_daq_objs(daq_platform, RE)
-        cache(**daq_objs)
+        cache(daq=Daq(RE=RE))
 
     # Happi db and Lightpath
     if db is not None:
