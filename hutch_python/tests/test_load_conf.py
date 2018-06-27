@@ -38,25 +38,6 @@ def test_conf_empty():
     assert len(objs) > 1
 
 
-def test_conf_platform():
-    logger.debug('test_conf_platform')
-    set_sim_mode(True)
-    # No platform
-    objs = load_conf({})
-    assert objs['daq']._plat == 0
-    # Define default platform
-    objs = load_conf({'daq_platform': {'default': 1}})
-    assert objs['daq']._plat == 1
-    # Define host platform
-    hostname = gethostname()
-    objs = load_conf({'daq_platform': {hostname: 2}})
-    assert objs['daq']._plat == 2
-    # Define both
-    objs = load_conf({'daq_platform': {'default': 3,
-                                       hostname: 4}})
-    assert objs['daq']._plat == 4
-
-
 def test_elog(monkeypatch, temporary_config):
     monkeypatch.setattr(hutch_python.load_conf, 'HutchELog', ELog)
     # No platform
