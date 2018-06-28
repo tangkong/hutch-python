@@ -223,7 +223,8 @@ def load_conf(conf, hutch_dir=None):
             happi_objs = get_happi_objs(db, hutch)
             cache(**happi_objs)
             bp = get_lightpath(db, hutch)
-            cache(**{"{}_beampath".format(hutch.lower()): bp})
+            if bp.devices:
+                cache(**{"{}_beampath".format(hutch.lower()): bp})
 
     # Elog
     with safe_load('elog'):
