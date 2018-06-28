@@ -4,6 +4,13 @@ Release History
 Next Release
 ============
 
+Features
+--------
+- Provide well-curated namespaces for ``bluesky`` plans. These are in the
+  shell as ``bp`` (bluesky plans) for normal plans, ``bps`` (bluesky plan
+  stubs) for plans that are not complete on their own, and ``bpp``
+  (bluesky plan preprocessors) for plans that modify other plans.
+
 Bugfixes
 ---------
 - Show a correct error message when there is an ``ImportError`` in an

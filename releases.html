@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Release History &mdash; hutch-python 0.5.0+12.g5e3aa36 documentation</title>
+  <title>Release History &mdash; hutch-python 0.5.0+20.g03e6075 documentation</title>
   
 
   
@@ -24,8 +24,7 @@
 
   
 
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -59,7 +58,7 @@
             
             
               <div class="version">
-                0.5.0+12.g5e3aa36
+                0.5.0+20.g03e6075
               </div>
             
           
@@ -108,6 +107,7 @@
 <li class="toctree-l1"><a class="reference internal" href="debug.html">Debug</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Release History</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#next-release">Next Release</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#features">Features</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#bugfixes">Bugfixes</a></li>
 </ul>
 </li>
@@ -117,14 +117,14 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-4-0-2018-04-23">v0.4.0 (2018-04-23)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#features">Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Bugfixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Bugfixes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-3-0-2018-04-06">v0.3.0 (2018-04-06)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id4">Bugfixes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Bugfixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">API Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
@@ -229,6 +229,15 @@
 <h1>Release History<a class="headerlink" href="#release-history" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="next-release">
 <h2>Next Release<a class="headerlink" href="#next-release" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="features">
+<h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Provide well-curated namespaces for <code class="docutils literal notranslate"><span class="pre">bluesky</span></code> plans. These are in the
+shell as <code class="docutils literal notranslate"><span class="pre">bp</span></code> (bluesky plans) for normal plans, <code class="docutils literal notranslate"><span class="pre">bps</span></code> (bluesky plan
+stubs) for plans that are not complete on their own, and <code class="docutils literal notranslate"><span class="pre">bpp</span></code>
+(bluesky plan preprocessors) for plans that modify other plans.</li>
+</ul>
+</div>
 <div class="section" id="bugfixes">
 <h3>Bugfixes<a class="headerlink" href="#bugfixes" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
@@ -264,15 +273,15 @@ with instances.</li>
 </div>
 <div class="section" id="v0-4-0-2018-04-23">
 <h2>v0.4.0 (2018-04-23)<a class="headerlink" href="#v0-4-0-2018-04-23" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="features">
-<h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Features<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">elog</span></code> object and posting</li>
 <li>load devices upstream from the hutch along the light path</li>
 </ul>
 </div>
-<div class="section" id="id2">
-<h3>Bugfixes<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Bugfixes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Allow posting bug reports to github from the control room machines through the proxy</li>
 <li>Optimize the namespaces for faster loads and avoid a critical slowdown bug</li>
@@ -284,8 +293,8 @@ with instances.</li>
 </div>
 <div class="section" id="v0-3-0-2018-04-06">
 <h2>v0.3.0 (2018-04-06)<a class="headerlink" href="#v0-3-0-2018-04-06" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
-<h3>Features<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Features<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>In-terminal bug reporting</li>
 <li>Port of the old python presets system</li>
@@ -293,15 +302,15 @@ with instances.</li>
 <li>Experiment object is always included</li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h3>Bugfixes<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Bugfixes<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>No longer create 1-item metadata objects</li>
 <li><code class="docutils literal notranslate"><span class="pre">db.txt</span></code> is created in all-write mode</li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h3>API Changes<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>API Changes<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Daq platform map is no longer stored in the module, this now must be configured
 through <code class="docutils literal notranslate"><span class="pre">conf.yml</span></code> for nonzero platforms.</li>
@@ -358,7 +367,7 @@ through <code class="docutils literal notranslate"><span class="pre">conf.yml</s
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.0+12.g5e3aa36',
+            VERSION:'0.5.0+20.g03e6075',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
@@ -373,10 +382,7 @@ through <code class="docutils literal notranslate"><span class="pre">conf.yml</s
 
   
 
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {

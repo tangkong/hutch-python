@@ -7,7 +7,6 @@ Submodules used by :py:mod:`load_conf`
    :toctree: generated
    :nosignatures:
 
-   hutch_python.daq.get_daq_objs
    hutch_python.happi.get_happi_objs
    hutch_python.happi.get_lightpath
    hutch_python.user_load.get_user_objs

@@ -1,6 +1,0 @@
-hutch\_python.daq.get\_daq\_objs
-================================
-
-.. currentmodule:: hutch_python.daq
-
-.. autofunction:: get_daq_objs
