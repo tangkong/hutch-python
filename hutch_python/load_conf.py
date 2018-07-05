@@ -220,7 +220,8 @@ def load_conf(conf, hutch_dir=None):
     # Scan PVs
     if hutch is not None:
         with safe_load('scan_pvs (disabled)'):
-            cache(scan_pvs=ScanVars('{}:SCAN', name='scan_pvs', RE=RE))
+            cache(scan_pvs=ScanVars('{}:SCAN'.format(hutch.upper()),
+                                    name='scan_pvs', RE=RE))
 
     # Happi db and Lightpath
     if db is not None:
