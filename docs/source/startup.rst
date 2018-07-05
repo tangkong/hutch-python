@@ -16,6 +16,7 @@ steps. In order, the startup sequence is as follows:
   - Create and set up a ``RunEngine`` as ``RE``
   - Create the ``plans`` object with default plans and alias to ``p``
   - Create the ``daq`` object
+  - Create the ``scan_pvs`` object
 
 - `Database <database>` Load
 

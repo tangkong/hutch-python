@@ -20,10 +20,11 @@
 
    startup
    database
+   daq
    beamline
    experiment
-   report
    presets
+   report
    tips
    user_utils
    other_modules
