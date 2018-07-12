@@ -1,6 +1,7 @@
 """
 Load Detector objects based on a camviewer config file
 """
+import asyncio
 import logging
 from functools import partial
 from multiprocessing.pool import ThreadPool
@@ -12,6 +13,8 @@ from pcdsdevices.areadetector.detectors import PCDSDetector
 
 logger = logging.getLogger(__name__)
 logger.success = partial(logger.log, SUCCESS_LEVEL)
+
+main_event_loop = None
 
 
 def read_camviewer_cfg(filename):
@@ -105,6 +108,10 @@ def load_cams(info):
     objs: ``{str: PCDSDetector}``
         Each detector object, indexed by name.
     """
+    # Any cam that needs the event loop has to have one set in the thread
+    global main_thread_loop
+    main_thread_loop = asyncio.get_event_loop()
+
     objs = {}
     logger.debug(info)
     pool = ThreadPool(cpu_count()-1)
@@ -129,6 +136,8 @@ def build_and_log(info_part):
     obj: ``PCDSDetector``
         The loaded detector, or None.
     """
+    # We sync with the main thread's loop so that they work as expected later
+    asyncio.set_event_loop(main_thread_loop)
     try:
         obj = build_cam(*info_part)
         logger.success('Loaded %s', obj.name)
