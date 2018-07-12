@@ -9,7 +9,7 @@ env:
 matrix:
   include:
     - python: 3.6
-      env: 
+      env:
          - PCDS_CHANNEL=pcds-tag
     - python: 3.6
       env:
@@ -17,7 +17,6 @@ matrix:
          - BUILD_DOCS=1
 
 install:
-  - sudo apt-get update
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
