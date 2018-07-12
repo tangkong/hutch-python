@@ -116,6 +116,19 @@ def load_cams(info):
 
 
 def build_and_log(info_part):
+    """
+    Wrapper to run build_cam in a threadpool and handle errors
+
+    Parameters
+    ----------
+    info_part: ``list of str``
+        Valid input for build_cam
+
+    Returns
+    -------
+    obj: ``PCDSDetector``
+        The loaded detector, or None.
+    """
     try:
         obj = build_cam(*info_part)
         logger.success('Loaded %s', obj.name)
