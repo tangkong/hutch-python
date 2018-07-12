@@ -35,7 +35,7 @@ Bugfixes
 
 API Changes
 -----------
-- `metadata_namespace` renamed to `tree_namespace`
+- ``metadata_namespace`` renamed to `tree_namespace`
 
 v0.4.0 (2018-04-23)
 ===================
