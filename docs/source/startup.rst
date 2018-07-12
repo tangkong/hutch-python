@@ -22,6 +22,7 @@ steps. In order, the startup sequence is as follows:
 
   - Load the ``db`` from ``cfg.yaml`` using ``happi``
   - Create the ``xxx_beampath`` object using ``lightpath``
+  - Create cameras using the camviewer configuration file
 
 - `Beamline <beamline>` Load
 
