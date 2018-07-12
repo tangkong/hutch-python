@@ -13,6 +13,7 @@ from bluesky.callbacks.best_effort import BestEffortCallback
 from bluesky.utils import install_kicker
 from elog import HutchELog
 from pcdsdaq.daq import Daq
+from pcdsdaq.scan_vars import ScanVars
 from pcdsdevices.mv_interface import setup_preset_paths
 
 from . import plan_defaults
@@ -74,9 +75,8 @@ def load_conf(conf, hutch_dir=None):
       not provided, or the hutch name e.g. ``mfx.db``.
     - Create a ``RunEngine``, ``RE``
     - Import ``plan_defaults`` and include as ``p``, ``plans``
-    - Create a ``daq`` object with ``RE`` registered, using ``daq_platform``
-      to define the ``platform`` argument if provided. The default value if
-      ``daq_platform`` was not defined is 0.
+    - Create a ``daq`` object with ``RE`` registered.
+    - Create a ``scan_pvs`` object, and leave it ``disabled``.
     - Use ``hutch`` and ``daq_platform`` keys to create the ``elog`` object
       and configure it to match the correct experiment.
     - Use ``db`` key to load devices from the ``happi`` beamline database
@@ -134,8 +134,8 @@ def load_conf(conf, hutch_dir=None):
             hutch = None
     except KeyError:
         hutch = None
-        logger.info(('Missing hutch from conf. Will skip DAQ, elog, '
-                     'and cameras.'))
+        logger.info(('Missing hutch from conf. Will skip elog '
+                     'and cameras.')
 
     # Display the banner
     if hutch is None:
@@ -223,6 +223,11 @@ def load_conf(conf, hutch_dir=None):
     with safe_load('daq'):
         cache(daq=Daq(RE=RE))
 
+    # Scan PVs
+    if hutch is not None:
+        with safe_load('scan_pvs (disabled)'):
+            cache(scan_pvs=ScanVars('{}:SCAN'.format(hutch.upper()),
+                                    name='scan_pvs', RE=RE))
     # Elog
     if hutch is not None:
         with safe_load('elog'):

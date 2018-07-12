@@ -19,7 +19,8 @@ def test_file_load():
     logger.debug('test_file_load')
     set_sim_mode(True)
     objs = load(os.path.join(os.path.dirname(__file__), 'conf.yaml'))
-    should_have = ('x', 'unique_device', 'calc_thing', 'daq', 'tst_beampath')
+    should_have = ('x', 'unique_device', 'calc_thing', 'daq', 'tst_beampath',
+                   'scan_pvs')
     err = '{} was overriden by a namespace'
     for elem in should_have:
         assert not isinstance(objs[elem], SimpleNamespace), err.format(elem)
