@@ -48,7 +48,6 @@ def test_read_camviewer_cfg():
 
 def test_include():
     logger.debug('test_include')
-    objs = interpret_lines(['include ' + CFG,
+    info = interpret_lines(['include ' + CFG,
                             'include'])
-    assert isinstance(objs['my_cam'], PCDSDetector)
-    assert len(objs) == 1
+    assert len(info) == 4
