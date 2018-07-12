@@ -8,8 +8,8 @@ from pcdsdevices.areadetector.detectors import PCDSDetector
 
 import hutch_python.cam_load as cam_load
 from hutch_python.cam_load import (read_camviewer_cfg, interpret_lines,
-                                   build_cam, UnsupportedConfig,
-                                   MalformedConfig)
+                                   build_and_log, build_cam,
+                                   UnsupportedConfig, MalformedConfig)
 
 from .conftest import TST_CAM_CFG
 
@@ -51,3 +51,9 @@ def test_include():
     info = interpret_lines(['include ' + CFG,
                             'include'])
     assert len(info) == 4
+
+
+def test_bad_object():
+    logger.debug('test_bad_object')
+    # Shouldn't get a full raise out of build_and_log when obj is bad
+    build_and_log(['GE', logger, None, 'bad'])
