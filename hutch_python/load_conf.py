@@ -135,7 +135,7 @@ def load_conf(conf, hutch_dir=None):
     except KeyError:
         hutch = None
         logger.info(('Missing hutch from conf. Will skip elog '
-                     'and cameras.')
+                     'and cameras.'))
 
     # Display the banner
     if hutch is None:
