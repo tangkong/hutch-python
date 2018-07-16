@@ -35,7 +35,7 @@ def read_camviewer_cfg(filename):
     return load_cams(info)
 
 
-def interpret_cfg(filename):
+def interpret_cfg(filename, pvnames=None):
     """
     Read camviewer.cfg file and interpret lines
 
@@ -52,17 +52,23 @@ def interpret_cfg(filename):
     with open(filename, 'r') as f:
         lines = f.readlines()
 
-    return interpret_lines(lines)
+    if pvnames is None:
+        pvnames = set()
+    return interpret_lines(lines, pvnames=pvnames)
 
 
-def interpret_lines(lines):
+def interpret_lines(lines, pvnames=None):
     """
-    Create detector object from string lines of a camviewer.cfg file.
+    Create info list from string lines of a camviewer.cfg file.
 
     Parameters
     ----------
     lines: ``list of str``
         The python strings for each line of the config file
+
+    pvnames: ``set``, optional
+        For internal use only, to keep track of which PVs we're already
+        planning to load so we don't make duplicate objects.
 
     Returns
     -------
@@ -70,6 +76,8 @@ def interpret_lines(lines):
         Valid inputs for build_cam
     """
     info = []
+    if pvnames is None:
+        pvnames = set()
 
     for line in lines:
         line = line.strip()
@@ -82,14 +90,19 @@ def interpret_lines(lines):
 
         if parts[0].startswith('include'):
             try:
-                inc = interpret_cfg(parts[0].split(' ')[1])
+                inc = interpret_cfg(parts[0].split(' ')[1], pvnames=pvnames)
                 info.extend(inc)
             except IndexError:
                 err = 'Malformed include line "%s" in camviewer cfg, skipping.'
                 logger.error(err, line)
                 logger.debug(err, line, exc_info=True)
-        else:
-            info.append(parts)
+        elif len(parts) > 1:
+            logger.debug(parts)
+            pvname = get_det_prefix(parts[1])
+            if pvname not in pvnames:
+                logger.debug(pvname)
+                pvnames.add(pvname)
+                info.append(parts)
 
     return info
 
@@ -154,9 +167,13 @@ def build_and_log(info_part):
         logger.error(err, info_part)
         logger.debug(err, info_part, exc_info=True)
     except Exception:
-        err = ('Error loading config %s in camviewer cfg. IOC '
+        if len(info_part) >= 4:
+            name = info_part[3]
+        else:
+            name = info_part
+        err = ('Error loading %s in camviewer cfg. IOC '
                'probably down, skipping.')
-        logger.error(err, info_part)
+        logger.error(err, name)
         logger.debug(err, info_part, exc_info=True)
 
 
@@ -190,19 +207,34 @@ def build_cam(cam_type, pv_info, evr, name, *args):
     if not cam_type.startswith('GE'):
         raise UnsupportedConfig('Only cam type GE (area detector) supported.',
                                 name=name)
-
     if not pv_info or not name:
         raise MalformedConfig(name=name)
+    detector_prefix = get_det_prefix(pv_info)
+    name = name.replace(' ', '_').lower()
+    return PCDSDetector(detector_prefix, name=name)
 
+
+def get_det_prefix(pv_info):
+    """
+    Determines which prefix will be passed into the detector init.
+
+    Parameters
+    ----------
+    pv_info: ``str``
+        The second element in a camview cfg line.
+
+    Returns
+    -------
+    detector_prefix: ``str``
+        The prefix to use in the detector init.
+    """
     pv_info = pv_info.split(';')
     try:
         detector_prefix = pv_info[1]
     except IndexError:
-        logger.debug('detector_prefix missing from pv_info %s', pv_info)
         # Not provided in config, guess from image base
         detector_prefix = ':'.join(pv_info[0].split(':')[:-1])
-
-    return PCDSDetector(detector_prefix, name=name)
+    return detector_prefix
 
 
 class UnsupportedConfig(Exception):
