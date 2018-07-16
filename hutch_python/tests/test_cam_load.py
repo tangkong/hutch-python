@@ -50,7 +50,7 @@ def test_include():
     logger.debug('test_include')
     info = interpret_lines(['include ' + CFG,
                             'include'])
-    assert len(info) == 3
+    assert len(info) == 4
 
 
 def test_bad_object():
