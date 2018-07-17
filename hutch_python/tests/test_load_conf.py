@@ -5,11 +5,12 @@ from types import SimpleNamespace
 
 from pcdsdaq.sim import set_sim_mode
 from pcdsdevices.mv_interface import Presets
+from pcdsdevices.sim.pv import using_fake_epics_pv
 
 import hutch_python.qs_load
 from hutch_python.load_conf import load, load_conf
 
-from .conftest import QSBackend, ELog
+from .conftest import QSBackend, ELog, TST_CAM_CFG
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +41,7 @@ def test_conf_empty():
 
 
 def test_elog(monkeypatch, temporary_config):
+    logger.debug('test_elog')
     monkeypatch.setattr(hutch_python.load_conf, 'HutchELog', ELog)
     # No platform
     objs = load_conf({'hutch': 'TST'})
@@ -57,6 +59,14 @@ def test_elog(monkeypatch, temporary_config):
                                        hostname: 4},
                       'hutch': 'TST'})
     assert objs['elog'].station == '1'
+
+
+@using_fake_epics_pv
+def test_camviewer_load(monkeypatch):
+    logger.debug('test_camviewer_load')
+    monkeypatch.setattr(hutch_python.load_conf, 'CAMVIEWER_CFG', TST_CAM_CFG)
+    objs = load_conf({'hutch': ''})
+    assert 'my_cam' in objs
 
 
 def test_skip_failures():

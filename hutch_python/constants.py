@@ -1,5 +1,7 @@
 from pathlib import Path
 
+CAMVIEWER_CFG = '/reg/g/pcds/pyps/config/{}/camviewer.cfg'
+
 CONDA_BASE = Path('/reg/g/pcds/pyps/conda/py36')
 
 CUR_EXP_SCRIPT = '/reg/g/pcds/engineering_tools/{0}/scripts/get_curr_exp {0}'

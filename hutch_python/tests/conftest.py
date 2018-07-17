@@ -5,16 +5,26 @@ from copy import copy
 from contextlib import contextmanager
 from collections import namedtuple
 from logging.handlers import QueueHandler
+from pathlib import Path
 from queue import Queue
 
 import pytest
 from elog import HutchELog
+from ophyd.device import Component as Cpt
+from ophyd.signal import Signal
+from pcdsdevices.areadetector.detectors import PCDSDetector
 
 import hutch_python.utils
 
 # We need to have the tests directory importable to match what we'd have in a
 # real hutch-python install
 sys.path.insert(0, os.path.dirname(__file__))
+
+TST_CAM_CFG = str(Path(__file__).parent / '{}camviewer.cfg')
+
+for plugin in ('image', 'stats'):
+    plugin_class = getattr(PCDSDetector, plugin).cls
+    plugin_class.plugin_type = Cpt(Signal, value=plugin_class._plugin_type)
 
 
 @contextmanager
