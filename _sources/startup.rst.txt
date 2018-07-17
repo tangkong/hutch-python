@@ -16,11 +16,13 @@ steps. In order, the startup sequence is as follows:
   - Create and set up a ``RunEngine`` as ``RE``
   - Create the ``plans`` object with default plans and alias to ``p``
   - Create the ``daq`` object
+  - Create the ``scan_pvs`` object
 
 - `Database <database>` Load
 
   - Load the ``db`` from ``cfg.yaml`` using ``happi``
   - Create the ``xxx_beampath`` object using ``lightpath``
+  - Create cameras using the camviewer configuration file
 
 - `Beamline <beamline>` Load
 

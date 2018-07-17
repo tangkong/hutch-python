@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Startup Sequence &mdash; hutch-python 0.6.0+2.gbbdade2 documentation</title>
+  <title>Startup Sequence &mdash; hutch-python 0.6.0+33.geb9a895 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                0.6.0+2.gbbdade2
+                0.6.0+33.geb9a895
               </div>
             
           
@@ -91,10 +91,11 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Startup Sequence</a></li>
 <li class="toctree-l1"><a class="reference internal" href="database.html">Database Objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="daq.html">DAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="beamline.html">Beamline File</a></li>
 <li class="toctree-l1"><a class="reference internal" href="experiment.html">Experiment File</a></li>
-<li class="toctree-l1"><a class="reference internal" href="report.html">Reporting Issues</a></li>
 <li class="toctree-l1"><a class="reference internal" href="presets.html">Presets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="report.html">Reporting Issues</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tips.html">Tips and Tricks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="user_utils.html">Useful Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="other_modules.html">Related Modules</a></li>
@@ -216,11 +217,13 @@ steps. In order, the startup sequence is as follows:</p>
 <li>Create and set up a <code class="docutils literal notranslate"><span class="pre">RunEngine</span></code> as <code class="docutils literal notranslate"><span class="pre">RE</span></code></li>
 <li>Create the <code class="docutils literal notranslate"><span class="pre">plans</span></code> object with default plans and alias to <code class="docutils literal notranslate"><span class="pre">p</span></code></li>
 <li>Create the <code class="docutils literal notranslate"><span class="pre">daq</span></code> object</li>
+<li>Create the <code class="docutils literal notranslate"><span class="pre">scan_pvs</span></code> object</li>
 </ul>
 </li>
 <li><a class="reference internal" href="database.html"><span class="doc">Database</span></a> Load<ul>
 <li>Load the <code class="docutils literal notranslate"><span class="pre">db</span></code> from <code class="docutils literal notranslate"><span class="pre">cfg.yaml</span></code> using <code class="docutils literal notranslate"><span class="pre">happi</span></code></li>
 <li>Create the <code class="docutils literal notranslate"><span class="pre">xxx_beampath</span></code> object using <code class="docutils literal notranslate"><span class="pre">lightpath</span></code></li>
+<li>Create cameras using the camviewer configuration file</li>
 </ul>
 </li>
 <li><a class="reference internal" href="beamline.html"><span class="doc">Beamline</span></a> Load<ul>
@@ -302,7 +305,7 @@ e.g. <code class="docutils literal notranslate"><span class="pre">xxx.dg1.name</
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.6.0+2.gbbdade2',
+            VERSION:'0.6.0+33.geb9a895',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

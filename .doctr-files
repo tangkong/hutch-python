@@ -2,6 +2,7 @@
 ./_sources/bug.rst.txt
 ./_sources/cache.rst.txt
 ./_sources/cli.rst.txt
+./_sources/daq.rst.txt
 ./_sources/database.rst.txt
 ./_sources/debug.rst.txt
 ./_sources/environment.rst.txt
@@ -116,6 +117,7 @@
 ./bug.html
 ./cache.html
 ./cli.html
+./daq.html
 ./database.html
 ./debug.html
 ./environment.html
