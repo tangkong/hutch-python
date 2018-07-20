@@ -73,6 +73,9 @@ def setup_cli_env():
     if args.debug:
         debug_mode(True)
 
+    # Do the first log message, now that logging is ready
+    logger.debug('cli starting with args %s', args)
+
     # Options that mean skipping the python environment
     if args.create:
         hutch = args.create

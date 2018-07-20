@@ -58,17 +58,21 @@ def load(cfg=None, args=None):
         that will be accessible in the global namespace.
     """
     if cfg is None:
-        return load_conf({})
+        conf = {}
+        hutch_dir = None
     else:
         with open(cfg, 'r') as f:
             conf = yaml.load(f)
         conf_path = Path(cfg)
         hutch_dir = conf_path.parent
-        if args is not None and args.exp is not None:
-            exp = {}
-            exp['proposal'], exp['run'] = split_expname(args.exp, args.hutch)
-            conf['experiment'] = exp
-        return load_conf(conf, hutch_dir=hutch_dir)
+
+    if args is not None and args.exp is not None:
+        proposal, run = split_expname(args.exp, getattr(args, 'hutch', None))
+        logger.debug('forcing proposal=%s, run=%s', proposal, run)
+        exp = {'proposal': proposal, 'run': run}
+        conf['experiment'] = exp
+
+    return load_conf(conf, hutch_dir=hutch_dir)
 
 
 def load_conf(conf, hutch_dir=None):
