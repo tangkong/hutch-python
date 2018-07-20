@@ -44,8 +44,10 @@ There are three launch scripts and one helper script:
 Command Line Options
 --------------------
 
-There are two additional options to ``xxxpython`` that may be useful.
+There are three additional options to ``xxxpython`` that may be useful.
 
+- ``xxxpython --exp <expname>``: Override the active experiment for a single
+                                 session. This is useful for setup and testing.
 - ``xxxpython --sim``: Start the session with a simulated ``Daq`` object.
                        This may be useful to test scans that need the daq when
                        the daq is unavailable.
