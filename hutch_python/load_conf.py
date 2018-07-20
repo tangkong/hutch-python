@@ -67,7 +67,7 @@ def load(cfg=None, args=None):
         hutch_dir = conf_path.parent
 
     if args is not None and args.exp is not None:
-        proposal, run = split_expname(args.exp, getattr(args, 'hutch', None))
+        proposal, run = split_expname(args.exp, conf.get('hutch', None))
         logger.debug('forcing proposal=%s, run=%s', proposal, run)
         exp = {'proposal': proposal, 'run': run}
         conf['experiment'] = exp

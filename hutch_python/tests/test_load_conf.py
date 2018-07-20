@@ -31,8 +31,12 @@ def test_file_load():
 def test_exp_override():
     logger.debug('test_exp_override')
     set_sim_mode(True)
+    # Should work with or without hutch name
     objs = load(os.path.join(os.path.dirname(__file__), 'conf.yaml'),
-                SimpleNamespace(hutch='tst', exp='x011'))
+                SimpleNamespace(exp='x011'))
+    assert hasattr(objs['x'], 'cats')
+    objs = load(os.path.join(os.path.dirname(__file__), 'conf.yaml'),
+                SimpleNamespace(exp='tstx011'))
     assert hasattr(objs['x'], 'cats')
 
 
