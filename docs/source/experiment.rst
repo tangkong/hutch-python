@@ -35,6 +35,12 @@ experiment other than the current experiment, you can override this as:
 
 See `yaml_files` for more information.
 
+You can also override for a single session with a command-line argument:
+
+.. code-block:: bash
+
+   hutch-python --exp ls2516
+
 
 Questionnaire
 -------------

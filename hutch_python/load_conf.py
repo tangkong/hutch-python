@@ -20,7 +20,7 @@ from . import plan_defaults
 from .cache import LoadCache
 from .cam_load import read_camviewer_cfg
 from .constants import VALID_KEYS, CAMVIEWER_CFG
-from .exp_load import get_exp_objs
+from .exp_load import get_exp_objs, split_expname
 from .happi import get_happi_objs, get_lightpath
 from .namespace import class_namespace, tree_namespace
 from .qs_load import get_qs_objs
@@ -31,13 +31,15 @@ from .utils import (get_current_experiment, safe_load, hutch_banner,
 logger = logging.getLogger(__name__)
 
 
-def load(cfg=None):
+def load(cfg=None, args=None):
     """
     Read the config file and convert the yaml format into a ``dict``.
 
     This method:
 
     - Finds the hutch's launch directory
+    - Modify the conf if specified by args
+      - ``exp`` is an override for the experiment key
     - Loads the hutch's objects by calling `load_conf.load_conf`
 
     Parameters
@@ -46,6 +48,9 @@ def load(cfg=None):
         Path to the ``conf.yml`` file.
         If this is missing, we'll end up with a very empty environment.
 
+    args: ``Namespace``, optional
+        All of the arguments from the cli.
+
     Returns
     -------
     objs: ``dict{str: object}``
@@ -53,13 +58,21 @@ def load(cfg=None):
         that will be accessible in the global namespace.
     """
     if cfg is None:
-        return load_conf({})
+        conf = {}
+        hutch_dir = None
     else:
         with open(cfg, 'r') as f:
             conf = yaml.load(f)
         conf_path = Path(cfg)
         hutch_dir = conf_path.parent
-        return load_conf(conf, hutch_dir=hutch_dir)
+
+    if args is not None and args.exp is not None:
+        proposal, run = split_expname(args.exp, conf.get('hutch', None))
+        logger.debug('forcing proposal=%s, run=%s', proposal, run)
+        exp = {'proposal': proposal, 'run': run}
+        conf['experiment'] = exp
+
+    return load_conf(conf, hutch_dir=hutch_dir)
 
 
 def load_conf(conf, hutch_dir=None):
@@ -269,10 +282,7 @@ def load_conf(conf, hutch_dir=None):
                 # xpplp1216
                 expname = get_current_experiment(hutch)
                 logger.info('Selected active experiment %s', expname)
-                # lp12
-                proposal = expname[3:-2]
-                # 16
-                run = expname[-2:]
+                proposal, run = split_expname(expname, hutch)
             except Exception:
                 err = 'Failed to select experiment automatically'
                 logger.error(err)

@@ -42,3 +42,36 @@ def get_exp_objs(proposal, run):
             else:
                 raise
     return SimpleNamespace()
+
+
+def split_expname(expname, hutch=None):
+    """
+    Give an experiment name, split out the proposal and the run number.
+
+    This is used in the split form because certain applications take the two
+    separately.
+
+    Parameters
+    ----------
+    expname: ``str``
+        The name of an experiment, e.g. xppx0112
+
+    hutch: ``str``, optional
+        If provided, and we find the hutch string in the expname, we'll strip
+        it out.
+
+    Returns
+    -------
+    proposal, run: ``tuple``, (``str``, ``str``)
+        e.g. ('x01', '12')
+    """
+    expname = expname.lower()
+    if hutch is not None:
+        hutch = hutch.lower()
+        if expname.startswith(hutch):
+            expname = expname[len(hutch):]
+    proposal = expname[:-2]
+    run = expname[-2:]
+    logger.debug('split expname %s into proposal=%s, run=%s',
+                 expname, proposal, run)
+    return proposal, run

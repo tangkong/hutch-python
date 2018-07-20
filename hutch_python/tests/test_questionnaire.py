@@ -17,6 +17,7 @@ def clear_happi_cache():
 def test_qs_load():
     logger.debug('test_qs_load')
     hutch_python.qs_load.QSBackend = QSBackend
+    clear_happi_cache()
     objs = get_qs_objs('LR12', '15')
     assert objs['inj_x'].run == '15'
     assert objs['inj_x'].proposal == 'LR12'
