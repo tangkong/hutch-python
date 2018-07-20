@@ -48,7 +48,7 @@ def load(cfg=None, args=None):
         Path to the ``conf.yml`` file.
         If this is missing, we'll end up with a very empty environment.
 
-    args: `Namespace`, optional
+    args: ``Namespace``, optional
         All of the arguments from the cli.
 
     Returns
