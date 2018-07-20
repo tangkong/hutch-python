@@ -38,7 +38,7 @@ def load(cfg=None, args=None):
     This method:
 
     - Finds the hutch's launch directory
-    - Modified the conf if specified by args
+    - Modify the conf if specified by args
       - ``exp`` is an override for the experiment key
     - Loads the hutch's objects by calling `load_conf.load_conf`
 
