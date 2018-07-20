@@ -3,9 +3,9 @@ import os.path
 from socket import gethostname
 from types import SimpleNamespace
 
+from ophyd.tests.conftest import using_fake_epics_pv
 from pcdsdaq.sim import set_sim_mode
 from pcdsdevices.mv_interface import Presets
-from pcdsdevices.sim.pv import using_fake_epics_pv
 
 import hutch_python.qs_load
 from hutch_python.load_conf import load, load_conf
@@ -26,6 +26,14 @@ def test_file_load():
         assert not isinstance(objs[elem], SimpleNamespace), err.format(elem)
     assert 'tst' in objs
     assert len(Presets._paths) == 2
+
+
+def test_exp_override():
+    logger.debug('test_exp_override')
+    set_sim_mode(True)
+    objs = load(os.path.join(os.path.dirname(__file__), 'conf.yaml'),
+                SimpleNamespace(hutch='tst', exp='x011'))
+    assert hasattr(objs['x'], 'cats')
 
 
 def test_no_file():

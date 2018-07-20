@@ -29,6 +29,8 @@ parser = argparse.ArgumentParser(prog='hutch-python',
                                  description='Launch LCLS Hutch Python')
 parser.add_argument('--cfg', required=False, default=None,
                     help='Configuration yaml file')
+parser.add_argument('--exp', required=False, default=None,
+                    help='Experiment number override')
 parser.add_argument('--debug', action='store_true', default=False,
                     help='Start in debug mode')
 parser.add_argument('--sim', action='store_true', default=False,
@@ -98,7 +100,7 @@ def setup_cli_env():
     opts_cache['script'] = args.script
 
     # Load objects based on the configuration file
-    objs = load(cfg=args.cfg)
+    objs = load(cfg=args.cfg, args=args)
 
     # Add cli debug tools
     objs['_debug_console_level'] = set_console_level
