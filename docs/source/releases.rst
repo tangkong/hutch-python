@@ -1,6 +1,27 @@
 Release History
 ###############
 
+v0.7.0 (2018-08-06)
+===================
+
+Features
+--------
+- Add a `ScanVars` class for the legacy scan pvs tie-in.
+- Automatically load all cameras defined in the camviewer config file.
+- Add the ``--exp`` arg for forcing the active experiment for the duration
+  of a session.
+
+Bugfixes
+--------
+- Exclude having a beampath when there are no devices on the path.
+  This is because the resulting empty path causes issues in the
+  environment. This will most commonly occur when calling
+  ``hutch-python`` with no arguments.
+
+Misc
+----
+- Fix a few typos
+
 v0.6.0 (2018-05-27)
 ===================
 
