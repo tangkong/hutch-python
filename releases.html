@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Release History &mdash; hutch-python 0.6.0+42.g9da2b3d documentation</title>
+  <title>Release History &mdash; hutch-python 0.6.0+44.g8bf8788 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                0.6.0+42.g9da2b3d
+                0.6.0+44.g8bf8788
               </div>
             
           
@@ -107,25 +107,31 @@
 <li class="toctree-l1"><a class="reference internal" href="yaml_files.html">Yaml Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="debug.html">Debug</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Release History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#v0-6-0-2018-05-27">v0.6.0 (2018-05-27)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#v0-7-0-2018-08-06">v0.7.0 (2018-08-06)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#features">Features</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#bugfixes">Bugfixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#misc">Misc</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#v0-6-0-2018-05-27">v0.6.0 (2018-05-27)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Bugfixes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-5-0-2018-05-08">v0.5.0 (2018-05-08)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Bugfixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Bugfixes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#api-changes">API Changes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-4-0-2018-04-23">v0.4.0 (2018-04-23)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id3">Bugfixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Bugfixes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#v0-3-0-2018-04-06">v0.3.0 (2018-04-06)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id4">Features</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">Bugfixes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id6">API Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Bugfixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">API Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#minor-changes">Minor Changes</a></li>
 </ul>
 </li>
@@ -228,10 +234,37 @@
 </style>
 <div class="section" id="release-history">
 <h1>Release History<a class="headerlink" href="#release-history" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="v0-6-0-2018-05-27">
-<h2>v0.6.0 (2018-05-27)<a class="headerlink" href="#v0-6-0-2018-05-27" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="v0-7-0-2018-08-06">
+<h2>v0.7.0 (2018-08-06)<a class="headerlink" href="#v0-7-0-2018-08-06" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="features">
 <h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Add a <code class="xref any docutils literal notranslate"><span class="pre">ScanVars</span></code> class for the legacy scan pvs tie-in.</li>
+<li>Automatically load all cameras defined in the camviewer config file.</li>
+<li>Add the <code class="docutils literal notranslate"><span class="pre">--exp</span></code> arg for forcing the active experiment for the duration
+of a session.</li>
+</ul>
+</div>
+<div class="section" id="bugfixes">
+<h3>Bugfixes<a class="headerlink" href="#bugfixes" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Exclude having a beampath when there are no devices on the path.
+This is because the resulting empty path causes issues in the
+environment. This will most commonly occur when calling
+<code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> with no arguments.</li>
+</ul>
+</div>
+<div class="section" id="misc">
+<h3>Misc<a class="headerlink" href="#misc" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Fix a few typos</li>
+</ul>
+</div>
+</div>
+<div class="section" id="v0-6-0-2018-05-27">
+<h2>v0.6.0 (2018-05-27)<a class="headerlink" href="#v0-6-0-2018-05-27" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Features<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Provide well-curated namespaces for <code class="docutils literal notranslate"><span class="pre">bluesky</span></code> plans. These are in the
 shell as <code class="docutils literal notranslate"><span class="pre">bp</span></code> (bluesky plans) for normal plans, <code class="docutils literal notranslate"><span class="pre">bps</span></code> (bluesky plan
@@ -239,8 +272,8 @@ stubs) for plans that are not complete on their own, and <code class="docutils l
 (bluesky plan preprocessors) for plans that modify other plans.</li>
 </ul>
 </div>
-<div class="section" id="bugfixes">
-<h3>Bugfixes<a class="headerlink" href="#bugfixes" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h3>Bugfixes<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Show a correct error message when there is an <code class="docutils literal notranslate"><span class="pre">ImportError</span></code> in an
 experiment file. This previously assumed the <code class="docutils literal notranslate"><span class="pre">ImportError</span></code> was from
@@ -255,8 +288,8 @@ is if X-Forwarding is disabled. (#132)</li>
 </div>
 <div class="section" id="v0-5-0-2018-05-08">
 <h2>v0.5.0 (2018-05-08)<a class="headerlink" href="#v0-5-0-2018-05-08" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>Bugfixes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>Bugfixes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>fix issue where importing hutchname.db could break under certain conditions</li>
 <li>fix issue where autocompleting a <code class="docutils literal notranslate"><span class="pre">SimpleNamespace</span></code> subclass would always
@@ -274,15 +307,15 @@ with instances.</li>
 </div>
 <div class="section" id="v0-4-0-2018-04-23">
 <h2>v0.4.0 (2018-04-23)<a class="headerlink" href="#v0-4-0-2018-04-23" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id2">
-<h3>Features<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>Features<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><code class="docutils literal notranslate"><span class="pre">elog</span></code> object and posting</li>
 <li>load devices upstream from the hutch along the light path</li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h3>Bugfixes<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Bugfixes<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Allow posting bug reports to github from the control room machines through the proxy</li>
 <li>Optimize the namespaces for faster loads and avoid a critical slowdown bug</li>
@@ -294,8 +327,8 @@ with instances.</li>
 </div>
 <div class="section" id="v0-3-0-2018-04-06">
 <h2>v0.3.0 (2018-04-06)<a class="headerlink" href="#v0-3-0-2018-04-06" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id4">
-<h3>Features<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Features<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>In-terminal bug reporting</li>
 <li>Port of the old python presets system</li>
@@ -303,15 +336,15 @@ with instances.</li>
 <li>Experiment object is always included</li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h3>Bugfixes<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>Bugfixes<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>No longer create 1-item metadata objects</li>
 <li><code class="docutils literal notranslate"><span class="pre">db.txt</span></code> is created in all-write mode</li>
 </ul>
 </div>
-<div class="section" id="id6">
-<h3>API Changes<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>API Changes<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Daq platform map is no longer stored in the module, this now must be configured
 through <code class="docutils literal notranslate"><span class="pre">conf.yml</span></code> for nonzero platforms.</li>
@@ -368,7 +401,7 @@ through <code class="docutils literal notranslate"><span class="pre">conf.yml</s
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.6.0+42.g9da2b3d',
+            VERSION:'0.6.0+44.g8bf8788',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
