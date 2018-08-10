@@ -4,6 +4,4 @@ db: happi_db.json
 
 load: tst.beamline
 
-experiment:
-  proposal: x0
-  run: 10
+experiment: tstx010

@@ -11,7 +11,7 @@ from .utils import safe_load
 logger = logging.getLogger(__name__)
 
 
-def get_qs_objs(proposal, run):
+def get_qs_objs(expname):
     """
     Gather user objects from the experiment questionnaire.
 
@@ -35,20 +35,17 @@ def get_qs_objs(proposal, run):
 
     Parameters
     ----------
-    proposal: ``str``
-        The experiment's proposal number
-
-    run: ``str``
-        A string representation of the run number
+    expname: ``str``
+        The experiment's name from the elog
 
     Returns
     -------
     objs: ``dict``
         Mapping from questionnaire ``python name`` to loaded object.
     """
-    logger.debug('get_qs_objs(%s, %s)', proposal, run)
+    logger.debug('get_qs_objs(%s)', expname)
     with safe_load('questionnaire'):
-        proposal = proposal.upper()
+        expname = expname.lower()
         # Determine which method of authentication we are going to use.
         # Search for a configuration file, either in the current directory
         # or hidden in the users home directory. If not found, attempt to
@@ -66,17 +63,17 @@ def get_qs_objs(proposal, run):
             except NoOptionError as exc:
                 raise ValueError("Must specify password as 'pw' in "
                                  "configuration file") from exc
-            qs_client = happi.Client(database=QSBackend(run, proposal,
+            qs_client = happi.Client(database=QSBackend(expname,
                                                         use_kerberos=False,
                                                         user=user, pw=pw))
         # Kerberos
         else:
-            qs_client = happi.Client(database=QSBackend(run, proposal,
+            qs_client = happi.Client(database=QSBackend(expname,
                                                         use_kerberos=True))
         # Create namespace
         if not qs_client.all_devices:
             logger.warning("No devices found in PCDS Questionnaire for %s",
-                           proposal)
+                           expname)
             return dict()
         dev_namespace = load_devices(*qs_client.all_devices, pprint=False)
         return dev_namespace.__dict__
