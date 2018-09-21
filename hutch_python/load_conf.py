@@ -20,7 +20,7 @@ from . import plan_defaults
 from .cache import LoadCache
 from .cam_load import read_camviewer_cfg
 from .constants import VALID_KEYS, CAMVIEWER_CFG
-from .exp_load import get_exp_objs, split_expname
+from .exp_load import get_exp_objs
 from .happi import get_happi_objs, get_lightpath
 from .namespace import class_namespace, tree_namespace
 from .qs_load import get_qs_objs
@@ -67,10 +67,8 @@ def load(cfg=None, args=None):
         hutch_dir = conf_path.parent
 
     if args is not None and args.exp is not None:
-        proposal, run = split_expname(args.exp, conf.get('hutch', None))
-        logger.debug('forcing proposal=%s, run=%s', proposal, run)
-        exp = {'proposal': proposal, 'run': run}
-        conf['experiment'] = exp
+        logger.debug('forcing experiment=%s', args.exp)
+        conf['experiment'] = args.exp
 
     return load_conf(conf, hutch_dir=hutch_dir)
 
@@ -181,11 +179,9 @@ def load_conf(conf, hutch_dir=None):
 
     try:
         experiment = conf['experiment']
-        if (not isinstance(experiment, dict)
-                or 'proposal' not in experiment
-                or 'run' not in experiment):
-            logger.error(('Invalid experiment selection %s, must be a dict '
-                          'with keys "proposal" and "run"'), experiment)
+        if not isinstance(experiment, str):
+            logger.error('Invalid experiment selection %s, must be a string '
+                         'matching the elog experiment name.', experiment)
             experiment = None
     except KeyError:
         experiment = None
@@ -275,14 +271,12 @@ def load_conf(conf, hutch_dir=None):
         cache(**load_objs)
 
     # Auto select experiment if we need to
-    proposal = None
     if experiment is None:
         if hutch is not None:
             try:
                 # xpplp1216
-                expname = get_current_experiment(hutch)
-                logger.info('Selected active experiment %s', expname)
-                proposal, run = split_expname(expname, hutch)
+                experiment = get_current_experiment(hutch)
+                logger.info('Selected active experiment %s', experiment)
             except Exception:
                 err = 'Failed to select experiment automatically'
                 logger.error(err)
@@ -290,13 +284,15 @@ def load_conf(conf, hutch_dir=None):
 
     # Experiment objects
     if experiment is not None:
-        proposal = experiment['proposal']
-        run = experiment['run']
-
-    if proposal is not None:
-        qs_objs = get_qs_objs(proposal, run)
+        if hutch in experiment:
+            full_expname = experiment
+            raw_expname = experiment.replace(hutch, '', 1)
+        else:
+            full_expname = hutch + experiment
+            raw_expname = experiment
+        qs_objs = get_qs_objs(full_expname)
         cache(**qs_objs)
-        user = get_exp_objs(proposal, run)
+        user = get_exp_objs(raw_expname)
         for name, obj in qs_objs.items():
             setattr(user, name, obj)
         cache(x=user, user=user)
@@ -321,14 +317,14 @@ def load_conf(conf, hutch_dir=None):
             presets_dir = Path(hutch_dir) / 'presets'
             beamline_presets = presets_dir / 'beamline'
             preset_paths = [presets_dir, beamline_presets]
-            if proposal is not None:
-                experiment_presets = presets_dir / (proposal + str(run))
+            if experiment is not None:
+                experiment_presets = presets_dir / raw_expname
                 preset_paths.append(experiment_presets)
             for path in preset_paths:
                 if not path.exists():
                     path.mkdir()
                     path.chmod(0o777)
-            if proposal is None:
+            if experiment is None:
                 setup_preset_paths(hutch=beamline_presets)
             else:
                 setup_preset_paths(hutch=beamline_presets,
