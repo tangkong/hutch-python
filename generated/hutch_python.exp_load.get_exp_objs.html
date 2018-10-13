@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hutch_python.exp_load.get_exp_objs &mdash; hutch-python 0.6.0+44.g8bf8788 documentation</title>
+  <title>hutch_python.exp_load.get_exp_objs &mdash; hutch-python 1.0.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                0.6.0+44.g8bf8788
+                1.0.0
               </div>
             
           
@@ -215,27 +215,21 @@
 <h1>hutch_python.exp_load.get_exp_objs<a class="headerlink" href="#hutch-python-exp-load-get-exp-objs" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="hutch_python.exp_load.get_exp_objs">
-<code class="descclassname">hutch_python.exp_load.</code><code class="descname">get_exp_objs</code><span class="sig-paren">(</span><em>proposal</em>, <em>run</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.exp_load.get_exp_objs" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">hutch_python.exp_load.</code><code class="descname">get_exp_objs</code><span class="sig-paren">(</span><em>exp_module</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.exp_load.get_exp_objs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the correct experiment module.</p>
-<p>This will import User from <code class="docutils literal notranslate"><span class="pre">experiments.{propsal}{run}</span></code>
+<p>This will import User from <code class="docutils literal notranslate"><span class="pre">experiments.{exp_module}</span></code>
 and create <code class="docutils literal notranslate"><span class="pre">User()</span></code>, storing it as <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>proposal</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – The proposal name, e.g. <code class="docutils literal notranslate"><span class="pre">lp56</span></code>. This will be forced to
-lowercase for the import.</li>
-<li><strong>run</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">int</span></code>) – The run number, e.g. 16</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exp_module</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – The name of the experiment from the elog, without the hutch. This will
+be the name of the module loaded from the experiments folder.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>user</strong> – Either the user’s class instantiated or a blank namespace for other
-experiment-specific objects to be attached to.</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>user</strong> – Either the user’s class instantiated or a blank namespace for other
+experiment-specific objects to be attached to.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="docutils literal notranslate"><span class="pre">object</span></code> or <code class="docutils literal notranslate"><span class="pre">SimpleNamespace</span></code></p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="docutils literal notranslate"><span class="pre">object</span></code> or <code class="docutils literal notranslate"><span class="pre">SimpleNamespace</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -285,7 +279,7 @@ experiment-specific objects to be attached to.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.6.0+44.g8bf8788',
+            VERSION:'1.0.0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

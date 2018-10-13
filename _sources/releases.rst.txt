@@ -1,6 +1,14 @@
 Release History
 ###############
 
+v1.0.0 (2018-10-12)
+===================
+
+API Breaks
+----------
+- Swap to the newer ``psdm_qs_cli`` API for experiment loading that is
+  compatible with commissioning experiment names.
+
 v0.7.0 (2018-08-06)
 ===================
 
