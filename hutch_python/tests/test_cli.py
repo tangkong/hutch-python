@@ -67,7 +67,7 @@ def create_arg_test(env=None):
 
     # Make sure we picked the correct env
     if env is not None:
-        with (test_dir / 'temp_createversion').open() as f:
+        with (test_dir / 'temp_createenv').open() as f:
             lines = f.readlines()
         has_env = False
         for line in lines:
