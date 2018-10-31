@@ -88,7 +88,7 @@ def test_create_arg_dev():
 def test_create_arg_prod(monkeypatch):
     logger.debug('test_create_arg_prod')
     monkeypatch.setattr(hutch_python.cli, 'CONDA_BASE', CFG_PATH.parent)
-    create_arg_test('pcds-2.0.0')
+    create_arg_test('pcds-2.0.1')
 
 
 def test_hutch_ipython_embed():
