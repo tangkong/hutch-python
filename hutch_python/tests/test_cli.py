@@ -73,7 +73,7 @@ def create_arg_test(env=None):
         for line in lines:
             if 'CONDA_ENVNAME' in line:
                 has_env = True
-                assert env == line.split("'")[-2]
+                assert env == line.split('"')[-2]
                 break
         assert has_env
 
