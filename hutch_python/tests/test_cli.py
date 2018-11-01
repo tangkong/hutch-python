@@ -67,13 +67,13 @@ def create_arg_test(env=None):
 
     # Make sure we picked the correct env
     if env is not None:
-        with (test_dir / 'temp_createversion').open() as f:
+        with (test_dir / 'temp_createenv').open() as f:
             lines = f.readlines()
         has_env = False
         for line in lines:
             if 'CONDA_ENVNAME' in line:
                 has_env = True
-                assert env == line.split("'")[-2]
+                assert env == line.split('"')[-2]
                 break
         assert has_env
 
@@ -88,7 +88,7 @@ def test_create_arg_dev():
 def test_create_arg_prod(monkeypatch):
     logger.debug('test_create_arg_prod')
     monkeypatch.setattr(hutch_python.cli, 'CONDA_BASE', CFG_PATH.parent)
-    create_arg_test('pcds-2.0.0')
+    create_arg_test('pcds-2.0.1')
 
 
 def test_hutch_ipython_embed():
