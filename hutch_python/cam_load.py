@@ -158,7 +158,7 @@ def build_and_log(info_part):
     except UnsupportedConfig as exc:
         logger.debug('Skip non area detector cam %s',
                      exc.name, exc_info=True)
-    except MalformedConfig as exc:
+    except MalformedConfig:
         err = 'Skip malformed config %s'
         logger.error(err, info_part)
         logger.debug(err, info_part, exc_info=True)
