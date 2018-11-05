@@ -234,7 +234,7 @@ def get_det_prefix(pv_info):
     except IndexError:
         # Not provided in config, guess from image base
         detector_prefix = ':'.join(pv_info[0].split(':')[:-1])
-    return detector_prefix
+    return detector_prefix + ':'
 
 
 class UnsupportedConfig(Exception):
