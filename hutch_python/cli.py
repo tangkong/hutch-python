@@ -112,7 +112,7 @@ def main():
         if os.getenv('DISPLAY'):
             ipy_config.InteractiveShellApp.matplotlib = 'qt5'
         else:
-            logger.warning('No DISPLAY enviornment variable detected. '
+            logger.warning('No DISPLAY environment variable detected. '
                            'Methods that create graphics will not '
                            'function properly.')
         # Avoid bugs, probably removable at some point
