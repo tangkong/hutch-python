@@ -112,7 +112,9 @@ def main():
         if os.getenv('DISPLAY'):
             ipy_config.InteractiveShellApp.matplotlib = 'qt5'
         else:
-            ipy_config.InteractiveShellApp.matplotlib = 'inline'
+            logger.warning('No DISPLAY enviornment variable detected. '
+                           'Methods that create graphics will not '
+                           'function properly.')
         # Avoid bugs, probably removable at some point
         ipy_config.InteractiveShellApp.Completer.use_jedi = False
         # Finally start the interactive session

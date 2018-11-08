@@ -18,6 +18,7 @@ requirements:
   run:
     - python {{PY_VER}}*,>=3.6
     - ipython
+    - pyqt >=5
     - pyyaml
     - coloredlogs
     - pyfiglet
