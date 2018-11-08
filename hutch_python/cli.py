@@ -4,19 +4,16 @@ This module defines the command-line interface arguments for the
 startup.
 """
 from pathlib import Path
+from traitlets.config import Config
 import argparse
 import logging
-import matplotlib.pyplot as plt
 import os
-import sys
 
-from IPython.terminal.embed import InteractiveShellEmbed
+from IPython import start_ipython
 from cookiecutter.main import cookiecutter
 from pcdsdaq.sim import set_sim_mode as set_daq_sim
 
-from .bug import BugMagics
 from .constants import CONDA_BASE, DIR_MODULE
-from .ipython_log import init_ipython_logger
 from .load_conf import load
 from .log_setup import (setup_logging, set_console_level, debug_mode,
                         debug_context, debug_wrapper)
@@ -44,23 +41,15 @@ parser.add_argument('script', nargs='?',
 __doc__ += '\n::\n\n    ' + parser.format_help().replace('\n', '\n    ')
 
 
-def setup_cli_env():
+def main():
     """
-    Parse the user's arguments and gather the session's objects.
+    Do the full hutch-python launch sequence.
 
-    Inlcudes objects defined by `load_conf.load` as well as debug methods
-    from :mod:`log_setup`.
-
-    Returns
-    -------
-    objs: ``dict``
-        Mapping of object name ``str`` to object
+    Parses the user's cli arguments and distributes them as needed to the
+    setup functions.
     """
     # Parse the user's arguments
     args = parser.parse_args()
-
-    # Make sure the hutch's directory is in the path
-    sys.path.insert(0, os.getcwd())
 
     # Set up logging first
     if args.cfg is None:
@@ -93,7 +82,7 @@ def setup_cli_env():
                      ' base=%s env=%s'), hutch, base, env)
         cookiecutter(str(DIR_MODULE / 'cookiecutter'), no_input=True,
                      extra_context=dict(base=base, env=env, hutch=hutch))
-        return {}
+        return
 
     # Now other flags
     if args.sim:
@@ -106,79 +95,30 @@ def setup_cli_env():
     objs = load(cfg=args.cfg, args=args)
 
     # Add cli debug tools
-    objs['_debug_console_level'] = set_console_level
-    objs['_debug_mode'] = debug_mode
-    objs['_debug_context'] = debug_context
-    objs['_debug_wrapper'] = debug_wrapper
+    objs['debug_console_level'] = set_console_level
+    objs['debug_mode'] = debug_mode
+    objs['debug_context'] = debug_context
+    objs['debug_wrapper'] = debug_wrapper
 
-    return objs
-
-
-def hutch_ipython_embed(stack_offset=0):
-    """
-    Make a shell, customize it, then run it
-
-    Parameters
-    ----------
-    stack_offset: int, optional
-        Determines which scope to run ipython in.
-        If you're embedding the terminal inside the current scope, leave this
-        as zero. If you're embedding the terminal inside a scope that is n
-        levels up the stack, set this to n.
-    """
-    logger.info('Starting IPython shell')
-    stack_depth = 2 + stack_offset
-    # 1 = whoever called this function
-    # + 1 = 2 because this is used inside the shell call
-    # + stack_offset for extra levels between this call and user space
-    shell = InteractiveShellEmbed.instance()
-    init_ipython_logger(shell)
-    # Only enable matplotlib Qt backend if we have a DISPLAY
-    if os.getenv("DISPLAY"):
-        shell.enable_matplotlib()
-        plt.ion()
-    else:
-        logger.warning("No DISPLAY enviornment variable detected. "
-                       "Methods that create graphics will not "
-                       "function properly.")
-    # Add our Bug Reporting Magic
-    logger.debug('Registering bug_report magics')
-    shell.register_magics(BugMagics)
-    # Disable jedi completion, it's buggy
-    shell.Completer.use_jedi = False
-    shell(stack_depth=stack_depth)
-
-
-def run_script(filename, stack_offset=0):
-    """
-    Basic shortcut to running a script in the current hutch python scope.
-
-    Parameters
-    ----------
-    stack_offset: int, optional
-        Determines which scope to run the script in.
-        If you're running a script from the current scope, leave this as zero.
-        If you're running a script from a scope that is n levels up the stack,
-        set this to n.
-    """
-    logger.info('Running script %s', filename)
-    stack_depth = 1 + stack_offset
-    # 1 = whoever called this function
-    # + stack_offset for extra levels between this call and user space
-    frame = sys._getframe(stack_depth)
-    with open(filename) as f:
-        code = compile(f.read(), filename, 'exec')
-        exec(code, frame.f_globals, frame.f_locals)
-
-
-def start_user():
-    """
-    Picks `hutch_ipython_embed` or `run_script` based on the args.
-
-    This is meant to be called directly in the ``hutch-python`` script.
-    """
     script = opts_cache.get('script')
     if script is None:
-        hutch_ipython_embed(stack_offset=1)
+        ipy_config = Config()
+        # Important Utilities
+        ipy_config.InteractiveShellApp.extensions = [
+            'hutch_python.ipython_log',
+            'hutch_python.bug'
+        ]
+        # Matplotlib setup if we have a screen
+        if os.getenv('DISPLAY'):
+            ipy_config.InteractiveShellApp.matplotlib = 'qt5'
+        else:
+            ipy_config.InteractiveShellApp.matplotlib = 'inline'
+        # Avoid bugs, probably removable at some point
+        ipy_config.InteractiveShellApp.Completer.use_jedi = False
+        # Finally start the interactive session
+        start_ipython(argv=[], user_ns=objs, config=ipy_config)
     else:
-        run_script(script, stack_offset=1)
+        # Instead of setting up ipython, run the script with objs
+        with open(script) as fn:
+            code = compile(fn.read(), script, 'exec')
+            exec(code, objs, objs)
