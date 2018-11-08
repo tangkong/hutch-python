@@ -1,13 +1,5 @@
 #!/usr/bin/env python
-from hutch_python.cli import (setup_cli_env as _setup_cli,
-                              start_user as _start_user)
+from hutch_python.cli import main
 
-# Parse args and collect all the objects
-_obj = _setup_cli()
-
-if _obj:
-    # Bring everything into the global namespace
-    globals().update(_obj)
-
-    # Start IPython OR start user script
-    _start_user()
+if __name__ == '__main__':
+    main()
