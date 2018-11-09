@@ -115,8 +115,6 @@ def main():
             logger.warning('No DISPLAY enviornment variable detected. '
                            'Methods that create graphics will not '
                            'function properly.')
-        # Avoid bugs, probably removable at some point
-        ipy_config.InteractiveShellApp.Completer.use_jedi = False
         # Finally start the interactive session
         start_ipython(argv=[], user_ns=objs, config=ipy_config)
     else:
