@@ -336,3 +336,7 @@ message = """\
 # store the description. Press "i" to be begin typing, then "Esc" followed by
 # ":wq" to exit.
 """
+
+
+def load_ipython_extension(ipython):
+    ipython.register_magics(BugMagics)

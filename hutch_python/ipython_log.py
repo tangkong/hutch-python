@@ -62,7 +62,7 @@ class IPythonLogger:
             logger.input('Logging error', exc_info=True)
 
 
-def init_ipython_logger(ip):
+def load_ipython_extension(ipython):
     """
     Initialize the `IPythonLogger`.
 
@@ -76,4 +76,4 @@ def init_ipython_logger(ip):
         ``IPython.get_ipython()``.
     """
     logging.addLevelName('INPUT', INPUT_LEVEL)
-    ip.events.register('post_execute', IPythonLogger(ip).log)
+    ipython.events.register('post_execute', IPythonLogger(ipython).log)
