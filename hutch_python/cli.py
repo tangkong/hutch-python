@@ -115,7 +115,7 @@ def main():
                            'Methods that create graphics will not '
                            'function properly.')
         # Finally start the interactive session
-        start_ipython(argv=[], user_ns=objs, config=ipy_config)
+        start_ipython(argv=['--quick'], user_ns=objs, config=ipy_config)
     else:
         # Instead of setting up ipython, run the script with objs
         with open(script) as fn:
