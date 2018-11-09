@@ -12,10 +12,6 @@
 ./_sources/generated/hutch_python.bug.get_text_from_editor.rst.txt
 ./_sources/generated/hutch_python.bug.post_to_github.rst.txt
 ./_sources/generated/hutch_python.bug.report_bug.rst.txt
-./_sources/generated/hutch_python.cli.hutch_ipython_embed.rst.txt
-./_sources/generated/hutch_python.cli.run_script.rst.txt
-./_sources/generated/hutch_python.cli.setup_cli_env.rst.txt
-./_sources/generated/hutch_python.cli.start_user.rst.txt
 ./_sources/generated/hutch_python.exp_load.get_exp_objs.rst.txt
 ./_sources/generated/hutch_python.happi.get_happi_objs.rst.txt
 ./_sources/generated/hutch_python.happi.get_lightpath.rst.txt
@@ -127,10 +123,6 @@
 ./generated/hutch_python.bug.get_text_from_editor.html
 ./generated/hutch_python.bug.post_to_github.html
 ./generated/hutch_python.bug.report_bug.html
-./generated/hutch_python.cli.hutch_ipython_embed.html
-./generated/hutch_python.cli.run_script.html
-./generated/hutch_python.cli.setup_cli_env.html
-./generated/hutch_python.cli.start_user.html
 ./generated/hutch_python.exp_load.get_exp_objs.html
 ./generated/hutch_python.happi.get_happi_objs.html
 ./generated/hutch_python.happi.get_lightpath.html

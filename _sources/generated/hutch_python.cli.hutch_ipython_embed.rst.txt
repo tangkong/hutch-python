@@ -1,6 +1,0 @@
-hutch\_python.cli.hutch\_ipython\_embed
-=======================================
-
-.. currentmodule:: hutch_python.cli
-
-.. autofunction:: hutch_ipython_embed

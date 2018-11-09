@@ -1,6 +1,0 @@
-hutch\_python.cli.setup\_cli\_env
-=================================
-
-.. currentmodule:: hutch_python.cli
-
-.. autofunction:: setup_cli_env
