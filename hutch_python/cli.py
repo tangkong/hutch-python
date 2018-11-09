@@ -104,10 +104,9 @@ def main():
     if script is None:
         ipy_config = Config()
         # Important Utilities
-        ipy_config.InteractiveShellApp.extensions = [
-            'hutch_python.ipython_log',
-            'hutch_python.bug'
-        ]
+        for ext in ('hutch_python.ipython_log',
+                    'hutch_python.bug'):
+            ipy_config.InteractiveShellApp.extensions.append(ext)
         # Matplotlib setup if we have a screen
         if os.getenv('DISPLAY'):
             ipy_config.InteractiveShellApp.matplotlib = 'qt5'
