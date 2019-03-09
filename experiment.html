@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Experiment File &mdash; hutch-python 1.0.0+23.gcde63c1 documentation</title>
+  <title>Experiment File &mdash; hutch-python 1.0.1 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0.0+23.gcde63c1
+                1.0.1
               </div>
             
           
@@ -204,6 +204,11 @@
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
 }
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
 </style>
 <div class="section" id="experiment-file">
 <h1>Experiment File<a class="headerlink" href="#experiment-file" title="Permalink to this headline">¶</a></h1>
@@ -225,9 +230,9 @@ macros into a cohesive <code class="docutils literal notranslate"><span class="p
 <p>If your <code class="docutils literal notranslate"><span class="pre">conf.yml</span></code> file does not include an <code class="docutils literal notranslate"><span class="pre">experiment</span></code> specification,
 the current experiment is picked up automatically. If you want to use an
 experiment other than the current experiment, you can override this as:</p>
-<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">experiment</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">proposal</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ls25</span>
-  <span class="l l-Scalar l-Scalar-Plain">run</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">experiment</span><span class="p">:</span>
+  <span class="nt">proposal</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ls25</span>
+  <span class="nt">run</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
 </pre></div>
 </div>
 <p>See <a class="reference internal" href="yaml_files.html"><span class="doc">Yaml Files</span></a> for more information.</p>
@@ -290,7 +295,7 @@ other objects, and will also be attached to the <code class="docutils literal no
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
 
   

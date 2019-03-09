@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DAQ &mdash; hutch-python 1.0.0+23.gcde63c1 documentation</title>
+  <title>DAQ &mdash; hutch-python 1.0.1 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0.0+23.gcde63c1
+                1.0.1
               </div>
             
           
@@ -206,6 +206,11 @@
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
 }
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
 </style>
 <div class="section" id="daq">
 <h1>DAQ<a class="headerlink" href="#daq" title="Permalink to this headline">¶</a></h1>
@@ -264,7 +269,7 @@ plan.</p>
 
 <span class="go"># Scan motor from 0 to 10 in 11 steps, run daq at each point</span>
 <span class="gp">In [7]: </span><span class="n">RE</span><span class="p">(</span><span class="n">scan</span><span class="p">([</span><span class="n">daq</span><span class="p">],</span> <span class="n">motor</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
-<span class="gh">Out[7]: </span><span class="go">(&#39;d3a952e7-42ec-492f-a6da-f4f22aa1100b&#39;,)</span>
+<span class="gh">Out[7]: </span><span class="go">(&#39;b20e8293-355a-49cb-b342-d03db424bfc4&#39;,)</span>
 </pre></div>
 </div>
 </div>
@@ -325,7 +330,7 @@ upon connecting in the scan.</p>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
 
   

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Release History &mdash; hutch-python 1.0.0+23.gcde63c1 documentation</title>
+  <title>Release History &mdash; hutch-python 1.0.1 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0.0+23.gcde63c1
+                1.0.1
               </div>
             
           
@@ -107,6 +107,10 @@
 <li class="toctree-l1"><a class="reference internal" href="yaml_files.html">Yaml Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="debug.html">Debug</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Release History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#v1-0-1-2019-03-08">v1.0.1 (2019-03-08)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fixes-and-maintenance">Fixes and Maintenance</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#v1-0-0-2018-10-12">v1.0.0 (2018-10-12)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#api-breaks">API Breaks</a></li>
 </ul>
@@ -235,9 +239,25 @@
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
 }
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
 </style>
 <div class="section" id="release-history">
 <h1>Release History<a class="headerlink" href="#release-history" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="v1-0-1-2019-03-08">
+<h2>v1.0.1 (2019-03-08)<a class="headerlink" href="#v1-0-1-2019-03-08" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fixes-and-maintenance">
+<h3>Fixes and Maintenance<a class="headerlink" href="#fixes-and-maintenance" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Clean up code for the <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code> launcher</li>
+<li>Fix issues with the test suite</li>
+<li>Fix issues with automatically loading ipython profiles</li>
+</ul>
+</div>
+</div>
 <div class="section" id="v1-0-0-2018-10-12">
 <h2>v1.0.0 (2018-10-12)<a class="headerlink" href="#v1-0-0-2018-10-12" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="api-breaks">
@@ -418,7 +438,7 @@ through <code class="docutils literal notranslate"><span class="pre">conf.yml</s
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
 
   

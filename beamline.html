@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Beamline File &mdash; hutch-python 1.0.0+23.gcde63c1 documentation</title>
+  <title>Beamline File &mdash; hutch-python 1.0.1 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0.0+23.gcde63c1
+                1.0.1
               </div>
             
           
@@ -201,6 +201,11 @@
 .admonition > p:before {
     margin-right: 4px;  /* make room for the exclamation icon */
 }
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
 </style>
 <div class="section" id="beamline-file">
 <h1>Beamline File<a class="headerlink" href="#beamline-file" title="Permalink to this headline">¶</a></h1>
@@ -217,7 +222,7 @@ database, but this is not necessary in every case.</p>
 found to specify the behavior of a <code class="docutils literal notranslate"><span class="pre">*</span></code> import.</p>
 <p>As specified on the <a class="reference internal" href="yaml_files.html"><span class="doc">Yaml Files</span></a> page, <code class="docutils literal notranslate"><span class="pre">conf.yml</span></code> can be extended to import
 from multiple modules:</p>
-<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">load</span><span class="p p-Indicator">:</span>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">load</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">xxx.beamline</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">xxx.my_module</span>
 </pre></div>
@@ -269,7 +274,7 @@ from multiple modules:</p>
         <script type="text/javascript" src="_static/jquery.js"></script>
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
     
 
   
