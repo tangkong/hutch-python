@@ -1,6 +1,16 @@
 Release History
 ###############
 
+v1.0.1 (2019-03-08)
+===================
+
+Fixes and Maintenance
+---------------------
+- Clean up code for the ``hutch-python`` launcher
+- Fix issues with the test suite
+- Fix issues with automatically loading ipython profiles
+
+
 v1.0.0 (2018-10-12)
 ===================
 
