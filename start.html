@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Starting a Session &mdash; hutch-python 1.0.1 documentation</title>
+  <title>Starting a Session &mdash; hutch-python 1.0.1+3.g0a5e4dd documentation</title>
   
 
   
@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="What to Expect When You are Expecting a New Hutch Python" href="tutorial.html" />
     <link rel="prev" title="Hutch Python" href="index.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +60,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.0.1+3.g0a5e4dd
               </div>
             
           
@@ -232,19 +234,19 @@ landing directory. All of the environment configuration is done for you in the
 launch scripts.</p>
 <p>There is a launch script and an environment script:</p>
 <ul class="simple">
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">xxxpython</span></code>: Main launch script.</dt>
-<dd>Starts an <code class="docutils literal notranslate"><span class="pre">ipython</span></code> session with hutch’s environment and
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">xxxpython</span></code>: Main launch script.</dt><dd><p>Starts an <code class="docutils literal notranslate"><span class="pre">ipython</span></code> session with hutch’s environment and
 configured devices. If called with a script, runs that script
 instead of starting an interactive session. This feature is
 useful for scripts that need to rely on the hutch’s configured
-devices.</dd>
+devices.</p>
+</dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">xxxenv</span></code>: Environment setup script.</dt>
-<dd>Source this script to activate the hutch’s <code class="docutils literal notranslate"><span class="pre">python</span></code>
-environment without running any particular script.</dd>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">xxxenv</span></code>: Environment setup script.</dt><dd><p>Source this script to activate the hutch’s <code class="docutils literal notranslate"><span class="pre">python</span></code>
+environment without running any particular script.</p>
+</dd>
 </dl>
 </li>
 </ul>
@@ -253,22 +255,22 @@ environment without running any particular script.</dd>
 <h2>Command Line Options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h2>
 <p>There are three additional options to <code class="docutils literal notranslate"><span class="pre">xxxpython</span></code> that may be useful.</p>
 <ul class="simple">
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">xxxpython</span> <span class="pre">--exp</span> <span class="pre">&lt;expname&gt;</span></code>: Override the active experiment for a single</dt>
-<dd>session. This is useful for setup and testing.</dd>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">xxxpython</span> <span class="pre">--exp</span> <span class="pre">&lt;expname&gt;</span></code>: Override the active experiment for a single</dt><dd><p>session. This is useful for setup and testing.</p>
+</dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">xxxpython</span> <span class="pre">--sim</span></code>: Start the session with a simulated <code class="docutils literal notranslate"><span class="pre">Daq</span></code> object.</dt>
-<dd>This may be useful to test scans that need the daq when
-the daq is unavailable.</dd>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">xxxpython</span> <span class="pre">--sim</span></code>: Start the session with a simulated <code class="docutils literal notranslate"><span class="pre">Daq</span></code> object.</dt><dd><p>This may be useful to test scans that need the daq when
+the daq is unavailable.</p>
+</dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">xxxpython</span> <span class="pre">--debug</span></code>: Start the session in debug mode.</dt>
-<dd>This will greatly increase the number of <code class="docutils literal notranslate"><span class="pre">logger</span></code>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">xxxpython</span> <span class="pre">--debug</span></code>: Start the session in debug mode.</dt><dd><p>This will greatly increase the number of <code class="docutils literal notranslate"><span class="pre">logger</span></code>
 messages that are displayed in the terminal. See
-<a class="reference internal" href="debug.html"><span class="doc">Debug</span></a> more more information.</dd>
+<a class="reference internal" href="debug.html"><span class="doc">Debug</span></a> more more information.</p>
+</dd>
 </dl>
 </li>
 </ul>
@@ -287,7 +289,7 @@ messages that are displayed in the terminal. See
         <a href="tutorial.html" class="btn btn-neutral float-right" title="What to Expect When You are Expecting a New Hutch Python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Hutch Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Hutch Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -313,26 +315,16 @@ messages that are displayed in the terminal. See
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

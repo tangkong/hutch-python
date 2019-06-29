@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hutch Python &mdash; hutch-python 1.0.1 documentation</title>
+  <title>Hutch Python &mdash; hutch-python 1.0.1+3.g0a5e4dd documentation</title>
   
 
   
@@ -17,33 +17,35 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Starting a Session" href="start.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -57,7 +59,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.0.1+3.g0a5e4dd
               </div>
             
           
@@ -219,31 +221,31 @@ sessions. The documentation is hosted at
 <a class="reference external" href="https://github.com/pcdshub/pcds-envs">pcds-envs</a> package.</p>
 <p>This module requires Python 3.6+ and the following utilities:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">ipython</span></code>, for improved interactive sessions</li>
-<li><a class="reference external" href="https://github.com/pcdshub/pcdsdaq">pcdsdaq</a>
-for using the daq in scans</li>
-<li><a class="reference external" href="https://github.com/pcdshub/pcdsdevices">pcdsdevices</a>
-for our Device abstraction layers</li>
-<li><a class="reference external" href="https://github.com/pcdshub/elog">elog</a>
-for posting to the LCLS experiment elogs</li>
-<li><a class="reference external" href="https://github.com/pcdshub/happi">happi</a>
-to enable device loading from a happi database</li>
-<li><a class="reference external" href="https://github.com/slaclab/psdm_qs_cli">psdm_qs_cli</a>
+<li><p><code class="docutils literal notranslate"><span class="pre">ipython</span></code>, for improved interactive sessions</p></li>
+<li><p><a class="reference external" href="https://github.com/pcdshub/pcdsdaq">pcdsdaq</a>
+for using the daq in scans</p></li>
+<li><p><a class="reference external" href="https://github.com/pcdshub/pcdsdevices">pcdsdevices</a>
+for our Device abstraction layers</p></li>
+<li><p><a class="reference external" href="https://github.com/pcdshub/elog">elog</a>
+for posting to the LCLS experiment elogs</p></li>
+<li><p><a class="reference external" href="https://github.com/pcdshub/happi">happi</a>
+to enable device loading from a happi database</p></li>
+<li><p><a class="reference external" href="https://github.com/slaclab/psdm_qs_cli">psdm_qs_cli</a>
 as an optional happi dependency for loading from the experiment
-questionnaire</li>
-<li><a class="reference external" href="https://github.com/pcdshub/lightpath">lightpath</a>
-organizes devices to provide a summarized state of the beamline as a whole</li>
-<li><code class="docutils literal notranslate"><span class="pre">pyyaml</span></code>, for reading config files</li>
-<li><code class="docutils literal notranslate"><span class="pre">coloredlogs</span></code>, for colored logging</li>
-<li><code class="docutils literal notranslate"><span class="pre">pyfiglet</span></code> for hutch banners (think big <code class="docutils literal notranslate"><span class="pre">xpppython</span></code> on startup)</li>
-<li><a class="reference external" href="https://github.com/audreyr/cookiecutter">cookiecutter</a>
-for starting new hutch repos</li>
+questionnaire</p></li>
+<li><p><a class="reference external" href="https://github.com/pcdshub/lightpath">lightpath</a>
+organizes devices to provide a summarized state of the beamline as a whole</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyyaml</span></code>, for reading config files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coloredlogs</span></code>, for colored logging</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyfiglet</span></code> for hutch banners (think big <code class="docutils literal notranslate"><span class="pre">xpppython</span></code> on startup)</p></li>
+<li><p><a class="reference external" href="https://github.com/audreyr/cookiecutter">cookiecutter</a>
+for starting new hutch repos</p></li>
 </ul>
 <p>To connect to the LCLS DAQ, your environment must have access to</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">pydaq</span></code> for connecting to and running the daq</li>
-<li><code class="docutils literal notranslate"><span class="pre">pycdb</span></code> for changing daq object configurations</li>
-<li><code class="docutils literal notranslate"><span class="pre">pyami</span></code> for viewing data from the daq</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pydaq</span></code> for connecting to and running the daq</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pycdb</span></code> for changing daq object configurations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyami</span></code> for viewing data from the daq</p></li>
 </ul>
 <p>These are not available outside of the slac intranet, and in some cases
 must be sync’d with the active DAQ versions, independent of all other
@@ -296,26 +298,16 @@ the LCLS NFS directories.</p>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

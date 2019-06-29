@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hutch_python.bug.report_bug &mdash; hutch-python 1.0.1 documentation</title>
+  <title>hutch_python.bug.report_bug &mdash; hutch-python 1.0.1+3.g0a5e4dd documentation</title>
   
 
   
@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="hutch_python.bug.post_to_github" href="hutch_python.bug.post_to_github.html" />
     <link rel="prev" title="hutch_python.bug.get_text_from_editor" href="hutch_python.bug.get_text_from_editor.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +60,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.0.1+3.g0a5e4dd
               </div>
             
           
@@ -220,7 +222,7 @@
 <h1>hutch_python.bug.report_bug<a class="headerlink" href="#hutch-python-bug-report-bug" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="hutch_python.bug.report_bug">
-<code class="descclassname">hutch_python.bug.</code><code class="descname">report_bug</code><span class="sig-paren">(</span><em>title=None</em>, <em>description=None</em>, <em>author=None</em>, <em>prior_commands=None</em>, <em>captured_output=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.bug.report_bug" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hutch_python.bug.</code><code class="sig-name descname">report_bug</code><span class="sig-paren">(</span><em class="sig-param">title=None</em>, <em class="sig-param">description=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">prior_commands=None</em>, <em class="sig-param">captured_output=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.bug.report_bug" title="Permalink to this definition">¶</a></dt>
 <dd><p>Report a bug from the IPython session</p>
 <p>The purpose of this command is to collect the necessary information to
 later help diagnose and troubleshoot the issue. This is written as an
@@ -229,33 +231,29 @@ the information on the call.</p>
 <p>By the end we should have gathered:</p>
 <blockquote>
 <div><ul class="simple">
-<li>A brief description of the problem</li>
-<li>The relevant commands to the bug report</li>
-<li>Name of the current CONDA environment</li>
-<li>Any packages installed in “development” mode</li>
-<li>Relevant logfiles</li>
-<li>Name of bug report author</li>
+<li><p>A brief description of the problem</p></li>
+<li><p>The relevant commands to the bug report</p></li>
+<li><p>Name of the current CONDA environment</p></li>
+<li><p>Any packages installed in “development” mode</p></li>
+<li><p>Relevant logfiles</p></li>
+<li><p>Name of bug report author</p></li>
 </ul>
 </div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – One sentence description of the issue</li>
-<li><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Written description of problem. If this is not provided, a text editor
-is launched that request the information from the user</li>
-<li><strong>author</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of bug report author. If not provided, this is requested from the
-user via command line</li>
-<li><strong>prior_commands</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of prior commands to capture. If this is not provided, this is
-requested from the user via command line.</li>
-<li><strong>captured_output</strong> (<em>str</em><em>, </em><em>optional</em>) – Captured output from the command</li>
-<li><strong>kwargs</strong> – Pass authentication information to <a class="reference internal" href="hutch_python.bug.post_to_github.html#hutch_python.bug.post_to_github" title="hutch_python.bug.post_to_github"><code class="xref py py-func docutils literal notranslate"><span class="pre">post_to_github()</span></code></a></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – One sentence description of the issue</p></li>
+<li><p><strong>description</strong> (<em>str</em><em>, </em><em>optional</em>) – Written description of problem. If this is not provided, a text editor
+is launched that request the information from the user</p></li>
+<li><p><strong>author</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of bug report author. If not provided, this is requested from the
+user via command line</p></li>
+<li><p><strong>prior_commands</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of prior commands to capture. If this is not provided, this is
+requested from the user via command line.</p></li>
+<li><p><strong>captured_output</strong> (<em>str</em><em>, </em><em>optional</em>) – Captured output from the command</p></li>
+<li><p><strong>kwargs</strong> – Pass authentication information to <a class="reference internal" href="hutch_python.bug.post_to_github.html#hutch_python.bug.post_to_github" title="hutch_python.bug.post_to_github"><code class="xref py py-func docutils literal notranslate"><span class="pre">post_to_github()</span></code></a></p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -271,7 +269,7 @@ requested from the user via command line.</li>
         <a href="hutch_python.bug.post_to_github.html" class="btn btn-neutral float-right" title="hutch_python.bug.post_to_github" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="hutch_python.bug.get_text_from_editor.html" class="btn btn-neutral" title="hutch_python.bug.get_text_from_editor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="hutch_python.bug.get_text_from_editor.html" class="btn btn-neutral float-left" title="hutch_python.bug.get_text_from_editor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -297,26 +295,16 @@ requested from the user via command line.</li>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

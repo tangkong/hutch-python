@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hutch_python.utils.extract_objs &mdash; hutch-python 1.0.1 documentation</title>
+  <title>hutch_python.utils.extract_objs &mdash; hutch-python 1.0.1+3.g0a5e4dd documentation</title>
   
 
   
@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="hutch_python.utils.find_object" href="hutch_python.utils.find_object.html" />
     <link rel="prev" title="hutch_python.utils.count_ns_leaves" href="hutch_python.utils.count_ns_leaves.html" /> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +60,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.0.1+3.g0a5e4dd
               </div>
             
           
@@ -224,34 +226,30 @@
 <h1>hutch_python.utils.extract_objs<a class="headerlink" href="#hutch-python-utils-extract-objs" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="hutch_python.utils.extract_objs">
-<code class="descclassname">hutch_python.utils.</code><code class="descname">extract_objs</code><span class="sig-paren">(</span><em>scope=None</em>, <em>skip_hidden=True</em>, <em>stack_offset=0</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.utils.extract_objs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hutch_python.utils.</code><code class="sig-name descname">extract_objs</code><span class="sig-paren">(</span><em class="sig-param">scope=None</em>, <em class="sig-param">skip_hidden=True</em>, <em class="sig-param">stack_offset=0</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.utils.extract_objs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all objects with the <code class="docutils literal notranslate"><span class="pre">scope</span></code>.</p>
 <p>This can be though of as a <code class="docutils literal notranslate"><span class="pre">*</span></code> import, and it obeys the <code class="docutils literal notranslate"><span class="pre">__all__</span></code>
 keyword functionality.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>scope</strong> (<code class="docutils literal notranslate"><span class="pre">module</span></code>, <code class="docutils literal notranslate"><span class="pre">namespace</span></code>, or <code class="docutils literal notranslate"><span class="pre">list</span></code> of these, optional) – If provided, we’ll import from this object.
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scope</strong> (<code class="docutils literal notranslate"><span class="pre">module</span></code>, <code class="docutils literal notranslate"><span class="pre">namespace</span></code>, or <code class="docutils literal notranslate"><span class="pre">list</span></code> of these, optional) – If provided, we’ll import from this object.
 If omitted, we’ll include all objects that have been loaded by
-hutch_python and everything in the caller’s global frame.</li>
-<li><strong>skip_hidden</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>, optional) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, we’ll omit objects with leading underscores.</li>
-<li><strong>stack_offset</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>, optional) – If <code class="docutils literal notranslate"><span class="pre">scope</span></code> was not provided, we’ll use <code class="docutils literal notranslate"><span class="pre">stack_offset</span></code> to determine
+hutch_python and everything in the caller’s global frame.</p></li>
+<li><p><strong>skip_hidden</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>, optional) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, we’ll omit objects with leading underscores.</p></li>
+<li><p><strong>stack_offset</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>, optional) – If <code class="docutils literal notranslate"><span class="pre">scope</span></code> was not provided, we’ll use <code class="docutils literal notranslate"><span class="pre">stack_offset</span></code> to determine
 which frame is the user’s frame. Leave this at zero if you want the
 objects in the caller’s frame, and increase it by one for each level
-up the stack your frame is.</li>
+up the stack your frame is.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>objs</strong> – Mapping from name in scope to object</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="docutils literal notranslate"><span class="pre">dict</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>objs</strong> – Mapping from name in scope to object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -267,7 +265,7 @@ up the stack your frame is.</li>
         <a href="hutch_python.utils.find_object.html" class="btn btn-neutral float-right" title="hutch_python.utils.find_object" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="hutch_python.utils.count_ns_leaves.html" class="btn btn-neutral" title="hutch_python.utils.count_ns_leaves" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="hutch_python.utils.count_ns_leaves.html" class="btn btn-neutral float-left" title="hutch_python.utils.count_ns_leaves" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -293,26 +291,16 @@ up the stack your frame is.</li>
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

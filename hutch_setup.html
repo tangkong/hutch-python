@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Hutch Setup &mdash; hutch-python 1.0.1 documentation</title>
+  <title>Hutch Setup &mdash; hutch-python 1.0.1+3.g0a5e4dd documentation</title>
   
 
   
@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Yaml Files" href="yaml_files.html" />
     <link rel="prev" title="Environments" href="environment.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +60,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.0.1+3.g0a5e4dd
               </div>
             
           
@@ -223,21 +225,21 @@ and in our directory tree at <code class="docutils literal notranslate"><span cl
 <p>There is a built-in template for starting a new hutch repo.
 Replacing <code class="docutils literal notranslate"><span class="pre">hutchname</span></code> with your hutch’s name:</p>
 <ol class="arabic simple">
-<li><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">/reg/g/pcds/pyps/apps/hutch-python</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">hutch-python</span> <span class="pre">--create</span> <span class="pre">hutchname</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">hutchname</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">init</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span> <span class="pre">*</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-m</span> <span class="pre">&quot;ENH:</span> <span class="pre">Add</span> <span class="pre">hutchname</span> <span class="pre">from</span> <span class="pre">template&quot;</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">remote</span> <span class="pre">add</span> <span class="pre">origin</span> <span class="pre">https://github.com/pcdshub/hutchname.git</span></code></li>
-<li>In a browser, navigate to <a class="reference external" href="https://github.com/pcdshub">https://github.com/pcdshub</a> and log in.</li>
-<li>Click <code class="docutils literal notranslate"><span class="pre">New</span></code> to make a new repo, name it <code class="docutils literal notranslate"><span class="pre">hutchname</span></code>, do not
-initialize with README, gitignore, or license.</li>
-<li><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">master</span></code></li>
-<li>As the hutch operator account, create a file named <code class="docutils literal notranslate"><span class="pre">.web.cfg</span></code> in the opr’s
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">/reg/g/pcds/pyps/apps/hutch-python</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hutch-python</span> <span class="pre">--create</span> <span class="pre">hutchname</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">hutchname</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">init</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">add</span> <span class="pre">*</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">-m</span> <span class="pre">&quot;ENH:</span> <span class="pre">Add</span> <span class="pre">hutchname</span> <span class="pre">from</span> <span class="pre">template&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">remote</span> <span class="pre">add</span> <span class="pre">origin</span> <span class="pre">https://github.com/pcdshub/hutchname.git</span></code></p></li>
+<li><p>In a browser, navigate to <a class="reference external" href="https://github.com/pcdshub">https://github.com/pcdshub</a> and log in.</p></li>
+<li><p>Click <code class="docutils literal notranslate"><span class="pre">New</span></code> to make a new repo, name it <code class="docutils literal notranslate"><span class="pre">hutchname</span></code>, do not
+initialize with README, gitignore, or license.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">push</span> <span class="pre">origin</span> <span class="pre">master</span></code></p></li>
+<li><p>As the hutch operator account, create a file named <code class="docutils literal notranslate"><span class="pre">.web.cfg</span></code> in the opr’s
 home area. Follow the specification of <a class="reference internal" href="generated/hutch_python.qs_load.get_qs_objs.html#hutch_python.qs_load.get_qs_objs" title="hutch_python.qs_load.get_qs_objs"><code class="xref any py py-func docutils literal notranslate"><span class="pre">get_qs_objs</span></code></a> to ensure we can load
 user objects from the questionnaire. Also include the necessary information
-for reporting issues to GitHub specified in <a class="reference internal" href="generated/hutch_python.bug.post_to_github.html#hutch_python.bug.post_to_github" title="hutch_python.bug.post_to_github"><code class="xref any py py-func docutils literal notranslate"><span class="pre">post_to_github</span></code></a></li>
+for reporting issues to GitHub specified in <a class="reference internal" href="generated/hutch_python.bug.post_to_github.html#hutch_python.bug.post_to_github" title="hutch_python.bug.post_to_github"><code class="xref any py py-func docutils literal notranslate"><span class="pre">post_to_github</span></code></a></p></li>
 </ol>
 </div>
 <div class="section" id="adding-devices-to-the-database">
@@ -263,12 +265,12 @@ modify the database beyond the short example below see
 <div class="section" id="updating-a-hutch-s-launch-scripts">
 <h2>Updating a Hutch’s Launch Scripts<a class="headerlink" href="#updating-a-hutch-s-launch-scripts" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li>Pick up the latest environment</li>
-<li>In some arbitrary directory, <code class="docutils literal notranslate"><span class="pre">hutch-python</span> <span class="pre">--create</span> <span class="pre">hutchname</span></code></li>
-<li>Copy the generated scripts into your <code class="docutils literal notranslate"><span class="pre">hutchname</span></code> checkout</li>
-<li><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">branchname</span></code></li>
-<li>git add, git commit, git push, make a PR</li>
-<li>Remove your dummy <code class="docutils literal notranslate"><span class="pre">hutchname</span></code> directory</li>
+<li><p>Pick up the latest environment</p></li>
+<li><p>In some arbitrary directory, <code class="docutils literal notranslate"><span class="pre">hutch-python</span> <span class="pre">--create</span> <span class="pre">hutchname</span></code></p></li>
+<li><p>Copy the generated scripts into your <code class="docutils literal notranslate"><span class="pre">hutchname</span></code> checkout</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">checkout</span> <span class="pre">-b</span> <span class="pre">branchname</span></code></p></li>
+<li><p>git add, git commit, git push, make a PR</p></li>
+<li><p>Remove your dummy <code class="docutils literal notranslate"><span class="pre">hutchname</span></code> directory</p></li>
 </ol>
 </div>
 </div>
@@ -284,7 +286,7 @@ modify the database beyond the short example below see
         <a href="yaml_files.html" class="btn btn-neutral float-right" title="Yaml Files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="environment.html" class="btn btn-neutral" title="Environments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="environment.html" class="btn btn-neutral float-left" title="Environments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -310,26 +312,16 @@ modify the database beyond the short example below see
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

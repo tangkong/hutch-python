@@ -9,6 +9,12 @@ hutch\_python.utils.IterableNamespace
    .. automethod:: __init__
 
    
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~IterableNamespace.__init__
+   
    
 
    

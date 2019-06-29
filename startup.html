@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Startup Sequence &mdash; hutch-python 1.0.1 documentation</title>
+  <title>Startup Sequence &mdash; hutch-python 1.0.1+3.g0a5e4dd documentation</title>
   
 
   
@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Database Objects" href="database.html" />
     <link rel="prev" title="What to Expect When You are Expecting a New Hutch Python" href="tutorial.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +60,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.0.1+3.g0a5e4dd
               </div>
             
           
@@ -215,54 +217,60 @@ file are documented on the <a class="reference internal" href="yaml_files.html">
 <p>Each step of the startup can freely access any objects defined by previous
 steps. In order, the startup sequence is as follows:</p>
 <ul class="simple">
-<li>Common Startup<ul>
-<li>Set up log files, debug state, and sim state</li>
-<li>Read <code class="docutils literal notranslate"><span class="pre">cfg.yml</span></code></li>
-<li>Display the <code class="docutils literal notranslate"><span class="pre">xxxpython</span></code> banner</li>
-<li>Create and set up a <code class="docutils literal notranslate"><span class="pre">RunEngine</span></code> as <code class="docutils literal notranslate"><span class="pre">RE</span></code></li>
-<li>Create the <code class="docutils literal notranslate"><span class="pre">plans</span></code> object with default plans and alias to <code class="docutils literal notranslate"><span class="pre">p</span></code></li>
-<li>Create the <code class="docutils literal notranslate"><span class="pre">daq</span></code> object</li>
-<li>Create the <code class="docutils literal notranslate"><span class="pre">scan_pvs</span></code> object</li>
+<li><p>Common Startup</p>
+<ul>
+<li><p>Set up log files, debug state, and sim state</p></li>
+<li><p>Read <code class="docutils literal notranslate"><span class="pre">cfg.yml</span></code></p></li>
+<li><p>Display the <code class="docutils literal notranslate"><span class="pre">xxxpython</span></code> banner</p></li>
+<li><p>Create and set up a <code class="docutils literal notranslate"><span class="pre">RunEngine</span></code> as <code class="docutils literal notranslate"><span class="pre">RE</span></code></p></li>
+<li><p>Create the <code class="docutils literal notranslate"><span class="pre">plans</span></code> object with default plans and alias to <code class="docutils literal notranslate"><span class="pre">p</span></code></p></li>
+<li><p>Create the <code class="docutils literal notranslate"><span class="pre">daq</span></code> object</p></li>
+<li><p>Create the <code class="docutils literal notranslate"><span class="pre">scan_pvs</span></code> object</p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="database.html"><span class="doc">Database</span></a> Load<ul>
-<li>Load the <code class="docutils literal notranslate"><span class="pre">db</span></code> from <code class="docutils literal notranslate"><span class="pre">cfg.yaml</span></code> using <code class="docutils literal notranslate"><span class="pre">happi</span></code></li>
-<li>Create the <code class="docutils literal notranslate"><span class="pre">xxx_beampath</span></code> object using <code class="docutils literal notranslate"><span class="pre">lightpath</span></code></li>
-<li>Create cameras using the camviewer configuration file</li>
+<li><p><a class="reference internal" href="database.html"><span class="doc">Database</span></a> Load</p>
+<ul>
+<li><p>Load the <code class="docutils literal notranslate"><span class="pre">db</span></code> from <code class="docutils literal notranslate"><span class="pre">cfg.yaml</span></code> using <code class="docutils literal notranslate"><span class="pre">happi</span></code></p></li>
+<li><p>Create the <code class="docutils literal notranslate"><span class="pre">xxx_beampath</span></code> object using <code class="docutils literal notranslate"><span class="pre">lightpath</span></code></p></li>
+<li><p>Create cameras using the camviewer configuration file</p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="beamline.html"><span class="doc">Beamline</span></a> Load<ul>
-<li>Import all objects from the modules under <code class="docutils literal notranslate"><span class="pre">load</span></code> in <code class="docutils literal notranslate"><span class="pre">cfg.yaml</span></code>.
+<li><p><a class="reference internal" href="beamline.html"><span class="doc">Beamline</span></a> Load</p>
+<ul>
+<li><p>Import all objects from the modules under <code class="docutils literal notranslate"><span class="pre">load</span></code> in <code class="docutils literal notranslate"><span class="pre">cfg.yaml</span></code>.
 By convention, this is just <code class="docutils literal notranslate"><span class="pre">xxx.beamline</span></code>, but it can also be extended
-to a list of modules.</li>
+to a list of modules.</p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="experiment.html"><span class="doc">Experiment</span></a> Load<ul>
-<li>Automatically select the hutch’s current experiment if one was not
-provided in the <code class="docutils literal notranslate"><span class="pre">cfg.yml</span></code>.</li>
-<li>Create user objects from the experiment questionnaire
-using <code class="docutils literal notranslate"><span class="pre">happi</span></code> and <code class="docutils literal notranslate"><span class="pre">psdm_qs_cli</span></code>.</li>
-<li>Import <code class="docutils literal notranslate"><span class="pre">User</span></code> class from experiment file and instantiate <code class="docutils literal notranslate"><span class="pre">User()</span></code>.</li>
-<li>Attach all questionnaire objects to the <code class="docutils literal notranslate"><span class="pre">User()</span></code> object</li>
-<li>If there was no experiment file, make a <code class="docutils literal notranslate"><span class="pre">SimpleNamespace()</span></code> object
-instead</li>
-<li>Set this object to be <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">user</span></code>.</li>
+<li><p><a class="reference internal" href="experiment.html"><span class="doc">Experiment</span></a> Load</p>
+<ul>
+<li><p>Automatically select the hutch’s current experiment if one was not
+provided in the <code class="docutils literal notranslate"><span class="pre">cfg.yml</span></code>.</p></li>
+<li><p>Create user objects from the experiment questionnaire
+using <code class="docutils literal notranslate"><span class="pre">happi</span></code> and <code class="docutils literal notranslate"><span class="pre">psdm_qs_cli</span></code>.</p></li>
+<li><p>Import <code class="docutils literal notranslate"><span class="pre">User</span></code> class from experiment file and instantiate <code class="docutils literal notranslate"><span class="pre">User()</span></code>.</p></li>
+<li><p>Attach all questionnaire objects to the <code class="docutils literal notranslate"><span class="pre">User()</span></code> object</p></li>
+<li><p>If there was no experiment file, make a <code class="docutils literal notranslate"><span class="pre">SimpleNamespace()</span></code> object
+instead</p></li>
+<li><p>Set this object to be <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">user</span></code>.</p></li>
 </ul>
 </li>
-<li>Groups Load<ul>
-<li>If any <code class="docutils literal notranslate"><span class="pre">EpicsMotor</span></code> objects were defined previously, group them into a
-<code class="docutils literal notranslate"><span class="pre">motors</span></code> object. Alias this to <code class="docutils literal notranslate"><span class="pre">m</span></code>.</li>
-<li>If any <code class="docutils literal notranslate"><span class="pre">Slits</span></code> objects were defined previously, group them into a
-<code class="docutils literal notranslate"><span class="pre">slits</span></code> object. Alias this to <code class="docutils literal notranslate"><span class="pre">s</span></code>.</li>
-<li>Group all loaded objects by metadata, to be found in a tab-accessible way
-e.g. <code class="docutils literal notranslate"><span class="pre">xxx.dg1.name</span></code></li>
-<li>Group everything into an <code class="docutils literal notranslate"><span class="pre">all_objects</span></code> object. Alias this to <code class="docutils literal notranslate"><span class="pre">a</span></code>.</li>
+<li><p>Groups Load</p>
+<ul>
+<li><p>If any <code class="docutils literal notranslate"><span class="pre">EpicsMotor</span></code> objects were defined previously, group them into a
+<code class="docutils literal notranslate"><span class="pre">motors</span></code> object. Alias this to <code class="docutils literal notranslate"><span class="pre">m</span></code>.</p></li>
+<li><p>If any <code class="docutils literal notranslate"><span class="pre">Slits</span></code> objects were defined previously, group them into a
+<code class="docutils literal notranslate"><span class="pre">slits</span></code> object. Alias this to <code class="docutils literal notranslate"><span class="pre">s</span></code>.</p></li>
+<li><p>Group all loaded objects by metadata, to be found in a tab-accessible way
+e.g. <code class="docutils literal notranslate"><span class="pre">xxx.dg1.name</span></code></p></li>
+<li><p>Group everything into an <code class="docutils literal notranslate"><span class="pre">all_objects</span></code> object. Alias this to <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p></li>
 </ul>
 </li>
-<li>Finish<ul>
-<li>Create all <code class="docutils literal notranslate"><span class="pre">_debug</span></code> objects as documented on the <a class="reference internal" href="debug.html"><span class="doc">debug</span></a> page.</li>
-<li>Enable input, output, and error logger</li>
-<li>Enter the <code class="docutils literal notranslate"><span class="pre">ipython</span></code> terminal</li>
+<li><p>Finish</p>
+<ul>
+<li><p>Create all <code class="docutils literal notranslate"><span class="pre">_debug</span></code> objects as documented on the <a class="reference internal" href="debug.html"><span class="doc">debug</span></a> page.</p></li>
+<li><p>Enable input, output, and error logger</p></li>
+<li><p>Enter the <code class="docutils literal notranslate"><span class="pre">ipython</span></code> terminal</p></li>
 </ul>
 </li>
 </ul>
@@ -279,7 +287,7 @@ e.g. <code class="docutils literal notranslate"><span class="pre">xxx.dg1.name</
         <a href="database.html" class="btn btn-neutral float-right" title="Database Objects" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tutorial.html" class="btn btn-neutral" title="What to Expect When You are Expecting a New Hutch Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tutorial.html" class="btn btn-neutral float-left" title="What to Expect When You are Expecting a New Hutch Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -305,26 +313,16 @@ e.g. <code class="docutils literal notranslate"><span class="pre">xxx.dg1.name</
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

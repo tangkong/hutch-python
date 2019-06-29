@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>What to Expect When You are Expecting a New Hutch Python &mdash; hutch-python 1.0.1 documentation</title>
+  <title>What to Expect When You are Expecting a New Hutch Python &mdash; hutch-python 1.0.1+3.g0a5e4dd documentation</title>
   
 
   
@@ -17,34 +17,36 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Startup Sequence" href="startup.html" />
     <link rel="prev" title="Starting a Session" href="start.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -58,7 +60,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.0.1+3.g0a5e4dd
               </div>
             
           
@@ -429,9 +431,9 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="Table-of-Contents">
 <h2>Table of Contents<a class="headerlink" href="#Table-of-Contents" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><a class="reference external" href="#Navigation">Navigation</a></li>
-<li><a class="reference external" href="#How-Devices-Are-Loaded">How Devices Are Loaded</a></li>
-<li><a class="reference external" href="#An-Introduction-to-Scanning">An Introduction to Scanning</a></li>
+<li><p><a class="reference external" href="#Navigation">Navigation</a></p></li>
+<li><p><a class="reference external" href="#How-Devices-Are-Loaded">How Devices Are Loaded</a></p></li>
+<li><p><a class="reference external" href="#An-Introduction-to-Scanning">An Introduction to Scanning</a></p></li>
 </ul>
 <p>If you do not want to setup a Jupyter Notebook environment yourself, skip ahead to <a class="reference external" href="#Navigation">navigation</a>. The code below is executed automatically when you launch the hutch python environment at a hutch.</p>
 <div class="nbinput nblast docutils container">
@@ -812,14 +814,14 @@ interfaces and applications in the future.</p>
 <h2>An Introduction to Scanning<a class="headerlink" href="#An-Introduction-to-Scanning" title="Permalink to this headline">¶</a></h2>
 <p>One of the major additions the <code class="docutils literal notranslate"><span class="pre">hutch_python</span></code> restructuring gives us is access to <code class="docutils literal notranslate"><span class="pre">bluesky</span></code> scanning capabilities. A full tutorial is available at <a class="reference external" href="http://nsls-ii.github.io/bluesky/tutorial">http://nsls-ii.github.io/bluesky/tutorial</a>. This very brief introduction assumes you know a little about how <code class="docutils literal notranslate"><span class="pre">bluesky</span></code> works in general. The major keys are:</p>
 <ul class="simple">
-<li>The <code class="docutils literal notranslate"><span class="pre">RunEngine</span></code> object is responsible for executing all scans.</li>
-<li>Experimental procedures are described in <code class="docutils literal notranslate"><span class="pre">plans</span></code>, python generators which allow sophisticated flow control</li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">RunEngine</span></code> object is responsible for executing all scans.</p></li>
+<li><p>Experimental procedures are described in <code class="docutils literal notranslate"><span class="pre">plans</span></code>, python generators which allow sophisticated flow control</p></li>
 </ul>
 <p>The hutch-python environment should already have a <code class="docutils literal notranslate"><span class="pre">RunEngine</span></code> instatiated for you to begin playing. It also has built-in <code class="docutils literal notranslate"><span class="pre">bluesky</span></code> <code class="docutils literal notranslate"><span class="pre">plans</span></code> that are tab-accessible in the following objects:</p>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">bp</span></code>: full plans that are ready to use</li>
-<li><code class="docutils literal notranslate"><span class="pre">bps</span></code>: partial plans that can be used as building blocks for larger plans</li>
-<li><code class="docutils literal notranslate"><span class="pre">bpp</span></code>: wrappers that add functionality to existing plans</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bp</span></code>: full plans that are ready to use</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bps</span></code>: partial plans that can be used as building blocks for larger plans</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bpp</span></code>: wrappers that add functionality to existing plans</p></li>
 </ul>
 <div class="section" id="Note">
 <h3>Note<a class="headerlink" href="#Note" title="Permalink to this headline">¶</a></h3>
@@ -2714,7 +2716,7 @@ generator scan [&#39;c4218a45&#39;] (scan num: 5)
         <a href="startup.html" class="btn btn-neutral float-right" title="Startup Sequence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="start.html" class="btn btn-neutral" title="Starting a Session" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="start.html" class="btn btn-neutral float-left" title="Starting a Session" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -2740,26 +2742,16 @@ generator scan [&#39;c4218a45&#39;] (scan num: 5)
   
 
 
-  
-
-    
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
