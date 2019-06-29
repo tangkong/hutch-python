@@ -13,7 +13,7 @@ from elog import HutchELog
 from ophyd.areadetector.plugins import PluginBase
 from ophyd.device import Component as Cpt
 from ophyd.signal import Signal
-from pcdsdevices.areadetector.detectors import PCDSDetector
+from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
 import hutch_python.utils
 
@@ -23,8 +23,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 TST_CAM_CFG = str(Path(__file__).parent / '{}camviewer.cfg')
 
-for component in PCDSDetector.component_names:
-    cpt_class = getattr(PCDSDetector, component).cls
+for component in PCDSAreaDetector.component_names:
+    cpt_class = getattr(PCDSAreaDetector, component).cls
     if issubclass(cpt_class, PluginBase):
         cpt_class.plugin_type = Cpt(Signal, value=cpt_class._plugin_type)
 

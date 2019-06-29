@@ -9,7 +9,7 @@ from multiprocessing import cpu_count
 
 from .constants import SUCCESS_LEVEL
 
-from pcdsdevices.areadetector.detectors import PCDSDetector
+from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
 logger = logging.getLogger(__name__)
 logger.success = partial(logger.log, SUCCESS_LEVEL)
@@ -28,7 +28,7 @@ def read_camviewer_cfg(filename):
 
     Returns
     -------
-    objs: ``{str: PCDSDetector}``
+    objs: ``{str: PCDSAreaDetector}``
         Each detector object, indexed by name.
     """
     info = interpret_cfg(filename)
@@ -118,7 +118,7 @@ def load_cams(info):
 
     Returns
     -------
-    objs: ``{str: PCDSDetector}``
+    objs: ``{str: PCDSAreaDetector}``
         Each detector object, indexed by name.
     """
     # Any cam that needs the event loop has to have one set in the thread
@@ -146,7 +146,7 @@ def build_and_log(info_part):
 
     Returns
     -------
-    obj: ``PCDSDetector``
+    obj: ``PCDSAreaDetector``
         The loaded detector, or None.
     """
     # We sync with the main thread's loop so that they work as expected later
@@ -202,7 +202,7 @@ def build_cam(cam_type, pv_info, evr, name, *args):
 
     Returns
     -------
-    cam: ``PCDSDetector``
+    cam: ``PCDSAreaDetector``
     """
     if not cam_type.startswith('GE'):
         raise UnsupportedConfig('Only cam type GE (area detector) supported.',
@@ -211,7 +211,7 @@ def build_cam(cam_type, pv_info, evr, name, *args):
         raise MalformedConfig(name=name)
     detector_prefix = get_det_prefix(pv_info)
     name = name.replace(' ', '_').lower()
-    return PCDSDetector(detector_prefix, name=name)
+    return PCDSAreaDetector(detector_prefix, name=name)
 
 
 def get_det_prefix(pv_info):
