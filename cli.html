@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>cli.py &mdash; hutch-python 1.0.1+3.g0a5e4dd documentation</title>
+  <title>cli.py &mdash; hutch-python 1.0.2+3.gd6004d5 documentation</title>
   
 
   
@@ -25,6 +25,7 @@
         <script type="text/javascript" src="_static/underscore.js"></script>
         <script type="text/javascript" src="_static/doctools.js"></script>
         <script type="text/javascript" src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -35,6 +36,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ipython_log.py" href="ipython_log.html" />
     <link rel="prev" title="cache.py" href="cache.html" /> 
 </head>
 
@@ -59,7 +61,7 @@
             
             
               <div class="version">
-                1.0.1+3.g0a5e4dd
+                1.0.2+3.gd6004d5
               </div>
             
           
@@ -113,9 +115,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="bug.html">bug.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">cache.py</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">cli.py</a><ul class="simple">
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">cli.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ipython_log.html">ipython_log.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="load_conf.html">load_conf.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="load_parts.html">load submodules</a></li>
@@ -191,13 +191,13 @@
 /* CSS overrides for sphinx_rtd_theme */
 
 /* 24px margin */
-.nbinput.nblast,
-.nboutput.nblast {
+.nbinput.nblast.container,
+.nboutput.nblast.container {
     margin-bottom: 19px;  /* padding has already 5px */
 }
 
 /* ... except between code cells! */
-.nblast + .nbinput {
+.nblast.container + .nbinput.container {
     margin-top: -19px;
 }
 
@@ -262,6 +262,8 @@ startup.</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ipython_log.html" class="btn btn-neutral float-right" title="ipython_log.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="cache.html" class="btn btn-neutral float-left" title="cache.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
