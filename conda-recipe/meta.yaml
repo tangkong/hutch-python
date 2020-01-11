@@ -33,6 +33,7 @@ requirements:
     - simplejson
     - requests
     - jinja2
+    - archapp
 
 test:
   imports:
