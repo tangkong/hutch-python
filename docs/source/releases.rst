@@ -1,6 +1,14 @@
 Release History
 ###############
 
+v1.1.0 (2020-01-10)
+===================
+
+Features
+--------
+- Add ``archapp`` support. Check out the ``archive`` object in the hutch
+  python namespace for access to the archiver appliance data.
+
 v1.0.1 (2019-03-08)
 ===================
 
@@ -9,7 +17,6 @@ Fixes and Maintenance
 - Clean up code for the ``hutch-python`` launcher
 - Fix issues with the test suite
 - Fix issues with automatically loading ipython profiles
-
 
 v1.0.0 (2018-10-12)
 ===================
