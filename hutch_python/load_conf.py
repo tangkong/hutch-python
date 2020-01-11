@@ -15,6 +15,7 @@ from elog import HutchELog
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdevices.mv_interface import setup_preset_paths
+from archapp.interactive import EpicsArchive
 
 from . import plan_defaults
 from .cache import LoadCache
@@ -258,6 +259,10 @@ def load_conf(conf, hutch_dir=None):
             bp = get_lightpath(db, hutch)
             if bp.devices:
                 cache(**{"{}_beampath".format(hutch.lower()): bp})
+
+    # ArchApp
+    with safe_load('archapp'):
+        cache(archive=EpicsArchive())
 
     # Camviewer
     if hutch is not None:
