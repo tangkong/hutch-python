@@ -56,7 +56,8 @@ def test_sim_arg(no_ipython_launch):
             main()
 
 
-def create_arg_test(env=None):
+def test_create_arg():
+    logger.debug('test_create_arg_dev')
     hutch = 'temp_create'
     test_dir = CFG_PATH.parent.parent.parent / hutch
     if test_dir.exists():
@@ -70,31 +71,7 @@ def create_arg_test(env=None):
 
     # Make sure conf.yml is valid
     load(str(test_dir / 'conf.yml'))
-
-    # Make sure we picked the correct env
-    if env is not None:
-        with (test_dir / 'temp_createenv').open() as f:
-            lines = f.readlines()
-        has_env = False
-        for line in lines:
-            if 'CONDA_ENVNAME' in line:
-                has_env = True
-                assert env == line.split('"')[-2]
-                break
-        assert has_env
-
     shutil.rmtree(test_dir)
-
-
-def test_create_arg_dev():
-    logger.debug('test_create_arg_dev')
-    create_arg_test()
-
-
-def test_create_arg_prod(monkeypatch):
-    logger.debug('test_create_arg_prod')
-    monkeypatch.setattr(hutch_python.cli, 'CONDA_BASE', CFG_PATH.parent)
-    create_arg_test('pcds-2.0.1')
 
 
 def test_run_script():
