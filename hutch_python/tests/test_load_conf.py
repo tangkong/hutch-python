@@ -3,7 +3,6 @@ import os.path
 from socket import gethostname
 from types import SimpleNamespace
 
-from ophyd.tests.conftest import using_fake_epics_pv
 from pcdsdaq.sim import set_sim_mode
 from pcdsdevices.mv_interface import Presets
 
@@ -73,7 +72,6 @@ def test_elog(monkeypatch, temporary_config):
     assert objs['elog'].station == '1'
 
 
-@using_fake_epics_pv
 def test_camviewer_load(monkeypatch):
     logger.debug('test_camviewer_load')
     monkeypatch.setattr(hutch_python.load_conf, 'CAMVIEWER_CFG', TST_CAM_CFG)
