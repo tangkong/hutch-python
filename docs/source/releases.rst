@@ -1,6 +1,15 @@
 Release History
 ###############
 
+v1.1.1 (2020-02-05)
+===================
+
+Fixes and Maintenance
+---------------------
+- Make tests compatible with ``ophyd`` ``v1.1.1``
+- Small adjustments to remove some warnings
+- Small updates to hutch directory generator
+
 v1.1.0 (2020-01-10)
 ===================
 
