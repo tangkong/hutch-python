@@ -160,6 +160,7 @@
 ./startup.html
 ./tips.html
 ./tutorial.html
+./tutorial.ipynb
 ./user_utils.html
 ./utils.html
 ./yaml_files.html
