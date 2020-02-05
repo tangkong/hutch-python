@@ -4,7 +4,7 @@ from socket import gethostname
 from types import SimpleNamespace
 
 from pcdsdaq.sim import set_sim_mode
-from pcdsdevices.mv_interface import Presets
+from pcdsdevices.interface import Presets
 
 import hutch_python.qs_load
 from hutch_python.load_conf import load, load_conf
