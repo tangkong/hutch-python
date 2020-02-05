@@ -63,7 +63,7 @@ def load(cfg=None, args=None):
         hutch_dir = None
     else:
         with open(cfg, 'r') as f:
-            conf = yaml.load(f)
+            conf = yaml.safe_load(f)
         conf_path = Path(cfg)
         hutch_dir = conf_path.parent
 
