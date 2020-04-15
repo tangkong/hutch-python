@@ -2,16 +2,18 @@
 This module is used to set up and manipulate the ``logging`` configuration for
 utilities like debug mode.
 """
-import os
-import time
 import logging
 import logging.config
+import os
+import time
+import yaml
 from contextlib import contextmanager
 from pathlib import Path
 
+from pcdsutils.log import configure_pcds_logging
+
 from .constants import FILE_YAML
 
-import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +24,8 @@ def setup_logging(dir_logs=None):
 
     Uses ``logging.yml`` to define the config
     and manages the ``log`` directory paths.
+
+    Also sets up the standard pcds logstash handler.
 
     Parameters
     ----------
@@ -61,6 +65,8 @@ def setup_logging(dir_logs=None):
     # https://github.com/ipython/ipython/issues/10946
     logging.getLogger('parso.python.diff').disabled = True
     logging.getLogger('parso.cache').disabled = True
+
+    configure_pcds_logging()
 
 
 def get_session_logfiles():
