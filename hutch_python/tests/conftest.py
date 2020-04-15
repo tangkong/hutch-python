@@ -75,8 +75,8 @@ class QSBackend:
         self.pw = pw
         self.kerberos = use_kerberos
 
-    def find(self, multiples=False, **kwargs):
-        devices = [{
+    def find(self, to_match):
+        device = {
             '_id': 'TST:USR:MMN:01',
             'beamline': 'TST',
             'device_class': 'hutch_python.tests.conftest.Experiment',
@@ -92,13 +92,22 @@ class QSBackend:
             'user': self.user,
             'pw': self.pw,
             'kerberos': self.kerberos,
-            'proposal': self.expname[3:-2].upper()}]
+            'proposal': self.expname[3:-2].upper()}
         if self.empty:
-            return None
-        elif multiples:
-            return devices
+            return
         else:
-            return devices[0]
+            yield device
+            return
+
+    # Dummy methods to make this "look like a database"
+    def all_devices(self, *args, **kwargs):
+        pass
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    def save(self, *args, **kwargs):
+        pass
 
 
 cfg = """\
