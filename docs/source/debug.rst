@@ -23,6 +23,49 @@ set up by the :py:mod:`log_setup` module. If not in debug mode, only log levels
 ``INFO`` and above will make it to the terminal. The files are configured to
 rotate and roll over into a second file once they get too large.
 
+PCDS-wide Logging
+-----------------
+
+A special Python logger for PCDS-wide logging is pre-configured within
+``hutch-python``.  This special logger is named ``'pcds-logging'``, and hooks
+in with our managed logstash, ElasticSearch and Grafana stack.  
+
+To explore the data, access Grafana `here
+<https://pswww.slac.stanford.edu/ctl/grafana/explore>`_.
+
+To record information, first get the logger itself:
+
+.. code-block:: python
+   
+    import logging
+    pcds_logger = logging.getLogger('pcds-logging')
+
+
+Log messages above the configured level (by default ``logging.DEBUG``) will be
+transmitted to the centralized log server to be recorded and indexed.
+
+One example use case is when an important event that would be useful to see
+trended over time:
+
+.. code-block:: python
+   
+    pcds_logger.info('I dropped the sample')
+
+
+Or for exception statistics, perhaps. The following will include a full stack
+trace along with module and line information automatically:
+
+
+    try:
+        1/0
+    except ZeroDivisionError:
+        pcds_logger.exception('This specific thing went wrong')
+
+
+It is not necessary to include information about the host that is running
+Python, module versions, or thread/process names as these are automatically
+included.
+
 
 Debug Mode
 ----------
