@@ -48,7 +48,8 @@ def get_happi_objs(db, hutch):
         reqs = dict(beamline=beamline, active=True,
                     start=conf.get('start', 0),
                     end=conf.get('end', None))
-        blc = client.search(**reqs)
+        results = client.search_range(key='z', **reqs)
+        blc = [res.device for res in results]
         # Add the beamline containers to the complete list
         if blc:
             containers.extend(blc)
