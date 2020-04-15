@@ -10,7 +10,7 @@ import yaml
 from contextlib import contextmanager
 from pathlib import Path
 
-from pcdsutils.log import configure_pcds_loging
+from pcdsutils.log import configure_pcds_logging
 
 from .constants import FILE_YAML
 
@@ -66,7 +66,7 @@ def setup_logging(dir_logs=None):
     logging.getLogger('parso.python.diff').disabled = True
     logging.getLogger('parso.cache').disabled = True
 
-    configure_pcds_loging()
+    configure_pcds_logging()
 
 
 def get_session_logfiles():
