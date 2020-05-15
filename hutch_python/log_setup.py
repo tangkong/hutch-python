@@ -57,10 +57,20 @@ def setup_logging(dir_logs=None):
         config['handlers']['debug']['filename'] = str(path_log_file)
 
     logging.config.dictConfig(config)
-    # Disable parso logging because it spams DEBUG messages
-    # https://github.com/ipython/ipython/issues/10946
-    logging.getLogger('parso.python.diff').disabled = True
-    logging.getLogger('parso.cache').disabled = True
+    noisy_loggers = ['parso', 'pyPDB.dbd.yacc', 'ophyd', 'bluesky']
+    hush_noisy_loggers(noisy_loggers)
+
+
+def hush_noisy_loggers(modules, level=logging.WARNING):
+    """
+    Some loggers spam on INFO with no restraint, so we must raise their levels.
+
+    It seems there is some disagreement over what log levels should mean. In
+    our repos, INFO is used as the de-facto print replacement, but in some
+    repos it is used as the secondary debug stream.
+    """
+    for module in modules:
+        logging.getLogger(module).setLevel(logging.WARNING)
 
 
 def get_session_logfiles():
