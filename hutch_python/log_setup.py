@@ -70,7 +70,7 @@ def hush_noisy_loggers(modules, level=logging.WARNING):
     repos it is used as the secondary debug stream.
     """
     for module in modules:
-        logging.getLogger(module).setLevel(logging.WARNING)
+        logging.getLogger(module).setLevel(level)
 
 
 def get_session_logfiles():
