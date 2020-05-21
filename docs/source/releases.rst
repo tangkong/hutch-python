@@ -1,6 +1,21 @@
 Release History
 ###############
 
+
+v1.2.0 (2020-05-21)
+===================
+
+Features
+--------
+- Configure the logstash logger using ``pcdsutils``
+
+Fixes and Maintenance
+---------------------
+- Adjust for latest ``happi`` API
+- Add documentation about logstash logging
+- Hush the noisiest loggers that are spamming the terminal sessions
+
+
 v1.1.1 (2020-02-05)
 ===================
 
