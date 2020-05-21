@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>cache.py &mdash; hutch-python 1.1.0+10.g4fd31cc documentation</title>
+  <title>cache.py &mdash; hutch-python 1.2.0+6.gd105993 documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                1.1.0+10.g4fd31cc
+                1.2.0+6.gd105993
               </div>
             
           
@@ -215,9 +215,9 @@
 <p>This module is responsible for accumulating all loaded objects and making sure
 they are available in the <code class="docutils literal notranslate"><span class="pre">xxx.db</span></code> virtual module. It is used extensively in
 <a class="reference internal" href="generated/hutch_python.load_conf.load_conf.html#hutch_python.load_conf.load_conf" title="hutch_python.load_conf.load_conf"><code class="xref any py py-func docutils literal notranslate"><span class="pre">load_conf.load_conf</span></code></a>.</p>
-<dl class="class">
+<dl class="py class">
 <dt id="hutch_python.cache.LoadCache">
-<em class="property">class </em><code class="sig-prename descclassname">hutch_python.cache.</code><code class="sig-name descname">LoadCache</code><span class="sig-paren">(</span><em class="sig-param">module</em>, <em class="sig-param">hutch_dir=None</em>, <em class="sig-param">**objs</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.cache.LoadCache" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">hutch_python.cache.</code><code class="sig-name descname">LoadCache</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module</span></em>, <em class="sig-param"><span class="n">hutch_dir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">objs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.cache.LoadCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class that accumulates objects in a virtual module.</p>
 <p>This virtual module can be imported from as if it were a normal module.</p>
 <dl class="field-list simple">
@@ -231,7 +231,7 @@ objects get imported.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="hutch_python.cache.LoadCache.objs">
 <code class="sig-name descname">objs</code><a class="headerlink" href="#hutch_python.cache.LoadCache.objs" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is a namespace containing all the objects that have been attached
@@ -243,9 +243,9 @@ to the <code class="docutils literal notranslate"><span class="pre">LoadCache</s
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="hutch_python.cache.LoadCache.__call__">
-<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">**objs</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.cache.LoadCache.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">objs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.cache.LoadCache.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add objects to the namespace.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -255,13 +255,13 @@ is the object we are adding.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="hutch_python.cache.LoadCache.spoof_module">
-<code class="sig-name descname">spoof_module</code><span class="sig-paren">(</span><em class="sig-param">module_name</em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.cache.LoadCache.spoof_module" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">spoof_module</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">module_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.cache.LoadCache.spoof_module" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a fake module that is actually self.objs</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="hutch_python.cache.LoadCache.write_file">
 <code class="sig-name descname">write_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.cache.LoadCache.write_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a <code class="docutils literal notranslate"><span class="pre">db.txt</span></code> file in the hutch’s directory. This file informs

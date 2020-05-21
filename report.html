@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Reporting Issues &mdash; hutch-python 1.1.0+10.g4fd31cc documentation</title>
+  <title>Reporting Issues &mdash; hutch-python 1.2.0+6.gd105993 documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                1.1.0+10.g4fd31cc
+                1.2.0+6.gd105993
               </div>
             
           
@@ -245,9 +245,9 @@ issues.</p>
 commands you want to include in the overall report. This allows you to
 posthumously report issues without running the actual function again.</p>
 <blockquote>
-<div><dl class="function">
+<div><dl class="py function">
 <dt>
-<code class="sig-prename descclassname">hutch_python.bug.</code><code class="sig-name descname">report_bug</code><span class="sig-paren">(</span><em class="sig-param">title=None</em>, <em class="sig-param">description=None</em>, <em class="sig-param">author=None</em>, <em class="sig-param">prior_commands=None</em>, <em class="sig-param">captured_output=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname">hutch_python.bug.</code><code class="sig-name descname">report_bug</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">description</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">author</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">prior_commands</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">captured_output</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span></dt>
 <dd><p>Report a bug from the IPython session</p>
 <p>The purpose of this command is to collect the necessary information to
 later help diagnose and troubleshoot the issue. This is written as an

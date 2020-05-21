@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Debug &mdash; hutch-python 1.1.0+10.g4fd31cc documentation</title>
+  <title>Debug &mdash; hutch-python 1.2.0+6.gd105993 documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                1.1.0+10.g4fd31cc
+                1.2.0+6.gd105993
               </div>
             
           
@@ -110,6 +110,7 @@
 <li class="toctree-l1"><a class="reference internal" href="yaml_files.html">Yaml Files</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Debug</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#live-session-logging">Live Session Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pcds-wide-logging">PCDS-wide Logging</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#debug-mode">Debug Mode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#automated-test-logging">Automated Test Logging</a></li>
 </ul>
@@ -234,6 +235,38 @@ that were created by calling that statement.</p>
 set up by the <code class="xref py py-mod docutils literal notranslate"><span class="pre">log_setup</span></code> module. If not in debug mode, only log levels
 <code class="docutils literal notranslate"><span class="pre">INFO</span></code> and above will make it to the terminal. The files are configured to
 rotate and roll over into a second file once they get too large.</p>
+</div>
+<div class="section" id="pcds-wide-logging">
+<h2>PCDS-wide Logging<a class="headerlink" href="#pcds-wide-logging" title="Permalink to this headline">¶</a></h2>
+<p>A special Python logger for PCDS-wide logging is pre-configured within
+<code class="docutils literal notranslate"><span class="pre">hutch-python</span></code>.  This special logger is named <code class="docutils literal notranslate"><span class="pre">'pcds-logging'</span></code>, and hooks
+in with our managed logstash, ElasticSearch and Grafana stack.</p>
+<p>To explore the data, access Grafana <a class="reference external" href="https://pswww.slac.stanford.edu/ctl/grafana/explore">here</a>.</p>
+<p>To record information, first get the logger itself:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">pcds_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;pcds-logging&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Log messages above the configured level (by default <code class="docutils literal notranslate"><span class="pre">logging.DEBUG</span></code>) will be
+transmitted to the centralized log server to be recorded and indexed.</p>
+<p>One example use case is when an important event that would be useful to see
+trended over time:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pcds_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;I dropped the sample&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Or for exception statistics, perhaps. The following will include a full stack
+trace along with module and line information automatically:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>try:</dt><dd><p>1/0</p>
+</dd>
+<dt>except ZeroDivisionError:</dt><dd><p>pcds_logger.exception(‘This specific thing went wrong’)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>It is not necessary to include information about the host that is running
+Python, module versions, or thread/process names as these are automatically
+included.</p>
 </div>
 <div class="section" id="debug-mode">
 <h2>Debug Mode<a class="headerlink" href="#debug-mode" title="Permalink to this headline">¶</a></h2>
