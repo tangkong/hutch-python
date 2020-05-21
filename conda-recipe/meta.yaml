@@ -22,11 +22,11 @@ requirements:
     - pyyaml
     - coloredlogs
     - pyfiglet
-    - happi >=1.5.0
-    - pcdsdevices >=2.3.0
-    - pcdsdaq >=2.0.0
-    - pcdsutils >=0.1.1
-    - psdm_qs_cli >=0.2.2
+    - happi >=1.6.0
+    - pcdsdevices >=2.6.0
+    - pcdsdaq >=2.2.4
+    - pcdsutils >=0.2.0
+    - psdm_qs_cli >=0.3.1
     - lightpath >=0.3.0
     - elog
     - cookiecutter >=1.6.0
