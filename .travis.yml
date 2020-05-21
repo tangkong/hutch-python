@@ -70,10 +70,13 @@ script:
   # Build docs
   - set -e
   - |
-    if [[ -n "$DOCTR_DEPLOY_ENCRYPTION_KEY_PCDSHUB_HUTCH_PYTHON" && $BUILD_DOCS ]]; then
+    if [[ -n $BUILD_DOCS ]]; then
       pushd docs
       make html
       popd
+    fi
+  - |
+    if [[ -n "$DOCTR_DEPLOY_ENCRYPTION_KEY_PCDSHUB_HUTCH_PYTHON" && $BUILD_DOCS ]]; then
       doctr deploy . --built-docs docs/build/html --deploy-branch-name gh-pages
     fi
 
