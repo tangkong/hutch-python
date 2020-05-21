@@ -10,9 +10,10 @@ from queue import Queue
 
 import pytest
 from elog import HutchELog
+from ophyd.areadetector.plugins import PluginBase
 from ophyd.device import Component as Cpt
 from ophyd.signal import Signal
-from pcdsdevices.areadetector.detectors import PCDSDetector
+from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
 import hutch_python.utils
 
@@ -22,9 +23,10 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 TST_CAM_CFG = str(Path(__file__).parent / '{}camviewer.cfg')
 
-for plugin in ('image', 'stats'):
-    plugin_class = getattr(PCDSDetector, plugin).cls
-    plugin_class.plugin_type = Cpt(Signal, value=plugin_class._plugin_type)
+for component in PCDSAreaDetector.component_names:
+    cpt_class = getattr(PCDSAreaDetector, component).cls
+    if issubclass(cpt_class, PluginBase):
+        cpt_class.plugin_type = Cpt(Signal, value=cpt_class._plugin_type)
 
 
 @contextmanager
@@ -73,8 +75,8 @@ class QSBackend:
         self.pw = pw
         self.kerberos = use_kerberos
 
-    def find(self, multiples=False, **kwargs):
-        devices = [{
+    def find(self, to_match):
+        device = {
             '_id': 'TST:USR:MMN:01',
             'beamline': 'TST',
             'device_class': 'hutch_python.tests.conftest.Experiment',
@@ -90,13 +92,22 @@ class QSBackend:
             'user': self.user,
             'pw': self.pw,
             'kerberos': self.kerberos,
-            'proposal': self.expname[3:-2].upper()}]
+            'proposal': self.expname[3:-2].upper()}
         if self.empty:
-            return None
-        elif multiples:
-            return devices
+            return
         else:
-            return devices[0]
+            yield device
+            return
+
+    # Dummy methods to make this "look like a database"
+    def all_devices(self, *args, **kwargs):
+        pass
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    def save(self, *args, **kwargs):
+        pass
 
 
 cfg = """\

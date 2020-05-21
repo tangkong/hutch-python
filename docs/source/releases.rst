@@ -1,6 +1,47 @@
 Release History
 ###############
 
+
+v1.2.0 (2020-05-21)
+===================
+
+Features
+--------
+- Configure the logstash logger using ``pcdsutils``
+
+Fixes and Maintenance
+---------------------
+- Adjust for latest ``happi`` API
+- Add documentation about logstash logging
+- Hush the noisiest loggers that are spamming the terminal sessions
+
+
+v1.1.1 (2020-02-05)
+===================
+
+Fixes and Maintenance
+---------------------
+- Make tests compatible with ``ophyd`` ``v1.1.1``
+- Small adjustments to remove some warnings
+- Small updates to hutch directory generator
+
+v1.1.0 (2020-01-10)
+===================
+
+Features
+--------
+- Add ``archapp`` support. Check out the ``archive`` object in the hutch
+  python namespace for access to the archiver appliance data.
+
+v1.0.1 (2019-03-08)
+===================
+
+Fixes and Maintenance
+---------------------
+- Clean up code for the ``hutch-python`` launcher
+- Fix issues with the test suite
+- Fix issues with automatically loading ipython profiles
+
 v1.0.0 (2018-10-12)
 ===================
 

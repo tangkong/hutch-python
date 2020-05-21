@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 # Use me to interactively explore the fully loaded test conf.yml
-cd `dirname $0`
+HERE=`dirname $0`
+cd "${HERE}"
+export PYTHONPATH="${PYTHONPATH}:${HERE}:${HERE}/../.."
 hutch-python --cfg conf.yaml $@

@@ -2,16 +2,18 @@
 This module is used to set up and manipulate the ``logging`` configuration for
 utilities like debug mode.
 """
-import os
-import time
 import logging
 import logging.config
+import os
+import time
+import yaml
 from contextlib import contextmanager
 from pathlib import Path
 
+from pcdsutils.log import configure_pcds_logging
+
 from .constants import FILE_YAML
 
-import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +24,8 @@ def setup_logging(dir_logs=None):
 
     Uses ``logging.yml`` to define the config
     and manages the ``log`` directory paths.
+
+    Also sets up the standard pcds logstash handler.
 
     Parameters
     ----------
@@ -57,10 +61,22 @@ def setup_logging(dir_logs=None):
         config['handlers']['debug']['filename'] = str(path_log_file)
 
     logging.config.dictConfig(config)
-    # Disable parso logging because it spams DEBUG messages
-    # https://github.com/ipython/ipython/issues/10946
-    logging.getLogger('parso.python.diff').disabled = True
-    logging.getLogger('parso.cache').disabled = True
+    noisy_loggers = ['parso', 'pyPDB.dbd.yacc', 'ophyd', 'bluesky']
+    hush_noisy_loggers(noisy_loggers)
+
+
+def hush_noisy_loggers(modules, level=logging.WARNING):
+    """
+    Some loggers spam on INFO with no restraint, so we must raise their levels.
+
+    It seems there is some disagreement over what log levels should mean. In
+    our repos, INFO is used as the de-facto print replacement, but in some
+    repos it is used as the secondary debug stream.
+    """
+    for module in modules:
+        logging.getLogger(module).setLevel(level)
+
+    configure_pcds_logging()
 
 
 def get_session_logfiles():

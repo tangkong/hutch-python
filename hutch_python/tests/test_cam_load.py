@@ -4,7 +4,7 @@ from ophyd.areadetector.base import EpicsSignalWithRBV
 from ophyd.sim import make_fake_device, fake_device_cache, FakeEpicsSignal
 import pytest
 
-from pcdsdevices.areadetector.detectors import PCDSDetector
+from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
 import hutch_python.cam_load as cam_load
 from hutch_python.cam_load import (read_camviewer_cfg, interpret_lines,
@@ -17,15 +17,15 @@ logger = logging.getLogger(__name__)
 CFG = TST_CAM_CFG.format('')
 
 fake_device_cache[EpicsSignalWithRBV] = FakeEpicsSignal
-FakeDet = make_fake_device(PCDSDetector)
-cam_load.PCDSDetector = FakeDet
+FakeDet = make_fake_device(PCDSAreaDetector)
+cam_load.PCDSAreaDetector = FakeDet
 
 
 def test_build_cam():
     logger.debug('test_build_cam')
     # Basic functionality test
     obj = build_cam('GE:16', 'PREFIX:IMAGE2', None, 'my_cam')
-    assert isinstance(obj, PCDSDetector)
+    assert isinstance(obj, PCDSAreaDetector)
 
 
 def test_build_cam_errors():
@@ -42,7 +42,7 @@ def test_read_camviewer_cfg():
     logger.debug('test_read_camviewer_cfg')
     # Basic functionality test
     objs = read_camviewer_cfg(CFG)
-    assert isinstance(objs['my_cam'], PCDSDetector)
+    assert isinstance(objs['my_cam'], PCDSAreaDetector)
     assert len(objs) == 1
 
 

@@ -266,7 +266,7 @@ def post_to_github(report, user=None, pw=None, proxies=None):
             try:
                 user = cfg.get('GITHUB', 'user')
                 pw = cfg.get('GITHUB', 'pw')
-            except (NoOptionError, NoSectionError) as exc:
+            except (NoOptionError, NoSectionError):
                 logger.debug('No GITHUB section in configuration file '
                              'with user and pw entries')
             # Grab proxy information if we will be using web.cfg
@@ -336,3 +336,7 @@ message = """\
 # store the description. Press "i" to be begin typing, then "Esc" followed by
 # ":wq" to exit.
 """
+
+
+def load_ipython_extension(ipython):
+    ipython.register_magics(BugMagics)

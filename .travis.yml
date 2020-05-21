@@ -1,20 +1,40 @@
 language: python
-sudo: false
+os: linux
+dist: xenial
 
 env:
   global:
     - OFFICIAL_REPO="pcdshub/hutch-python"
     - secure: "kjUAbNvwnSPFQFNf0TRX+Ea0BgVwMwRaPaL5wLRD7zvLpF5D9dzc+giUneap3LzKBxtEXIJ8hY9KgL0n63z0LwyWHKmKQT0F3ILEaqIcOOscU1G0MjCSal0DUji8EBe7xzXWr1T0AApyu39Y2iW0Qp+gTMSJEcNN9XdnBh7V0PIEA9xYP4xfpZ7vbNGvMhpDefJSIjdrAz7bVxp8JH8pxnu2WYCDS1Ik8pA7WGgNSknI0VBI2Fs43gfLocMkJSKimn2M+EGgxORdgBwoxMjRKRxIaTiLsCd+ZY5FP1DM1F1dvVusm3KNyyytaWTv9cDELQazMspv6VB1s7ouq0IgOJMySkl2BAvT6c+e8Adn+x87ZO1PyBAlJZNGO/YQdjrhRNbObu5Ld5IyvwcLw10teCMEkWJ3cNfYBL8O52vlzIlvhDcb1J+pONecc+a6Fr9Ag6nUz6krPr5zF5bK/3qxlC5PmzhnjSeTXqizaub+RVXHNyj7xKNJDczOmqM4HvkXe+kyBiauCnWXu86bOlKY3j8upSrGQCOKcHbFWMExZIsIBq3+g2nLI0bpEC2xT9iTgeLtzB24kkF3bHQ6BaTjU135lrRlVhC7CFiFPuqDUpVzLNWikG9rjPcJAsmQzYauUedm40MNtbqVOA5+2VGePuVMxLIXfHVn43taL916Vh8="
 
-matrix:
+jobs:
+  fast_finish: true
   include:
     - python: 3.6
       env:
+         - BUILD_DOCS=1
          - PCDS_CHANNEL=pcds-tag
     - python: 3.6
-      env:
-         - PCDS_CHANNEL=pcds-dev
-         - BUILD_DOCS=1
+      env: PCDS_CHANNEL=pcds-dev
+    - python: 3.7
+      dist: xenial
+      sudo: true
+      env: PCDS_CHANNEL=pcds-tag
+    - python: 3.7
+      dist: xenial
+      sudo: true
+      env: PCDS_CHANNEL=pcds-dev
+  allow_failures:
+    - python: 3.6
+      env: PCDS_CHANNEL=pcds-dev
+    - python: 3.7
+      dist: xenial
+      sudo: true
+      env: PCDS_CHANNEL=pcds-tag
+    - python: 3.7
+      dist: xenial
+      sudo: true
+      env: PCDS_CHANNEL=pcds-dev
 
 install:
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -26,7 +46,7 @@ install:
   - conda update -q conda conda-build
   - conda config --add channels pcds-tag
   - conda config --add channels $PCDS_CHANNEL
-  - conda config --append channels conda-forge
+  - conda config --add channels conda-forge
   # Useful for debugging any issues with conda
   - conda info -a
   # Test conda build
@@ -51,10 +71,13 @@ script:
   # Build docs
   - set -e
   - |
-    if [[ -n "$DOCTR_DEPLOY_ENCRYPTION_KEY_PCDSHUB_HUTCH_PYTHON" && $BUILD_DOCS ]]; then
+    if [[ -n $BUILD_DOCS ]]; then
       pushd docs
       make html
       popd
+    fi
+  - |
+    if [[ -n "$DOCTR_DEPLOY_ENCRYPTION_KEY_PCDSHUB_HUTCH_PYTHON" && $BUILD_DOCS ]]; then
       doctr deploy . --built-docs docs/build/html --deploy-branch-name gh-pages
     fi
 
