@@ -10,6 +10,7 @@ from queue import Queue
 
 import pytest
 from elog import HutchELog
+from epics import PV
 from ophyd.areadetector.plugins import PluginBase
 from ophyd.device import Component as Cpt
 from ophyd.signal import Signal
@@ -27,6 +28,9 @@ for component in PCDSAreaDetector.component_names:
     cpt_class = getattr(PCDSAreaDetector, component).cls
     if issubclass(cpt_class, PluginBase):
         cpt_class.plugin_type = Cpt(Signal, value=cpt_class._plugin_type)
+
+# Stupid patch that somehow makes the test cleanup bug go away
+PV.count = property(lambda self: 1)
 
 
 @contextmanager
