@@ -32,6 +32,7 @@ for component in PCDSAreaDetector.component_names:
 # Stupid patch that somehow makes the test cleanup bug go away
 PV.count = property(lambda self: 1)
 
+
 @contextmanager
 def cli_args(args):
     """
