@@ -17,6 +17,7 @@ Fixes and Maintenance
 ---------------------
 - Fix issue with tests freezing
 
+
 v1.2.2 (2020-05-21)
 ===================
 
