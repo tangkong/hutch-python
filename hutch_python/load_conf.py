@@ -7,6 +7,7 @@ import yaml
 from copy import copy
 from pathlib import Path
 from socket import gethostname
+from types import SimpleNamespace
 
 from bluesky import RunEngine
 from bluesky.callbacks.best_effort import BestEffortCallback
@@ -266,9 +267,9 @@ def load_conf(conf, hutch_dir=None):
 
     # Camviewer
     if hutch is not None:
-        with safe_load('Cameras'):
+        with safe_load('camviewer config'):
             objs = read_camviewer_cfg(CAMVIEWER_CFG.format(hutch))
-            cache(**objs)
+            cache(camviewer=SimpleNamespace(**objs))
 
     # Load user files
     if load is not None:
