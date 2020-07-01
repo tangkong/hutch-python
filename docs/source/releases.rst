@@ -25,6 +25,7 @@ Fixes and Maintenance
 ---------------------
 - Fix issue with generated area detectors having the wrong prefix
 
+
 v1.2.1 (2020-05-21)
 ===================
 
