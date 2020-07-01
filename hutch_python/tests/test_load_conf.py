@@ -76,7 +76,8 @@ def test_camviewer_load(monkeypatch):
     logger.debug('test_camviewer_load')
     monkeypatch.setattr(hutch_python.load_conf, 'CAMVIEWER_CFG', TST_CAM_CFG)
     objs = load_conf({'hutch': ''})
-    assert 'my_cam' in objs
+    assert 'camviewer' in objs
+    assert 'my_cam' in dir(objs['camviewer'])
 
 
 def test_skip_failures():
