@@ -1,6 +1,36 @@
 Release History
 ###############
 
+v1.3.0 (2020-07-01)
+===================
+
+Features
+--------
+- Pack camviewer config into a camviewer namespace for ease of access
+  and to avoid name collisions with other data sources.
+
+
+v1.2.3 (2020-05-29)
+===================
+
+Fixes and Maintenance
+---------------------
+- Fix issue with tests freezing
+
+v1.2.2 (2020-05-21)
+===================
+
+Fixes and Maintenance
+---------------------
+- Fix issue with generated area detectors having the wrong prefix
+
+v1.2.1 (2020-05-21)
+===================
+
+Fixes and Maintenance
+---------------------
+- Fix issue preventing conda upload on tag
+
 
 v1.2.0 (2020-05-21)
 ===================
