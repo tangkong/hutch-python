@@ -11,6 +11,7 @@
             "name": "{{name}}"
         },
         "last_edit": "Tue Jan 16 13:36:13 2018",
+	"lightpath": true,
         "macros": null,
         "name": "tst_device_1",
         "parent": null,
@@ -33,6 +34,7 @@
             "name": "{{name}}"
         },
         "last_edit": "Tue Jan 16 13:36:13 2018",
+	"lightpath": true,
         "macros": null,
         "name": "tst_device_2",
         "parent": null,
@@ -55,6 +57,7 @@
             "name": "{{name}}"
         },
         "last_edit": "Tue Jan 16 13:36:13 2018",
+	"lightpath": true,
         "macros": null,
         "name": "tst_device_3",
         "parent": null,
