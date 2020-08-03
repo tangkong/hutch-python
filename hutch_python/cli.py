@@ -12,6 +12,7 @@ import os
 from IPython import start_ipython
 from cookiecutter.main import cookiecutter
 from pcdsdaq.sim import set_sim_mode as set_daq_sim
+from pcdsdevices.interface import set_engineering_mode
 
 from .constants import CONDA_BASE, DIR_MODULE
 from .load_conf import load
@@ -99,6 +100,10 @@ def main():
     objs['debug_mode'] = debug_mode
     objs['debug_context'] = debug_context
     objs['debug_wrapper'] = debug_wrapper
+
+    # Turn engineering mode off by default and add to namespace
+    set_engineering_mode(False)
+    objs['set_engineering_mode'] = set_engineering_mode
 
     script = opts_cache.get('script')
     if script is None:
