@@ -52,7 +52,7 @@ def test_get_current_environment():
     fk_pkgs = ['one', 'two', 'three']
     os.environ['CONDA_ENVNAME'] = 'test-environment'
     with tempfile.TemporaryDirectory() as tmp:
-        logger.debug('Creating temp directory {}', tmp)
+        logger.debug('Creating temp directory %s', tmp)
         # Set a PythonPath
         os.environ['PYTHONPATH'] = tmp
         # Create fake packages
