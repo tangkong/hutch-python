@@ -1,4 +1,4 @@
-hutch\_python.utils.extract\_objs
+﻿hutch\_python.utils.extract\_objs
 =================================
 
 .. currentmodule:: hutch_python.utils

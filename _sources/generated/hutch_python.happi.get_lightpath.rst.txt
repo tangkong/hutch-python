@@ -1,4 +1,4 @@
-hutch\_python.happi.get\_lightpath
+﻿hutch\_python.happi.get\_lightpath
 ==================================
 
 .. currentmodule:: hutch_python.happi

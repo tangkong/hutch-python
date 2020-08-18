@@ -1,4 +1,4 @@
-hutch\_python.happi.get\_happi\_objs
+﻿hutch\_python.happi.get\_happi\_objs
 ====================================
 
 .. currentmodule:: hutch_python.happi

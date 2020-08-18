@@ -1,4 +1,4 @@
-hutch\_python.utils.hutch\_banner
+﻿hutch\_python.utils.hutch\_banner
 =================================
 
 .. currentmodule:: hutch_python.utils

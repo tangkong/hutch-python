@@ -1,4 +1,4 @@
-hutch\_python.bug.get\_text\_from\_editor
+﻿hutch\_python.bug.get\_text\_from\_editor
 =========================================
 
 .. currentmodule:: hutch_python.bug

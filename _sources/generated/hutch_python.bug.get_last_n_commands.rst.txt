@@ -1,4 +1,4 @@
-hutch\_python.bug.get\_last\_n\_commands
+﻿hutch\_python.bug.get\_last\_n\_commands
 ========================================
 
 .. currentmodule:: hutch_python.bug

@@ -1,4 +1,4 @@
-hutch\_python.utils.IterableNamespace
+﻿hutch\_python.utils.IterableNamespace
 =====================================
 
 .. currentmodule:: hutch_python.utils

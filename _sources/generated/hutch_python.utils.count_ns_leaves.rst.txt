@@ -1,4 +1,4 @@
-hutch\_python.utils.count\_ns\_leaves
+﻿hutch\_python.utils.count\_ns\_leaves
 =====================================
 
 .. currentmodule:: hutch_python.utils

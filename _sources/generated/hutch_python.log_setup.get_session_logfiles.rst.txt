@@ -1,4 +1,4 @@
-hutch\_python.log\_setup.get\_session\_logfiles
+﻿hutch\_python.log\_setup.get\_session\_logfiles
 ===============================================
 
 .. currentmodule:: hutch_python.log_setup

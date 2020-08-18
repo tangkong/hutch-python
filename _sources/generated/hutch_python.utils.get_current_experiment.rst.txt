@@ -1,4 +1,4 @@
-hutch\_python.utils.get\_current\_experiment
+﻿hutch\_python.utils.get\_current\_experiment
 ============================================
 
 .. currentmodule:: hutch_python.utils

@@ -1,4 +1,4 @@
-hutch\_python.user\_load.get\_user\_objs
+﻿hutch\_python.user\_load.get\_user\_objs
 ========================================
 
 .. currentmodule:: hutch_python.user_load

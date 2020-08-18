@@ -1,4 +1,4 @@
-hutch\_python.log\_setup.debug\_wrapper
+﻿hutch\_python.log\_setup.debug\_wrapper
 =======================================
 
 .. currentmodule:: hutch_python.log_setup

@@ -1,4 +1,4 @@
-hutch\_python.utils.safe\_load
+﻿hutch\_python.utils.safe\_load
 ==============================
 
 .. currentmodule:: hutch_python.utils

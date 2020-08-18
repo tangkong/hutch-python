@@ -1,4 +1,4 @@
-hutch\_python.load\_conf.load\_conf
+﻿hutch\_python.load\_conf.load\_conf
 ===================================
 
 .. currentmodule:: hutch_python.load_conf

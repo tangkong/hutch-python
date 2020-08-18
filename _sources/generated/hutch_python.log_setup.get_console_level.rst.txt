@@ -1,4 +1,4 @@
-hutch\_python.log\_setup.get\_console\_level
+﻿hutch\_python.log\_setup.get\_console\_level
 ============================================
 
 .. currentmodule:: hutch_python.log_setup

@@ -1,4 +1,4 @@
-hutch\_python.log\_setup.get\_console\_handler
+﻿hutch\_python.log\_setup.get\_console\_handler
 ==============================================
 
 .. currentmodule:: hutch_python.log_setup
