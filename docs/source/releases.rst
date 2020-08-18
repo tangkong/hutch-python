@@ -9,6 +9,10 @@ Features
 - Load hutch-python with engineering mode disabled to optimize interactive
   use.
 
+Fixes and Maintenance
+---------------------
+- Fix bad log message handler in test suite
+
 
 v1.3.1 (2020-07-27)
 ===================
