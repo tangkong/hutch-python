@@ -1,6 +1,27 @@
 Release History
 ###############
 
+v1.4.0 (2020-08-18)
+===================
+
+Features
+--------
+- Load hutch-python with engineering mode disabled to optimize interactive
+  use.
+
+Fixes and Maintenance
+---------------------
+- Fix bad log message handler in test suite
+
+
+v1.3.1 (2020-07-27)
+===================
+
+Fixes and Maintenance
+---------------------
+- Test suite update for compatibility with lightpath v0.6.5
+
+
 v1.3.0 (2020-07-01)
 ===================
 
