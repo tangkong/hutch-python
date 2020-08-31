@@ -10,7 +10,7 @@ from socket import gethostname
 from types import SimpleNamespace
 
 import matplotlib
-matplotlib.use('Qt5Agg')  # noqa
+matplotlib.use('Qt5Agg')  # noqa isort:skip
 from bluesky import RunEngine
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
 from bluesky.callbacks.best_effort import BestEffortCallback
