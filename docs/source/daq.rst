@@ -29,6 +29,8 @@ resume the run.
 .. ipython:: python
    :suppress:
 
+   import matplotlib
+   matplotlib.use('Qt5Agg')
    from bluesky.run_engine import RunEngine
    from bluesky.plans import scan
    from ophyd.sim import motor
@@ -40,7 +42,6 @@ resume the run.
    daq = Daq(RE=RE)
 
 .. ipython:: python
-   :suppress:
 
    # Run for 120 events, wait, leave the run open.
    daq.begin(events=120, wait=True)
@@ -55,7 +56,6 @@ The python will steal control from the GUI. Only one or the other can have
 control at a time. Use ``daq.disconnect`` to give up control to the GUI.
 
 .. ipython:: python
-   :suppress:
 
    daq.disconnect()
 
@@ -72,7 +72,6 @@ If ``scan_pvs`` are enabled, these will be written to during the ``bluesky``
 plan.
 
 .. ipython:: python
-   :suppress:
 
    # Configure for 120 events per point
    daq.preconfig(events=120)
