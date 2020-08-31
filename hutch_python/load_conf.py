@@ -9,7 +9,9 @@ from pathlib import Path
 from socket import gethostname
 from types import SimpleNamespace
 
+from . import mpl_config  # noqa: F401 # isort: ignore
 from bluesky import RunEngine
+from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
 from bluesky.callbacks.best_effort import BestEffortCallback
 from bluesky.utils import install_kicker
 from elog import HutchELog
@@ -216,6 +218,7 @@ def load_conf(conf, hutch_dir=None):
 
     # Make RunEngine
     RE = RunEngine({})
+    initialize_qt_teleporter()
     bec = BestEffortCallback()
     RE.subscribe(bec)
     cache(RE=RE)
