@@ -9,8 +9,7 @@ from pathlib import Path
 from socket import gethostname
 from types import SimpleNamespace
 
-import matplotlib
-matplotlib.use('Qt5Agg')  # noqa isort:skip
+from . import mpl_config  # noqa: F401 # isort: ignore
 from bluesky import RunEngine
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
 from bluesky.callbacks.best_effort import BestEffortCallback
