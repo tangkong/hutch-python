@@ -15,8 +15,8 @@ from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
 from bluesky.callbacks.best_effort import BestEffortCallback
 from bluesky.utils import install_kicker
 from elog import HutchELog
-from pcdsdaq.daq import Daq
-from pcdsdaq.scan_vars import ScanVars
+#from pcdsdaq.daq import Daq
+#from pcdsdaq.scan_vars import ScanVars
 from pcdsdevices.interface import setup_preset_paths
 from archapp.interactive import EpicsArchive
 
