@@ -10,6 +10,7 @@ from socket import gethostname
 from types import SimpleNamespace
 
 import matplotlib
+matplotlib.use('Qt5Agg')  # noqa
 from bluesky import RunEngine
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
 from bluesky.callbacks.best_effort import BestEffortCallback
@@ -32,7 +33,6 @@ from .user_load import get_user_objs
 from .utils import (get_current_experiment, safe_load, hutch_banner,
                     count_ns_leaves)
 
-matplotlib.use('Qt5Agg')
 logger = logging.getLogger(__name__)
 
 
