@@ -7,7 +7,6 @@ SPHINXBUILD   = sphinx-build
 SPHINXPROJ    = PCDSDevices
 SOURCEDIR     = source
 BUILDDIR      = build
-QT_QPA_PLATFORM=offscreen
 
 #Put it first so that "make" without argument is like "make help".
 help:

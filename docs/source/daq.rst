@@ -29,8 +29,6 @@ resume the run.
 .. ipython:: python
    :suppress:
 
-   import matplotlib
-   matplotlib.use('Qt5Agg')
    from bluesky.run_engine import RunEngine
    from bluesky.plans import scan
    from ophyd.sim import motor
