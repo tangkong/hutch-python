@@ -1,15 +1,16 @@
 import logging
+import sys
 from logging.handlers import QueueHandler
 from pathlib import Path
 
 import pytest
-
-from hutch_python.log_setup import (setup_logging, get_session_logfiles,
-                                    get_console_handler, set_console_level,
-                                    debug_mode, debug_context, debug_wrapper,
-                                    get_debug_handler)
-
 from conftest import restore_logging
+
+from hutch_python.log_setup import (configure_excepthook_logging,
+                                    debug_context, debug_mode, debug_wrapper,
+                                    get_console_handler, get_debug_handler,
+                                    get_session_logfiles, set_console_level,
+                                    setup_logging)
 
 logger = logging.getLogger(__name__)
 
@@ -129,3 +130,12 @@ def test_debug_wrapper(log_queue):
     debug_wrapper(assert_is_debug, log_queue)
 
     assert_is_info(log_queue)
+
+
+# pytest-qt will catch the excepthook fake exception without this:
+@pytest.mark.qt_no_exception_capture
+def test_except_hook(caplog):
+    configure_excepthook_logging(logger_name='test-purposes')
+    with caplog.at_level(logging.ERROR, logger='test-purposes'):
+        sys.excepthook(ValueError, ValueError('exception hook?'), None)
+    assert 'ValueError: exception hook?' in caplog.text
