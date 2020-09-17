@@ -6,16 +6,16 @@ import logging
 import logging.config
 import os
 import time
-import yaml
 from contextlib import contextmanager
 from pathlib import Path
 
-from pcdsutils.log import configure_pcds_logging
+import pcdsutils.log
+import yaml
 
-from .constants import FILE_YAML
-
+from .constants import FILE_YAML, NO_LOG_EXCEPTIONS
 
 logger = logging.getLogger(__name__)
+central_logger = pcdsutils.log.logger
 
 
 def setup_logging(dir_logs=None):
@@ -60,6 +60,10 @@ def setup_logging(dir_logs=None):
         path_log_file.touch()
         config['handlers']['debug']['filename'] = str(path_log_file)
 
+    # Configure centralized PCDS logging:
+    pcdsutils.log.configure_pcds_logging()
+    central_logger.propagate = False
+
     logging.config.dictConfig(config)
     noisy_loggers = ['parso', 'pyPDB.dbd.yacc', 'ophyd', 'bluesky']
     hush_noisy_loggers(noisy_loggers)
@@ -75,8 +79,6 @@ def hush_noisy_loggers(modules, level=logging.WARNING):
     """
     for module in modules:
         logging.getLogger(module).setLevel(level)
-
-    configure_pcds_logging()
 
 
 def get_session_logfiles():
@@ -232,3 +234,29 @@ def debug_wrapper(f, *args, **kwargs):
     """
     with debug_context():
         f(*args, **kwargs)
+
+
+def log_exception_to_central_server(exc_info, *, context='exception',
+                                    level=logging.ERROR):
+    """
+    Log an exception to the central server (i.e., logstash/grafana).
+
+    Parameters
+    ----------
+    exc_info : (exc_type, exc_value, exc_traceback)
+        The exception information.
+
+    context : str, optional
+        Additional context for the log message.
+
+    level : int, optional
+        The log level to use.  Defaults to ERROR.
+    """
+    exc_type, exc_value, exc_traceback = exc_info
+    if issubclass(exc_type, NO_LOG_EXCEPTIONS):
+        return
+
+    central_logger.log(
+        level, f'[{context}] {exc_value}',
+        exc_info=(exc_type, exc_value, exc_traceback)
+    )
