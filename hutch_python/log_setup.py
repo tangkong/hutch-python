@@ -62,6 +62,7 @@ def setup_logging(dir_logs=None):
 
     # Configure centralized PCDS logging:
     pcdsutils.log.configure_pcds_logging()
+    central_logger.propagate = False
 
     logging.config.dictConfig(config)
     noisy_loggers = ['parso', 'pyPDB.dbd.yacc', 'ophyd', 'bluesky']
@@ -248,8 +249,8 @@ def log_exception_to_central_server(exc_info, *, context='exception',
     context : str, optional
         Additional context for the log message.
 
-    level : int
-        The log level to use.
+    level : int, optional
+        The log level to use.  Defaults to ERROR.
     """
     exc_type, exc_value, exc_traceback = exc_info
     if issubclass(exc_type, NO_LOG_EXCEPTIONS):
