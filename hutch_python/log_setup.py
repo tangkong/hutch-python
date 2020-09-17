@@ -5,8 +5,6 @@ utilities like debug mode.
 import logging
 import logging.config
 import os
-import sys
-import threading
 import time
 from contextlib import contextmanager
 from pathlib import Path
@@ -14,9 +12,10 @@ from pathlib import Path
 import pcdsutils.log
 import yaml
 
-from .constants import FILE_YAML
+from .constants import FILE_YAML, NO_LOG_EXCEPTIONS
 
 logger = logging.getLogger(__name__)
+central_logger = pcdsutils.log.logger
 
 
 def setup_logging(dir_logs=None):
@@ -63,7 +62,6 @@ def setup_logging(dir_logs=None):
 
     # Configure centralized PCDS logging:
     pcdsutils.log.configure_pcds_logging()
-    configure_excepthook_logging()
 
     logging.config.dictConfig(config)
     noisy_loggers = ['parso', 'pyPDB.dbd.yacc', 'ophyd', 'bluesky']
@@ -237,44 +235,28 @@ def debug_wrapper(f, *args, **kwargs):
         f(*args, **kwargs)
 
 
-def configure_excepthook_logging(logger_name=None):
-    """Install the exception handler to ship errors off to logstash."""
-    do_not_log = (KeyboardInterrupt, SystemExit)
+def log_exception_to_central_server(exc_info, *, context='exception',
+                                    level=logging.ERROR):
+    """
+    Log an exception to the central server (i.e., logstash/grafana).
 
-    if logger_name is not None:
-        logger = logging.getLogger(logger_name)
-    else:
-        logger = pcdsutils.log.logger
+    Parameters
+    ----------
+    exc_info : (exc_type, exc_value, exc_traceback)
+        The exception information.
 
-    if getattr(sys.excepthook, '_pcds_', None):
-        # Already installed; do not continue.
+    context : str, optional
+        Additional context for the log message.
+
+    level : int
+        The log level to use.
+    """
+    exc_type, exc_value, exc_traceback = exc_info
+    if issubclass(exc_type, NO_LOG_EXCEPTIONS):
         return
 
-    # The stashed excepthooks:
-    _except_hook = sys.excepthook
-    # This is technically Python 3.8+, but this should not interfere with
-    # anything in earlier versions:
-    _thread_except_hook = getattr(threading, 'excepthook', None)
-
-    def excepthook(exc_type, exc_value, exc_traceback):
-        if not issubclass(exc_type, do_not_log):
-            logger.error('[exception] %s', exc_value,
-                         exc_info=(exc_type, exc_value, exc_traceback))
-        if _except_hook is not None:
-            _except_hook(exc_type, exc_value, exc_traceback)
-
-    def thread_excepthook(args):
-        # https://docs.python.org/3/library/threading.html#threading.excepthook
-        if not issubclass(args.exc_type, do_not_log):
-            logger.error('[exception] (%s) %s', args.thread.name,
-                         args.exc_value,
-                         exc_info=(args.exc_type, args.exc_value,
-                                   args.exc_traceback))
-        if _thread_except_hook is not None:
-            _thread_except_hook(args)
-
-    # Indicator to not install twice:
-    excepthook._pcds_ = True
-
-    sys.excepthook = excepthook
-    threading.excepthook = thread_excepthook
+    central_logger.log(
+        level,
+        '[%s] %s', context, exc_value,
+        exc_info=(exc_type, exc_value, exc_traceback)
+    )

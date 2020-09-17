@@ -3,12 +3,13 @@ This module modifies an ``ipython`` shell to log inputs, outputs, and
 tracebacks to a custom ``logger.input`` level. The ``INPUT`` level is lower
 than the ``DEBUG`` level to avoid a terminal echo in debug mode.
 """
-import sys
-import traceback
 import functools
 import logging
+import sys
+import traceback
 
 from .constants import INPUT_LEVEL
+from .log_setup import log_exception_to_central_server
 
 logger = logging.getLogger(__name__)
 logger.input = functools.partial(logger.log, INPUT_LEVEL)
@@ -53,10 +54,12 @@ class IPythonLogger:
             except KeyError:
                 pass
             if hasattr(sys, 'last_value') and sys.last_value != self.prev_err:
-                tb = ''.join(traceback.format_exception(sys.last_type,
-                                                        sys.last_value,
-                                                        sys.last_traceback))
-                logger.input('Exception in IPython session, traceback:\n' + tb)
+                exc_info = (sys.last_type, sys.last_value, sys.last_traceback)
+                logger.input(
+                    'Exception in IPython session, traceback:\n%s',
+                    ''.join(traceback.format_exception(*exc_info))
+                )
+                log_exception_to_central_server(exc_info)
                 self.prev_err = sys.last_value
         except Exception:
             logger.input('Logging error', exc_info=True)
