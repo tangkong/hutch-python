@@ -256,7 +256,6 @@ def log_exception_to_central_server(exc_info, *, context='exception',
         return
 
     central_logger.log(
-        level,
-        '[%s] %s', context, exc_value,
+        level, f'[{context}] {exc_value}',
         exc_info=(exc_type, exc_value, exc_traceback)
     )
