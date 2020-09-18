@@ -1,6 +1,21 @@
 Release History
 ###############
 
+
+v1.5.0 (2020-09-18)
+===================
+
+Features
+--------
+- Send uncaught exceptions to the centrally configured logstash
+
+Fixes and Maintenance
+---------------------
+- Fix issues related to LivePlot segmentation faults
+- Remove jedi tab completion, again
+- Fix and standardize the CI configuration
+
+
 v1.4.0 (2020-08-18)
 ===================
 
