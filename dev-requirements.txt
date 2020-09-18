@@ -2,7 +2,6 @@ sphinx
 sphinx_rtd_theme
 nbsphinx
 doctr
-pyqt
 pytest
 pytest-timeout
 flake8
