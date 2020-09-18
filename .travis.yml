@@ -4,28 +4,33 @@ env:
   global:
     - secure: "kjUAbNvwnSPFQFNf0TRX+Ea0BgVwMwRaPaL5wLRD7zvLpF5D9dzc+giUneap3LzKBxtEXIJ8hY9KgL0n63z0LwyWHKmKQT0F3ILEaqIcOOscU1G0MjCSal0DUji8EBe7xzXWr1T0AApyu39Y2iW0Qp+gTMSJEcNN9XdnBh7V0PIEA9xYP4xfpZ7vbNGvMhpDefJSIjdrAz7bVxp8JH8pxnu2WYCDS1Ik8pA7WGgNSknI0VBI2Fs43gfLocMkJSKimn2M+EGgxORdgBwoxMjRKRxIaTiLsCd+ZY5FP1DM1F1dvVusm3KNyyytaWTv9cDELQazMspv6VB1s7ouq0IgOJMySkl2BAvT6c+e8Adn+x87ZO1PyBAlJZNGO/YQdjrhRNbObu5Ld5IyvwcLw10teCMEkWJ3cNfYBL8O52vlzIlvhDcb1J+pONecc+a6Fr9Ag6nUz6krPr5zF5bK/3qxlC5PmzhnjSeTXqizaub+RVXHNyj7xKNJDczOmqM4HvkXe+kyBiauCnWXu86bOlKY3j8upSrGQCOKcHbFWMExZIsIBq3+g2nLI0bpEC2xT9iTgeLtzB24kkF3bHQ6BaTjU135lrRlVhC7CFiFPuqDUpVzLNWikG9rjPcJAsmQzYauUedm40MNtbqVOA5+2VGePuVMxLIXfHVn43taL916Vh8="
 
+    # enable the usage of versions menu which allow versioning of the docs
+    # pages and not only the master branch
     - DOCTR_VERSIONS_MENU="1"
+    # Dependency files used to build the documentation (space separated)
     - DOCS_REQUIREMENTS="dev-requirements.txt requirements.txt"
+    # Options to be passed to flake8 for package linting. Usually this is just
+    # the package name but you can enable other flake8 options via this config
     - PYTHON_LINT_OPTIONS="hutch_python"
 
-    - CONDA_PACKAGE="hutch_python"
+    # The name of the conda package
+    - CONDA_PACKAGE="hutch-python"
+    # The folder containing the conda recipe (meta.yaml)
     - CONDA_RECIPE_FOLDER="conda-recipe"
-    - CONDA_EXTRAS="pip pyqt=5 happi"
+    # Extra dependencies needed to run the tests which are not included
+    # at the recipe and dev-requirements.txt. E.g. PyQt
+    - CONDA_EXTRAS="pip"
+    # Requirements file with contents for tests dependencies
     - CONDA_REQUIREMENTS="dev-requirements.txt"
 
-    - BENCHMARK_PYTHON="3.6"
-    - BENCHMARK_COMMAND="--benchmark-only"
-
-    - PIP_EXTRAS="PyQt5 happi"
+    # Extra dependencies needed to run the test with Pip (similar to
+    # CONDA_EXTRAS) but for pip
+    - PIP_EXTRAS=""
 
 jobs:
   allow_failures:
     - name: "Python 3.6 - PIP"
 
-after_failure:
-  - cat logs/run_tests_log.txt
-
 import:
   - pcdshub/pcds-ci-helpers:travis/shared_configs/setup-env-ui.yml
   - pcdshub/pcds-ci-helpers:travis/shared_configs/standard-python-conda.yml
-  - pcdshub/pcds-ci-helpers:travis/shared_configs/python-benchmark.yml
