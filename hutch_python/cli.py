@@ -120,8 +120,11 @@ def main():
             logger.warning('No DISPLAY environment variable detected. '
                            'Methods that create graphics will not '
                            'function properly.')
-        # Avoid bugs, probably removable at some point
+        # Old API for disabling Jedi. Keep in just in case API changes back.
         ipy_config.InteractiveShellApp.Completer.use_jedi = False
+        # New API for disabling Jedi (two access points documented, use both)
+        ipy_config.Completer.use_jedi = False
+        ipy_config.IPCompleter.use_jedi = False
         # Finally start the interactive session
         start_ipython(argv=['--quick'], user_ns=objs, config=ipy_config)
     else:
