@@ -235,7 +235,7 @@ def load_conf(conf, hutch_dir=None):
 
     # Daq
     with safe_load('daq'):
-        cache(daq=Daq(RE=RE))
+        cache(daq=Daq(RE=RE, hutch_name=hutch))
 
     # Scan PVs
     if hutch is not None:
