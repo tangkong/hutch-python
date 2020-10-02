@@ -310,12 +310,16 @@ def load_conf(conf, hutch_dir=None):
     with safe_load('default groups'):
         default_class_namespace('EpicsMotor', 'motors', cache)
         default_class_namespace('Slits', 'slits', cache)
-        if hutch is not None:
-            tree = tree_namespace(scope='hutch_python.db')
-            # Prune meta, remove branches with only one object
-            for name, space in tree.__dict__.items():
-                if count_ns_leaves(space) > 1:
-                    cache(**{name: space})
+
+        # Hotfix/disabled until we fix issues here
+        # Tree namespace can cause havoc and break top-level devices
+        #
+        # if hutch is not None:
+        #     tree = tree_namespace(scope='hutch_python.db')
+        #     # Prune meta, remove branches with only one object
+        #     for name, space in tree.__dict__.items():
+        #         if count_ns_leaves(space) > 1:
+        #             cache(**{name: space})
 
         all_objs = copy(cache.objs)
         cache(a=all_objs, all_objects=all_objs)
