@@ -13,7 +13,6 @@ from . import mpl_config  # noqa: F401 # isort: ignore
 from bluesky import RunEngine
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
 from bluesky.callbacks.best_effort import BestEffortCallback
-from bluesky.utils import install_kicker
 from elog import HutchELog
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
@@ -222,11 +221,6 @@ def load_conf(conf, hutch_dir=None):
     bec = BestEffortCallback()
     RE.subscribe(bec)
     cache(RE=RE)
-    try:
-        install_kicker()
-    except RuntimeError:
-        # Probably don't have a display if this failed, so nothing to kick
-        pass
 
     # Collect Plans
     cache(bp=plan_defaults.plans)
