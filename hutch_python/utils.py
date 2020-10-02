@@ -41,7 +41,7 @@ def safe_load(name, cls=None):
         The class of a loaded object to be logged. This will be used in the log
         message.
     """
-    start_time = time.time()
+    start_time = time.monotonic()
 
     if cls is None:
         identifier = name
@@ -50,10 +50,11 @@ def safe_load(name, cls=None):
     logger.info('Loading %s...', identifier)
     try:
         yield
-        duration = time.time() - start_time
-        logger.success('Successfully loaded %s in %.2f s', identifier, duration)
+        duration = time.monotonic() - start_time
+        logger.success('Successfully loaded %s in %.2f s',
+                       identifier, duration)
     except Exception as exc:
-        duration = time.time() - start_time
+        duration = time.monotonic() - start_time
         logger.error('Failed to load %s after %.2f s', identifier, duration)
         logger.debug(exc, exc_info=True)
 
