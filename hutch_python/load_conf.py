@@ -13,7 +13,6 @@ from . import mpl_config  # noqa: F401 # isort: ignore
 from bluesky import RunEngine
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
 from bluesky.callbacks.best_effort import BestEffortCallback
-from bluesky.utils import install_kicker
 from elog import HutchELog
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
@@ -222,11 +221,6 @@ def load_conf(conf, hutch_dir=None):
     bec = BestEffortCallback()
     RE.subscribe(bec)
     cache(RE=RE)
-    try:
-        install_kicker()
-    except RuntimeError:
-        # Probably don't have a display if this failed, so nothing to kick
-        pass
 
     # Collect Plans
     cache(bp=plan_defaults.plans)
@@ -235,7 +229,7 @@ def load_conf(conf, hutch_dir=None):
 
     # Daq
     with safe_load('daq'):
-        cache(daq=Daq(RE=RE))
+        cache(daq=Daq(RE=RE, hutch_name=hutch))
 
     # Scan PVs
     if hutch is not None:
@@ -308,8 +302,9 @@ def load_conf(conf, hutch_dir=None):
 
     # Default namespaces
     with safe_load('default groups'):
-        default_class_namespace('EpicsMotor', 'motors', cache)
+        default_class_namespace('ophyd.PositionerBase', 'motors', cache)
         default_class_namespace('Slits', 'slits', cache)
+        default_class_namespace('pcdsdaq.ami.AmiDet', 'detectors', cache)
 
         # Hotfix/disabled until we fix issues here
         # Tree namespace can cause havoc and break top-level devices
