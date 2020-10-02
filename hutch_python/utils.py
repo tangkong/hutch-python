@@ -10,6 +10,7 @@ from subprocess import check_output
 from types import SimpleNamespace
 import logging
 import sys
+import time
 
 import pyfiglet
 
@@ -40,6 +41,8 @@ def safe_load(name, cls=None):
         The class of a loaded object to be logged. This will be used in the log
         message.
     """
+    start_time = time.monotonic()
+
     if cls is None:
         identifier = name
     else:
@@ -47,9 +50,12 @@ def safe_load(name, cls=None):
     logger.info('Loading %s...', identifier)
     try:
         yield
-        logger.success('Successfully loaded %s', identifier)
+        duration = time.monotonic() - start_time
+        logger.success('Successfully loaded %s in %.2f s',
+                       identifier, duration)
     except Exception as exc:
-        logger.error('Failed to load %s', identifier)
+        duration = time.monotonic() - start_time
+        logger.error('Failed to load %s after %.2f s', identifier, duration)
         logger.debug(exc, exc_info=True)
 
 
