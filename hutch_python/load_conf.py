@@ -304,6 +304,7 @@ def load_conf(conf, hutch_dir=None):
     with safe_load('default groups'):
         default_class_namespace('ophyd.PositionerBase', 'motors', cache)
         default_class_namespace('Slits', 'slits', cache)
+        default_class_namespace('pcdsdaq.ami.AmiDet', 'detectors', cache)
         if hutch is not None:
             tree = tree_namespace(scope='hutch_python.db')
             # Prune meta, remove branches with only one object
