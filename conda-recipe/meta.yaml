@@ -23,7 +23,7 @@ requirements:
     - pyyaml
     - coloredlogs
     - pyfiglet
-    - bluesky >= 1.6.0
+    - bluesky >=1.6.0
     - happi >=1.6.0
     - pcdsdevices >=2.6.0
     - pcdsdaq >=2.3.0
