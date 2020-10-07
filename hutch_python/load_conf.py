@@ -20,6 +20,7 @@ from pcdsdevices.interface import setup_preset_paths
 from archapp.interactive import EpicsArchive
 
 from . import plan_defaults
+from . import sim
 from .cache import LoadCache
 from .cam_load import read_camviewer_cfg
 from .constants import VALID_KEYS, CAMVIEWER_CFG
@@ -299,6 +300,10 @@ def load_conf(conf, hutch_dir=None):
         for name, obj in qs_objs.items():
             setattr(user, name, obj)
         cache(x=user, user=user)
+
+    # Simulated hardware
+    with safe_load('simulated hardware'):
+        cache(sim=sim.get_hw())
 
     # Default namespaces
     with safe_load('default groups'):
