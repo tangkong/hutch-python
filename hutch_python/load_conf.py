@@ -26,11 +26,10 @@ from .cam_load import read_camviewer_cfg
 from .constants import VALID_KEYS, CAMVIEWER_CFG
 from .exp_load import get_exp_objs
 from .happi import get_happi_objs, get_lightpath
-from .namespace import class_namespace, tree_namespace
+from .namespace import class_namespace
 from .qs_load import get_qs_objs
 from .user_load import get_user_objs
-from .utils import (get_current_experiment, safe_load, hutch_banner,
-                    count_ns_leaves)
+from .utils import get_current_experiment, safe_load, hutch_banner
 
 logger = logging.getLogger(__name__)
 
