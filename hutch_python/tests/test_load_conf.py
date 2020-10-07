@@ -23,7 +23,7 @@ def test_file_load():
     err = '{} was overriden by a namespace'
     for elem in should_have:
         assert not isinstance(objs[elem], SimpleNamespace), err.format(elem)
-    assert 'tst' in objs
+    assert 'tst' not in objs  # Tree namespace should be disabled
     assert len(Presets._paths) == 2
 
 
