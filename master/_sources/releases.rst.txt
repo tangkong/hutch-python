@@ -1,6 +1,30 @@
 Release History
 ###############
 
+v1.6.0 (2020-10-07)
+===================
+
+Features
+--------
+- Expand motors group to have all positioners.
+- Add detectors (d) namespace for ami detectors.
+- Time safe_load and report duration.
+- Add a few simulated motors by default in a sim namespace.
+
+
+Fixes and Maintenance
+---------------------
+- Pass hutch name to daq to avoid calling get_hutch_name, which can be slow.
+- Disable tree namespace until issues are resolved.
+
+
+v1.5.1 (2020-10-02)
+===================
+
+Fixes and Maintenance
+---------------------
+- Remove jedi tab completion again, again.
+
 
 v1.5.0 (2020-09-18)
 ===================
