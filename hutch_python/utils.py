@@ -3,18 +3,18 @@ Module that contains general-use utilities. Some of these are useful outside of
 ``hutch-python``, while others are used in multiple places throughout the
 module.
 """
+import logging
+import sys
+import time
 from contextlib import contextmanager
 from functools import partial
 from importlib import import_module
 from subprocess import check_output
 from types import SimpleNamespace
-import logging
-import sys
-import time
 
 import pyfiglet
 
-from .constants import (CUR_EXP_SCRIPT, CLASS_SEARCH_PATH, HUTCH_COLORS,
+from .constants import (CLASS_SEARCH_PATH, CUR_EXP_SCRIPT, HUTCH_COLORS,
                         SUCCESS_LEVEL)
 
 logging.addLevelName('SUCCESS', SUCCESS_LEVEL)
@@ -263,6 +263,36 @@ def strip_prefix(name, strip_text):
         return name[len(strip_text)+1:]
     else:
         return name
+
+
+def maybe_exit(logger, message, exception_message, *, exit_code=1):
+    """
+    For potentially fatal exceptions, prompt the user whether or not to exit.
+
+    This outputs a full exception traceback first with the message
+    `exception_message`, before a friendlier `message`, and then querying the
+    user.
+
+    Parameters
+    ----------
+    logger : logging.Logger
+        The logger instance to output a message.
+
+    message : str
+        The user-friendly error message.
+
+    exception_message : str
+        The error to show along with the full exception traceback.
+
+    exit_code : int, optional
+        The exit code, if the user decides to exit.
+    """
+    logger.exception(exception_message)
+    logger.error(message)
+
+    response = input('Continue loading hutch-python? [Yn] ')
+    if response.lower() not in {'y', ''}:
+        sys.exit(exit_code)
 
 
 def hutch_banner(hutch_name='Hutch '):
