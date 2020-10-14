@@ -37,7 +37,8 @@ def get_exp_objs(exp_module, *, ask_on_failure=True):
             module = import_module(module_name)
             return module.User()
         except Exception as ex:
-            if isinstance(ex, ImportError) and module_name in ex.msg:
+            import_err = isinstance(ex, ImportError) and module_name in ex.msg
+            if import_err or not ask_on_failure:
                 logger.info('Skip missing experiment file %s.py', exp_module)
                 return SimpleNamespace()
 
