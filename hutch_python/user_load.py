@@ -1,7 +1,6 @@
 import logging
-import sys
 
-from .utils import extract_objs, safe_load
+from . import utils
 
 logger = logging.getLogger(__name__)
 
@@ -32,25 +31,22 @@ def get_user_objs(load, *, ask_on_failure=True):
 
     objs = {}
     for module in load:
-        with safe_load(module):
+        with utils.safe_load(module):
             try:
-                module_objs = extract_objs(module)
+                module_objs = utils.extract_objs(module)
                 objs.update(module_objs)
             except Exception as ex:
                 if not ask_on_failure:
                     raise
 
-                # Dump out the full exception first, before a friendlier
-                # message and querying the user.
-                logger.exception('Failed to load %s', module)
-                logger.error(
-                    'Devices and functions from module %r will NOT be '
-                    'available because it failed to load with:\n\t %s: %s.',
-                    module, ex.__class__.__name__, ex
+                utils.maybe_exit(
+                    logger,
+                    message=(
+                        f'Devices and functions from module {module} will NOT '
+                        f'be available because it failed to load with:\n\t'
+                        f'{ex.__class__.__name__}: {ex}'
+                    ),
+                    exception_message=f'Failed to load {module}',
                 )
-
-                response = input('Continue loading hutch-python? [Yn] ')
-                if response.lower() not in {'y', ''}:
-                    sys.exit(1)
 
     return objs
