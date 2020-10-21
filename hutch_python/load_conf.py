@@ -25,6 +25,7 @@ from .cam_load import read_camviewer_cfg
 from .constants import CAMVIEWER_CFG, VALID_KEYS
 from .exp_load import get_exp_objs
 from .happi import get_happi_objs, get_lightpath
+from .lcls import global_devices
 from .namespace import class_namespace
 from .qs_load import get_qs_objs
 from .user_load import get_user_objs
@@ -250,6 +251,10 @@ def load_conf(conf, hutch_dir=None):
                 logger.info("Configuring ELog to post to secondary experiment")
                 kwargs = {'station': '1'}
             cache(elog=HutchELog.from_conf(hutch.upper(), **kwargs))
+
+    # Shared global devices for LCLS
+    with safe_load('lcls PVs'):
+        cache(**global_devices())
 
     # Happi db and Lightpath
     if db is not None:
