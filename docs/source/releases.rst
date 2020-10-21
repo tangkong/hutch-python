@@ -1,6 +1,27 @@
 Release History
 ###############
 
+
+v1.7.0 (2020-10-21)
+===================
+
+Features
+--------
+- Alert and show the user the full traceback when there are issues loading
+  user files like beamline and experiment files.
+- Ask the user if it is okay to proceed with the user file loading failure,
+  which typically renders the session useless, rather than just
+  passing over the issue.
+
+
+v1.6.1 (2020-10-07)
+===================
+
+Fixes and Maintenance
+---------------------
+- Re-tag of v1.6.0 to trigger the anaconda upload.
+
+
 v1.6.0 (2020-10-07)
 ===================
 
