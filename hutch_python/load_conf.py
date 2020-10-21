@@ -8,6 +8,8 @@ from pathlib import Path
 from socket import gethostname
 from types import SimpleNamespace
 
+from . import mpl_config  # noqa: F401
+
 import yaml
 from archapp.interactive import EpicsArchive
 from bluesky import RunEngine
@@ -18,7 +20,6 @@ from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdevices.interface import setup_preset_paths
 
-from . import mpl_config  # noqa: F401 # isort: ignore
 from . import plan_defaults, sim
 from .cache import LoadCache
 from .cam_load import read_camviewer_cfg
