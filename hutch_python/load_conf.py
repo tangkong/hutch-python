@@ -232,9 +232,12 @@ def load_conf(conf, hutch_dir=None):
 
     # Scan PVs
     if hutch is not None:
-        with safe_load('scan_pvs (disabled)'):
-            cache(scan_pvs=ScanVars('{}:SCAN'.format(hutch.upper()),
-                                    name='scan_pvs', RE=RE))
+        with safe_load('scan_pvs'):
+            scan_pvs = ScanVars('{}:SCAN'.format(hutch.upper()),
+                                name='scan_pvs', RE=RE)
+            scan_pvs.enable()
+            cache(scan_pvs=scan_pvs)
+
     # Elog
     if hutch is not None:
         with safe_load('elog'):
