@@ -3,33 +3,34 @@ This module is responsible for reading and interpreting the ``conf.yml`` file.
 The file's specification can be found on the `yaml_files` page.
 """
 import logging
-import yaml
 from copy import copy
 from pathlib import Path
 from socket import gethostname
 from types import SimpleNamespace
 
-from . import mpl_config  # noqa: F401 # isort: ignore
+from . import mpl_config  # noqa: F401
+
+import yaml
+from archapp.interactive import EpicsArchive
 from bluesky import RunEngine
-from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
 from bluesky.callbacks.best_effort import BestEffortCallback
+from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
 from elog import HutchELog
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdevices.interface import setup_preset_paths
-from archapp.interactive import EpicsArchive
 
-from . import plan_defaults
-from . import sim
+from . import plan_defaults, sim
 from .cache import LoadCache
 from .cam_load import read_camviewer_cfg
-from .constants import VALID_KEYS, CAMVIEWER_CFG
+from .constants import CAMVIEWER_CFG, VALID_KEYS
 from .exp_load import get_exp_objs
 from .happi import get_happi_objs, get_lightpath
+from .lcls import global_devices
 from .namespace import class_namespace
 from .qs_load import get_qs_objs
 from .user_load import get_user_objs
-from .utils import get_current_experiment, safe_load, hutch_banner
+from .utils import get_current_experiment, hutch_banner, safe_load
 
 logger = logging.getLogger(__name__)
 
@@ -97,13 +98,13 @@ def load_conf(conf, hutch_dir=None):
       and create a ``hutch_beampath`` object from ``lightpath``
     - Use ``hutch`` key to load detector objects from the ``camviewer``
       configuration file.
-    - Use ``load`` key to bring up the user's ``beamline`` modules
     - Use ``experiment`` key to select the current experiment
 
         - If ``experiment`` was missing, autoselect experiment using
           ``hutch`` key
 
     - Use current experiment to load experiment objects from questionnaire
+    - Use ``load`` key to bring up the user's ``beamline`` modules
     - Use current experiment to load experiment file
 
     If a conf key is missing, we'll note it in a ``logger.info`` message.
@@ -233,9 +234,12 @@ def load_conf(conf, hutch_dir=None):
 
     # Scan PVs
     if hutch is not None:
-        with safe_load('scan_pvs (disabled)'):
-            cache(scan_pvs=ScanVars('{}:SCAN'.format(hutch.upper()),
-                                    name='scan_pvs', RE=RE))
+        with safe_load('scan_pvs'):
+            scan_pvs = ScanVars('{}:SCAN'.format(hutch.upper()),
+                                name='scan_pvs', RE=RE)
+            scan_pvs.enable()
+            cache(scan_pvs=scan_pvs)
+
     # Elog
     if hutch is not None:
         with safe_load('elog'):
@@ -248,6 +252,10 @@ def load_conf(conf, hutch_dir=None):
                 logger.info("Configuring ELog to post to secondary experiment")
                 kwargs = {'station': '1'}
             cache(elog=HutchELog.from_conf(hutch.upper(), **kwargs))
+
+    # Shared global devices for LCLS
+    with safe_load('lcls PVs'):
+        cache(**global_devices())
 
     # Happi db and Lightpath
     if db is not None:
@@ -268,10 +276,9 @@ def load_conf(conf, hutch_dir=None):
             objs = read_camviewer_cfg(CAMVIEWER_CFG.format(hutch))
             cache(camviewer=SimpleNamespace(**objs))
 
-    # Load user files
-    if load is not None:
-        load_objs = get_user_objs(load)
-        cache(**load_objs)
+    # Simulated hardware
+    with safe_load('simulated hardware'):
+        cache(sim=sim.get_hw())
 
     # Auto select experiment if we need to
     if experiment is None:
@@ -285,7 +292,7 @@ def load_conf(conf, hutch_dir=None):
                 logger.error(err)
                 logger.debug(err, exc_info=True)
 
-    # Experiment objects
+    # Process experiment name a bit
     if experiment is not None:
         if hutch in experiment:
             full_expname = experiment
@@ -293,16 +300,23 @@ def load_conf(conf, hutch_dir=None):
         else:
             full_expname = hutch + experiment
             raw_expname = experiment
+
+    # Load questionnaire
+    if experiment is not None:
         qs_objs = get_qs_objs(full_expname)
         cache(**qs_objs)
+
+    # Load user/beamline files
+    if load is not None:
+        load_objs = get_user_objs(load)
+        cache(**load_objs)
+
+    # Load experiment file
+    if experiment is not None:
         user = get_exp_objs(raw_expname)
         for name, obj in qs_objs.items():
             setattr(user, name, obj)
         cache(x=user, user=user)
-
-    # Simulated hardware
-    with safe_load('simulated hardware'):
-        cache(sim=sim.get_hw())
 
     # Default namespaces
     with safe_load('default groups'):
