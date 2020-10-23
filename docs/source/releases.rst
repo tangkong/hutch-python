@@ -1,6 +1,18 @@
 Release History
 ###############
 
+v1.8.0 (2020-10-23)
+===================
+
+Features
+--------
+- Include the beam_stats and lcls objects in every hutch python session.
+- Enable scan PVs for all consumers (instead of starting as disabled).
+
+Bugfixes
+--------
+- Fix load order so that beamline and experiment files happen as late as possible.
+
 
 v1.7.0 (2020-10-21)
 ===================
