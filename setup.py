@@ -10,5 +10,8 @@ setup(name='hutch-python',
       include_package_data=True,
       description=('Launcher and Config Reader for '
                    'LCLS Interactive IPython Sessions'),
-      scripts=['bin/hutch-python']
+      # scripts=['bin/hutch-python']
+      entry_points={'console_scripts': [
+            'hutch-python=hutch_python.cli:main',
+            'epicsarch-qs=hutch_python.epics_arch:main']}
       )
