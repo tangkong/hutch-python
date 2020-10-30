@@ -1,13 +1,15 @@
-"""Module to help create the epicsArch file that will be read by the DAQ"""
+"""Module to help create the epicsArch file that will be read by the DAQ."""
 import argparse
-import happi
 import logging
-import sys
-from happi.backends.qs_db import QSBackend
 import os
-from .constants import EPICS_ARCH_FILE_PATH
+import sys
+
+import happi
+from happi.backends.qs_db import QSBackend
+
 import hutch_python.constants
 
+from .constants import EPICS_ARCH_FILE_PATH
 
 logger = logging.getLogger(__name__)
 
@@ -19,10 +21,12 @@ parser.add_argument('experiment', help='Experiment name to'
                     ' create the epicsArch file from. E.g.: xpplv6818')
 
 parser.add_argument('--hutch', action="store",
-                    help='Hutch name to create the epicsArch for. E.g.: xpp')
+                    help='Hutch name to create the epicsArch file for.'
+                    ' E.g.: xpp')
 
 parser.add_argument('--path', action="store",
-                    help='Path to create the epicsArch file to.')
+                    help='Path to create the epicsArch file.'
+                    ' E.g.: /path/to/the/directory/')
 
 parser.add_argument('--dry-run', action='store_true', default=False,
                     help='Print to stdout what would be written in the '
@@ -30,7 +34,41 @@ parser.add_argument('--dry-run', action='store_true', default=False,
 
 
 def epics_arch_qs(args):
-    """Command Line for epicsarch-qs."""
+    """
+    Command Line for epicsarch-qs.
+
+    Parameter
+    ---------
+    args : list
+        Arguments passed to epicsarch-qs.
+
+    Examples
+    --------
+    Create the epicsArch file for experiment `xpplv6818`. If no `--path` or
+    `--hutch` provided, write the file at the default path:
+    `/cds/group/pcds/dist/pds/{}/misc/` whre {} is the hutch name from the
+    experiment (`xpp`):
+
+    >>> epicsarch-qs xpplv6818
+
+    Would write: `/cds/group/pcds/dist/pds/xpp/misc/epicsArch_xpplv6818.txt`
+
+    To change the path where you want to write the epicsArch file:
+
+    >>> epicsarch-qs xpplv6818 --path /my/new/path/
+
+    Would write: `/my/new/path/epicsArch_xpplv6818.txt`
+
+    To change only the hutch name in the path:
+
+    >>> epicsarch-qs xpplv6818 --hutch xcs
+
+    Would write: `/cds/group/pcds/dist/pds/xcs/misc/epicsArch_xpplv6818.txt`
+
+    To print to standard output what would be written in the epicsArch file:
+
+    >>> epicsarch-qs xpplv6818 --dry-run
+    """
     args = parser.parse_args(args)
 
     if args.experiment and not args.dry_run:
@@ -58,6 +96,11 @@ def epics_arch_qs(args):
 def overwirte_hutch(hutch_name):
     """
     Overwirte the default Hutch.
+
+    Parameters
+    ----------
+    hutch_name : str
+        Name of the hutch, e.g.: xpp
     """
     if hutch_name:
         hutch_python.constants.EPICS_ARCH_FILE_PATH = (
@@ -68,6 +111,11 @@ def overwirte_hutch(hutch_name):
 def overwirte_path(path):
     """
     Overwrite the default path.
+
+    Parameters
+    ----------
+    path : str
+        Path where to write the epicsArch file to.
     """
     if path:
         hutch_python.constants.EPICS_ARCH_FILE_PATH = path
@@ -76,6 +124,11 @@ def overwirte_path(path):
 def set_path(exp_name):
     """
     Figure out the huch name from the experiment and set the path with it.
+
+    Parameters
+    ----------
+    exp_name : str
+        Experiment name, e.g.: xpplv6818
     """
     if exp_name:
         hutch_python.constants.EPICS_ARCH_FILE_PATH = (
@@ -85,7 +138,7 @@ def set_path(exp_name):
 
 def print_dry_run(exp_name):
     """
-    Print to stdou the data that would be stored in the epicsArch file.
+    Print to stdout the data that would be stored in the epicsArch file.
 
     Parameters
     ----------
@@ -139,7 +192,7 @@ def create_file(exp_name, path=None):
     exp_name : str
         Experiment name, e.g.: xpplv6818
     path : str, optional
-        Path where to create the epicsArch file to.
+        Directory where to create the epicsArch file. E.g.: /my/directory/path/
     """
     data_list = get_questionnaire_data(exp_name)
     path = path or hutch_python.constants.EPICS_ARCH_FILE_PATH
