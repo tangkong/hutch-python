@@ -22,11 +22,11 @@ def _create_parser():
 
     parser.add_argument('--hutch', action="store",
                         help='Hutch name to create the epicsArch file for.'
-                        ' E.g.: xpp')
+                        ' E.g.: xpp', default=None)
 
     parser.add_argument('--path', action="store",
                         help='Path to create the epicsArch file.'
-                        ' E.g.: /path/to/the/directory/')
+                        ' E.g.: /path/to/the/directory/', default=None)
 
     parser.add_argument('--dry-run', action='store_true', default=False,
                         help='Print to stdout what would be written in the '
@@ -34,15 +34,10 @@ def _create_parser():
     return parser
 
 
-def parse_arguments(*args, **kwargs):
-    """Parse arguments."""
-    parser = _create_parser()
-    return parser.parse_args(*args, **kwargs)
-
-
 def main():
     """Entry point."""
-    parsed_args = parse_arguments()
+    parser = _create_parser()
+    parsed_args = parser.parse_args()
     kwargs = vars(parsed_args)
     create_arch_file(**kwargs)
 
