@@ -21,12 +21,12 @@ def _create_parser():
                         ' create the epicsArch file from. E.g.: xpplv6818')
 
     parser.add_argument('--hutch', action="store",
-                        help='Hutch name to create the epicsArch file for.'
-                        ' E.g.: xpp', default=None)
+                        help='Overrides hutch detection from the experiment '
+                        'name. E.g.: xpp', default=None)
 
     parser.add_argument('--path', action="store",
-                        help='Path to create the epicsArch file.'
-                        ' E.g.: /path/to/the/directory/', default=None)
+                        help='Directory path where to create the epicsArch '
+                        'file. E.g.: /path/to/the/directory/', default=None)
 
     parser.add_argument('--dry-run', action='store_true', default=False,
                         help='Print to stdout what would be written in the '
