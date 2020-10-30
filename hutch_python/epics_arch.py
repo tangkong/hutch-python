@@ -6,6 +6,8 @@ import sys
 from happi.backends.qs_db import QSBackend
 import os
 from .constants import EPICS_ARCH_FILE_PATH
+import hutch_python.constants
+
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +15,7 @@ logger = logging.getLogger(__name__)
 parser = argparse.ArgumentParser(description='Create an epicsArch file from'
                                              ' the Quesionnaire')
 
-parser.add_argument('experiment', nargs="?", help='Experiment name to'
+parser.add_argument('experiment', help='Experiment name to'
                     ' create the epicsArch file from. E.g.: xpplv6818')
 
 parser.add_argument('--hutch', action="store",
@@ -28,20 +30,20 @@ parser.add_argument('--dry-run', action='store_true', default=False,
 
 
 def epics_arch_qs(args):
+    """Command Line for epicsarch-qs."""
     args = parser.parse_args(args)
 
     if args.experiment and not args.dry_run:
+        # set the path to write the epicsArch file to.
+        if args.path:
+            overwirte_path(args.path)
+        elif args.hutch:
+            overwirte_hutch(args.hutch)
+        else:
+            set_path(args.experiment)
         logger.info('Creating epicsArch file for experiment: %s',
                     args.experiment)
-        print('HELLO --- for now')
-        # create_file(exp_name)
-    elif args.hutch:
-        # Overwrite the default hutch
-        print(f'HUTCH----------------- {args.hutch}')
-        # EPICS_ARCH_FILE_PATH.format(hutch)
-    elif args.path:
-        # Overwrite the default path
-        print(f'PATH----------------- {args.path}')
+        create_file(args.experiment)
     elif args.dry_run:
         if args.experiment:
             print_dry_run(args.experiment)
@@ -51,6 +53,34 @@ def epics_arch_qs(args):
     else:
         parser.print_usage()
         return
+
+
+def overwirte_hutch(hutch_name):
+    """
+    Overwirte the default Hutch.
+    """
+    if hutch_name:
+        hutch_python.constants.EPICS_ARCH_FILE_PATH = (
+            EPICS_ARCH_FILE_PATH.format(hutch_name.lower())
+        )
+
+
+def overwirte_path(path):
+    """
+    Overwrite the default path.
+    """
+    if path:
+        hutch_python.constants.EPICS_ARCH_FILE_PATH = path
+
+
+def set_path(exp_name):
+    """
+    Figure out the huch name from the experiment and set the path with it.
+    """
+    if exp_name:
+        hutch_python.constants.EPICS_ARCH_FILE_PATH = (
+            EPICS_ARCH_FILE_PATH.format(exp_name[0:3])
+        )
 
 
 def print_dry_run(exp_name):
@@ -73,7 +103,7 @@ def print_dry_run(exp_name):
 
 def get_questionnaire_data(exp_name):
     """
-    Returns a list of items that would be written in the epicsArch file.
+    Return a list of items that would be written in the epicsArch file.
 
     Parameters
     ----------
@@ -87,8 +117,6 @@ def get_questionnaire_data(exp_name):
     """
     data_list = []
     qs_client = happi.Client(database=QSBackend(exp_name, use_kerberos=True))
-    # qs_client = happi.Client(
-    #    path='/home/cristina/workspace/device_config/db.json')
     items = qs_client.all_items
     if not items:
         logger.warning("No devices found in PCDS Questionnaire for %s",
@@ -105,11 +133,16 @@ def get_questionnaire_data(exp_name):
 def create_file(exp_name, path=None):
     """
     Create a file with aliases and pvs from the questionnaire.
+
+    Parameters
+    ----------
+    exp_name : str
+        Experiment name, e.g.: xpplv6818
+    path : str, optional
+        Path where to create the epicsArch file to.
     """
     data_list = get_questionnaire_data(exp_name)
-    hutch = exp_name[0:3]
-    path = path or EPICS_ARCH_FILE_PATH.format(hutch)
-    # path = path or '/home/cristina/workspace/hutch-python/'
+    path = path or hutch_python.constants.EPICS_ARCH_FILE_PATH
     if not os.path.exists(path):
         raise IOError('Invalid path: %s' % path)
     exp_name = str(exp_name)
