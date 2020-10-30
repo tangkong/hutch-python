@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 parser = argparse.ArgumentParser(description='Create an epicsArch file from'
                                              ' the Quesionnaire')
 
-parser.add_argument('experiment', help='Experiment name to'
+parser.add_argument('experiment', nargs='?', help='Experiment name to'
                     ' create the epicsArch file from. E.g.: xpplv6818')
 
 parser.add_argument('--hutch', action="store",
@@ -74,14 +74,16 @@ def epics_arch_qs(args):
     if args.experiment and not args.dry_run:
         # set the path to write the epicsArch file to.
         if args.path:
-            overwirte_path(args.path)
+            overwrite_path(args.path)
         elif args.hutch:
-            overwirte_hutch(args.hutch)
+            overwrite_hutch(args.hutch)
         else:
             set_path(args.experiment)
-        logger.info('Creating epicsArch file for experiment: %s',
-                    args.experiment)
         create_file(args.experiment)
+    elif args.hutch:
+        overwrite_hutch(args.hutch)
+    elif args.path:
+        overwrite_path(args.path)
     elif args.dry_run:
         if args.experiment:
             print_dry_run(args.experiment)
@@ -93,9 +95,9 @@ def epics_arch_qs(args):
         return
 
 
-def overwirte_hutch(hutch_name):
+def overwrite_hutch(hutch_name):
     """
-    Overwirte the default Hutch.
+    Overwrite the default Hutch.
 
     Parameters
     ----------
@@ -108,7 +110,7 @@ def overwirte_hutch(hutch_name):
         )
 
 
-def overwirte_path(path):
+def overwrite_path(path):
     """
     Overwrite the default path.
 
@@ -117,7 +119,9 @@ def overwirte_path(path):
     path : str
         Path where to write the epicsArch file to.
     """
-    if path:
+    if path and not os.path.exists(path):
+        raise IOError('Invalid path: %s' % path)
+    elif path:
         hutch_python.constants.EPICS_ARCH_FILE_PATH = path
 
 
@@ -169,18 +173,44 @@ def get_questionnaire_data(exp_name):
         List containing the names ans prefixes of items in the Questionnaire.
     """
     data_list = []
-    qs_client = happi.Client(database=QSBackend(exp_name, use_kerberos=True))
-    items = qs_client.all_items
-    if not items:
-        logger.warning("No devices found in PCDS Questionnaire for %s",
-                       exp_name)
-        return
-    else:
+    items = get_items(exp_name)
+
+    if items:
         for item in items:
             name = ''.join(('* ', item.name))
             data_list.append(name)
             data_list.append(item.prefix)
     return data_list
+
+
+def get_items(exp_name):
+    """
+    Get all_items from Questionnaire.
+
+    Parameters
+    ----------
+    exp_name : str
+        Experiment name, e.g.: xpplv6818
+
+    Returns
+    -------
+    items : list
+        List of all_items from Questionnaire.
+    """
+    try:
+        # TODO: maybe i should be using get_qs_objs here from qs_load?
+        # i'd need to split it into two - i only need client.all_items
+        qs_client = happi.Client(database=QSBackend(exp_name,
+                                 use_kerberos=True))
+    except Exception as ex:
+        logger.error('Failed to load the Questionnaire, %s', ex)
+        raise ex
+    items = qs_client.all_items
+    if not items:
+        logger.warning("No devices found in PCDS Questionnaire for %s",
+                       exp_name)
+        return
+    return items
 
 
 def create_file(exp_name, path=None):
@@ -200,6 +230,9 @@ def create_file(exp_name, path=None):
         raise IOError('Invalid path: %s' % path)
     exp_name = str(exp_name)
     file_path = ''.join((path, 'epicsArch_', exp_name, '.txt'))
+
+    logger.info('Creating epicsArch file for experiment: %s', exp_name)
+
     with open(file_path, 'w') as f:
         for data in data_list:
             try:
