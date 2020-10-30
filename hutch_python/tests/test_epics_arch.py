@@ -7,13 +7,7 @@ import happi
 import pytest
 from conftest import cli_args
 
-import hutch_python
-import hutch_python.constants
-import hutch_python.epics_arch
-import hutch_python.qs_load
-
-from ..epics_arch import (create_file, main, overwrite_hutch, overwrite_path,
-                          print_dry_run, set_path, get_items)
+from ..epics_arch import create_file, get_items, main, print_dry_run
 
 logger = logging.getLogger(__name__)
 
@@ -25,38 +19,28 @@ def test_epics_arch_args():
         mock.assert_called_once()
 
 
-def test_overwrite_hutch_args():
-    with cli_args(['epicsarch-qs', '--hutch', 'xpp']):
-        with patch('hutch_python.epics_arch.overwrite_hutch') as mock:
-            main()
-        mock.assert_called_once()
-
-
-def test_overwrite_path_args():
-    with cli_args(['epicsarch-qs', '--path', '/xpp/my/path/']):
-        with patch('hutch_python.epics_arch.overwrite_path') as mock:
-            main()
-        mock.assert_called_once()
-
-
 @patch('hutch_python.epics_arch.create_file')
-@patch('hutch_python.epics_arch.overwrite_hutch')
-def test_overwrite_hutch_with_exp_args(hutch_mock, create_mock):
+def test_create_file_with_hutch_args(create_mock):
     with cli_args(['epicsarch-qs', 'xpplv6818', '--hutch', 'xpp']):
         with patch('hutch_python.epics_arch.get_items', return_value=items):
             main()
-        hutch_mock.assert_called_once()
         create_mock.assert_called_once()
 
 
 @patch('hutch_python.epics_arch.create_file')
-@patch('hutch_python.epics_arch.overwrite_path')
-def test_overwrite_path_with_exp_args(hutch_mock, create_mock):
+@patch('os.path.exists', return_value=True)
+def test_create_file_with_path_args(path_mock, create_mock):
     with cli_args(['epicsarch-qs', 'xpplv6818', '--path', '/my/path/xpp/']):
         with patch('hutch_python.epics_arch.get_items', return_value=items):
             main()
-        hutch_mock.assert_called_once()
         create_mock.assert_called_once()
+
+
+@patch('os.path.exists', return_value=False)
+def test_create_file_with_bad_path_args(path_mock):
+    with cli_args(['epicsarch-qs', 'xpplv6818', '--path', '/my/path/xpp/']):
+        with pytest.raises(OSError):
+            main()
 
 
 @patch('hutch_python.epics_arch.get_questionnaire_data')
@@ -72,31 +56,6 @@ def test_dry_run_args(get_data_mock, items):
 def test_dry_run_args_exception():
     with pytest.raises(Exception):
         get_items('somebadname')
-
-
-def test_overwrite_hutch():
-    overwrite_hutch('xpp')
-    assert hutch_python.constants.EPICS_ARCH_FILE_PATH == (
-        '/cds/group/pcds/dist/pds/xpp/misc/'
-        )
-
-
-def test_overwrite_path():
-    with patch('os.path.exists', return_value=True):
-        overwrite_path('/my/dummy/path/')
-        assert hutch_python.constants.EPICS_ARCH_FILE_PATH == '/my/dummy/path/'
-
-
-def test_overwrite_bad_path():
-    with pytest.raises(OSError):
-        overwrite_path('/my/dummy/path/')
-
-
-def test_set_path():
-    set_path('xcslv6818')
-    assert hutch_python.constants.EPICS_ARCH_FILE_PATH == (
-        '/cds/group/pcds/dist/pds/xcs/misc/'
-        )
 
 
 def test_print_dry_run(items, capsys):

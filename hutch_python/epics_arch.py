@@ -7,40 +7,62 @@ import sys
 import happi
 from happi.backends.qs_db import QSBackend
 
-import hutch_python.constants
-
 from .constants import EPICS_ARCH_FILE_PATH
 
 logger = logging.getLogger(__name__)
 
-# Simple Argument Parser Setup
-parser = argparse.ArgumentParser(description='Create an epicsArch file from'
-                                             ' the Quesionnaire')
 
-parser.add_argument('experiment', nargs='?', help='Experiment name to'
-                    ' create the epicsArch file from. E.g.: xpplv6818')
+def _create_parser():
+    """Argument Parser Setup. Define shell commands."""
+    parser = argparse.ArgumentParser(description='Create an epicsArch file '
+                                                 'from the Quesionnaire')
 
-parser.add_argument('--hutch', action="store",
-                    help='Hutch name to create the epicsArch file for.'
-                    ' E.g.: xpp')
+    parser.add_argument('experiment', help='Experiment name to'
+                        ' create the epicsArch file from. E.g.: xpplv6818')
 
-parser.add_argument('--path', action="store",
-                    help='Path to create the epicsArch file.'
-                    ' E.g.: /path/to/the/directory/')
+    parser.add_argument('--hutch', action="store",
+                        help='Hutch name to create the epicsArch file for.'
+                        ' E.g.: xpp')
 
-parser.add_argument('--dry-run', action='store_true', default=False,
-                    help='Print to stdout what would be written in the '
-                         'archFIle.')
+    parser.add_argument('--path', action="store",
+                        help='Path to create the epicsArch file.'
+                        ' E.g.: /path/to/the/directory/')
+
+    parser.add_argument('--dry-run', action='store_true', default=False,
+                        help='Print to stdout what would be written in the '
+                        'archFIle.')
+    return parser
 
 
-def epics_arch_qs(args):
+def parse_arguments(*args, **kwargs):
+    """Parse arguments."""
+    parser = _create_parser()
+    return parser.parse_args(*args, **kwargs)
+
+
+def main():
+    """Entry point."""
+    parsed_args = parse_arguments()
+    kwargs = vars(parsed_args)
+    create_arch_file(**kwargs)
+
+
+def create_arch_file(experiment, hutch=None, path=None, dry_run=False):
     """
-    Command Line for epicsarch-qs.
+    Create an epicsArch file for the experiment.
 
     Parameter
     ---------
-    args : list
-        Arguments passed to epicsarch-qs.
+    experiment : str
+        Experiment name, e.g.: `xpplv6818`
+    hutch : str
+        Hutch name if other than the one from the experiment, e.g.: `xcs`
+    path : str
+        Directory where to create the file if other than the default one which
+        is `/cds/group/pcds/dist/pds/{}/misc/`
+    dry_run : bool
+        To indicate if only print to stdout the data that would be stored
+        in the epicsArch file and not create the file.
 
     Examples
     --------
@@ -69,75 +91,20 @@ def epics_arch_qs(args):
 
     >>> epicsarch-qs xpplv6818 --dry-run
     """
-    args = parser.parse_args(args)
-
-    if args.experiment and not args.dry_run:
+    file_path = None
+    if experiment and not dry_run:
         # set the path to write the epicsArch file to.
-        if args.path:
-            overwrite_path(args.path)
-        elif args.hutch:
-            overwrite_hutch(args.hutch)
+        if path:
+            if path and not os.path.exists(path):
+                raise IOError('Invalid path: %s' % path)
+            file_path = path
+        elif hutch:
+            file_path = EPICS_ARCH_FILE_PATH.format(hutch.lower())
         else:
-            set_path(args.experiment)
-        create_file(args.experiment)
-    elif args.hutch:
-        overwrite_hutch(args.hutch)
-    elif args.path:
-        overwrite_path(args.path)
-    elif args.dry_run:
-        if args.experiment:
-            print_dry_run(args.experiment)
-        else:
-            logger.error('Please provide an experiment name.')
-            return
-    else:
-        parser.print_usage()
-        return
-
-
-def overwrite_hutch(hutch_name):
-    """
-    Overwrite the default Hutch.
-
-    Parameters
-    ----------
-    hutch_name : str
-        Name of the hutch, e.g.: xpp
-    """
-    if hutch_name:
-        hutch_python.constants.EPICS_ARCH_FILE_PATH = (
-            EPICS_ARCH_FILE_PATH.format(hutch_name.lower())
-        )
-
-
-def overwrite_path(path):
-    """
-    Overwrite the default path.
-
-    Parameters
-    ----------
-    path : str
-        Path where to write the epicsArch file to.
-    """
-    if path and not os.path.exists(path):
-        raise IOError('Invalid path: %s' % path)
-    elif path:
-        hutch_python.constants.EPICS_ARCH_FILE_PATH = path
-
-
-def set_path(exp_name):
-    """
-    Figure out the huch name from the experiment and set the path with it.
-
-    Parameters
-    ----------
-    exp_name : str
-        Experiment name, e.g.: xpplv6818
-    """
-    if exp_name:
-        hutch_python.constants.EPICS_ARCH_FILE_PATH = (
-            EPICS_ARCH_FILE_PATH.format(exp_name[0:3])
-        )
+            file_path = EPICS_ARCH_FILE_PATH.format(experiment[0:3])
+        create_file(exp_name=experiment, path=file_path)
+    elif dry_run:
+        print_dry_run(experiment)
 
 
 def print_dry_run(exp_name):
@@ -205,6 +172,7 @@ def get_items(exp_name):
     except Exception as ex:
         logger.error('Failed to load the Questionnaire, %s', ex)
         raise ex
+        sys.exit()
     items = qs_client.all_items
     if not items:
         logger.warning("No devices found in PCDS Questionnaire for %s",
@@ -213,19 +181,18 @@ def get_items(exp_name):
     return items
 
 
-def create_file(exp_name, path=None):
+def create_file(exp_name, path):
     """
     Create a file with aliases and pvs from the questionnaire.
 
     Parameters
     ----------
     exp_name : str
-        Experiment name, e.g.: xpplv6818
-    path : str, optional
-        Directory where to create the epicsArch file. E.g.: /my/directory/path/
+        Experiment name, e.g.: `xpplv6818`
+    path : str
+        Directory where to create the epicsArch file.
     """
     data_list = get_questionnaire_data(exp_name)
-    path = path or hutch_python.constants.EPICS_ARCH_FILE_PATH
     if not os.path.exists(path):
         raise IOError('Invalid path: %s' % path)
     exp_name = str(exp_name)
@@ -241,6 +208,5 @@ def create_file(exp_name, path=None):
                 logger.error('Could not write file %s, %s', file_path, ex)
 
 
-def main():
-    """Execute the ``epics_arch`` with command line arguments."""
-    epics_arch_qs(sys.argv[1:])
+if __name__ == '__main__':
+    main()
