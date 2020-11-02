@@ -43,6 +43,7 @@ test:
     - hutch_python
   commands:
     - hutch-python --help
+    - epicsarch-qs --help
 
 about:
   home: https://github.com/pcdshub/hutch-python
