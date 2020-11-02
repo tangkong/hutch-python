@@ -4,8 +4,7 @@ import logging
 import os
 import sys
 
-import happi
-from happi.backends.qs_db import QSBackend
+from .qs_load import get_qs_client
 
 from .constants import EPICS_ARCH_FILE_PATH
 
@@ -160,10 +159,7 @@ def get_items(exp_name):
         List of all_items from Questionnaire.
     """
     try:
-        # TODO: maybe i should be using get_qs_objs here from qs_load?
-        # i'd need to split it into two - i only need client.all_items
-        qs_client = happi.Client(database=QSBackend(exp_name,
-                                 use_kerberos=True))
+        qs_client = get_qs_client(exp_name)
     except Exception as ex:
         logger.error('Failed to load the Questionnaire, %s', ex)
         raise ex
