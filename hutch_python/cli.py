@@ -3,21 +3,22 @@ This module defines the command-line interface arguments for the
 ``hutch-python`` script. It also provides utilities that are only used at
 startup.
 """
-from pathlib import Path
-from traitlets.config import Config
 import argparse
 import logging
 import os
+from pathlib import Path
 
-from IPython import start_ipython
+import IPython
 from cookiecutter.main import cookiecutter
+from IPython import start_ipython
 from pcdsdaq.sim import set_sim_mode as set_daq_sim
 from pcdsdevices.interface import set_engineering_mode
+from traitlets.config import Config
 
 from .constants import CONDA_BASE, DIR_MODULE
 from .load_conf import load
-from .log_setup import (setup_logging, set_console_level, debug_mode,
-                        debug_context, debug_wrapper)
+from .log_setup import (debug_context, debug_mode, debug_wrapper,
+                        set_console_level, setup_logging)
 
 logger = logging.getLogger(__name__)
 opts_cache = {}
@@ -125,6 +126,18 @@ def main():
         # New API for disabling Jedi (two access points documented, use both)
         ipy_config.Completer.use_jedi = False
         ipy_config.IPCompleter.use_jedi = False
+        try:
+            # Monkeypatch IPython completion - we need it to respect __dir__
+            # when Jedi is disabled.
+            # Details: https://github.com/pcdshub/pcdsdevices/issues/709
+            # First, access it to see that the internals have not changed:
+            IPython.core.completer.dir2
+        except AttributeError:
+            logger.debug('Looks like the IPython API changed!')
+        else:
+            # Then monkeypatch it in:
+            IPython.core.completer.dir2 = dir
+
         # Finally start the interactive session
         start_ipython(argv=['--quick'], user_ns=objs, config=ipy_config)
     else:
