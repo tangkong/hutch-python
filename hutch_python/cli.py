@@ -43,6 +43,60 @@ parser.add_argument('script', nargs='?',
 __doc__ += '\n::\n\n    ' + parser.format_help().replace('\n', '\n    ')
 
 
+def configure_tab_completion(ipy_config):
+    """
+    Disable Jedi and tweak IPython tab completion.
+
+    Parameters
+    ----------
+    ipy_config : traitlets.config.Config
+        IPython configuration.
+    """
+    # Old API for disabling Jedi. Keep in just in case API changes back.
+    ipy_config.InteractiveShellApp.Completer.use_jedi = False
+    # New API for disabling Jedi (two access points documented, use both)
+    ipy_config.Completer.use_jedi = False
+    ipy_config.IPCompleter.use_jedi = False
+    try:
+        # Monkeypatch IPython completion - we need it to respect __dir__
+        # when Jedi is disabled.
+        # Details: https://github.com/pcdshub/pcdsdevices/issues/709
+        # First, access it to see that the internals have not changed:
+        IPython.core.completer.dir2
+    except AttributeError:
+        logger.debug('Looks like the IPython API changed!')
+    else:
+        # Then monkeypatch it in:
+        IPython.core.completer.dir2 = dir
+
+
+def configure_ipython_session():
+    """
+    Configure a new IPython session.
+
+    Returns
+    -------
+    ipy_config : traitlets.config.Config
+        IPython configuration.
+    """
+    ipy_config = Config()
+    # Important Utilities
+    ipy_config.InteractiveShellApp.extensions = [
+        'hutch_python.ipython_log',
+        'hutch_python.bug'
+    ]
+    # Matplotlib setup if we have a screen
+    if os.getenv('DISPLAY'):
+        ipy_config.InteractiveShellApp.matplotlib = 'qt5'
+    else:
+        logger.warning('No DISPLAY environment variable detected. '
+                       'Methods that create graphics will not '
+                       'function properly.')
+
+    configure_tab_completion(ipy_config)
+    return ipy_config
+
+
 def main():
     """
     Do the full hutch-python launch sequence.
@@ -108,38 +162,9 @@ def main():
 
     script = opts_cache.get('script')
     if script is None:
-        ipy_config = Config()
-        # Important Utilities
-        ipy_config.InteractiveShellApp.extensions = [
-            'hutch_python.ipython_log',
-            'hutch_python.bug'
-        ]
-        # Matplotlib setup if we have a screen
-        if os.getenv('DISPLAY'):
-            ipy_config.InteractiveShellApp.matplotlib = 'qt5'
-        else:
-            logger.warning('No DISPLAY environment variable detected. '
-                           'Methods that create graphics will not '
-                           'function properly.')
-        # Old API for disabling Jedi. Keep in just in case API changes back.
-        ipy_config.InteractiveShellApp.Completer.use_jedi = False
-        # New API for disabling Jedi (two access points documented, use both)
-        ipy_config.Completer.use_jedi = False
-        ipy_config.IPCompleter.use_jedi = False
-        try:
-            # Monkeypatch IPython completion - we need it to respect __dir__
-            # when Jedi is disabled.
-            # Details: https://github.com/pcdshub/pcdsdevices/issues/709
-            # First, access it to see that the internals have not changed:
-            IPython.core.completer.dir2
-        except AttributeError:
-            logger.debug('Looks like the IPython API changed!')
-        else:
-            # Then monkeypatch it in:
-            IPython.core.completer.dir2 = dir
-
         # Finally start the interactive session
-        start_ipython(argv=['--quick'], user_ns=objs, config=ipy_config)
+        start_ipython(argv=['--quick'], user_ns=objs,
+                      config=configure_ipython_session())
     else:
         # Instead of setting up ipython, run the script with objs
         with open(script) as fn:
