@@ -1,15 +1,15 @@
+import logging
 import os
 import shutil
-import logging
 from pathlib import Path
 
+import IPython.core.completer
 import pytest
+from conftest import cli_args, restore_logging
 
+import hutch_python.cli
 from hutch_python.cli import main
 from hutch_python.load_conf import load
-import hutch_python.cli
-
-from conftest import cli_args, restore_logging
 
 logger = logging.getLogger(__name__)
 
@@ -82,3 +82,22 @@ def test_run_script():
                    str(Path(__file__).parent / 'script.py')]):
         with restore_logging():
             main()
+
+
+def test_ipython_tab_completion():
+    class MyTest:
+        THIS_SHOULD_NOT_BE_THERE = None
+
+        def __dir__(self):
+            return ['foobar']
+
+    ns = {'a': MyTest()}
+
+    # Side-effect of the following is monkey-patching `dir2` to "fix" this for
+    # us.
+    hutch_python.cli.configure_ipython_session()
+
+    completer = IPython.core.completer.Completer(namespace=ns)
+    completer.limit_to__all__ = False
+    assert 'a.THIS_SHOULD_NOT_BE_THERE' not in completer.attr_matches('a.')
+    assert completer.attr_matches('a.') == ['a.foobar']
