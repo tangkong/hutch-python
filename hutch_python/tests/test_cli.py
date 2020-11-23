@@ -3,7 +3,6 @@ import os
 import shutil
 from pathlib import Path
 
-import IPython
 import IPython.core.completer
 import pytest
 from conftest import cli_args, restore_logging
