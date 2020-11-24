@@ -33,7 +33,9 @@ def collect_plans(modules):
     return SimpleNamespace(**plans)
 
 
-plans = collect_plans(['bluesky.plans'])
-plan_stubs = collect_plans(['bluesky.plan_stubs'])
+plans = collect_plans(['bluesky.plans',
+                       'nabs.plans'])
+plan_stubs = collect_plans(['bluesky.plan_stubs',
+                            'nabs.plan_stubs'])
 preprocessors = collect_plans(['bluesky.preprocessors',
-                               'pcdsdaq.preprocessors'])
+                               'nabs.preprocessors'])
