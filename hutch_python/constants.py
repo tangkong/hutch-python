@@ -8,6 +8,8 @@ CUR_EXP_SCRIPT = '/reg/g/pcds/engineering_tools/{0}/scripts/get_curr_exp {0}'
 
 CLASS_SEARCH_PATH = ['pcdsdevices.device_types']
 
+EPICS_ARCH_FILE_PATH = '/cds/group/pcds/dist/pds/{}/misc/'
+
 DIR_MODULE = Path(__file__).resolve().parent
 
 FILE_YAML = DIR_MODULE / 'logging.yml'
