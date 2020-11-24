@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>hutch_python.qs_load.get_qs_objs &mdash; hutch-python 1.8.0+4.g899e28c documentation</title>
+  <title>hutch_python.qs_load.get_qs_objs &mdash; hutch-python 1.8.0+15.g0a9ebda documentation</title>
   
 
   
@@ -62,7 +62,7 @@
             
             
               <div class="version">
-                1.8.0+4.g899e28c
+                1.8.0+15.g0a9ebda
               </div>
             
           
@@ -228,21 +228,6 @@
 <dt id="hutch_python.qs_load.get_qs_objs">
 <code class="sig-prename descclassname">hutch_python.qs_load.</code><code class="sig-name descname">get_qs_objs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">expname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.qs_load.get_qs_objs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gather user objects from the experiment questionnaire.</p>
-<p>Connects to the questionnaire webservice via the <code class="docutils literal notranslate"><span class="pre">happi</span></code> <code class="docutils literal notranslate"><span class="pre">QSBackend</span></code>
-using <code class="docutils literal notranslate"><span class="pre">psdm_qs_cli</span></code> to collect well-defined devices.</p>
-<p>There are two possible methods of authentication to the
-<code class="docutils literal notranslate"><span class="pre">QuestionnaireClient</span></code>, <code class="docutils literal notranslate"><span class="pre">Kerberos</span></code> and <code class="docutils literal notranslate"><span class="pre">WS-Auth</span></code>. The first is simpler
-but is not possible for all users, we therefore search for a configuration
-file named <code class="docutils literal notranslate"><span class="pre">web.cfg</span></code>, either hidden in the current directory or the users
-home directory. This should contain the username and password needed to
-authenticate into the <code class="docutils literal notranslate"><span class="pre">QuestionnaireClient</span></code>. The format of this
-configuration file is the standard <code class="docutils literal notranslate"><span class="pre">.ini</span></code> structure and should define the
-username and password like:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[DEFAULT]</span>
-<span class="na">user</span> <span class="o">=</span> <span class="s">MY_USERNAME</span>
-<span class="na">pw</span> <span class="o">=</span> <span class="s">MY_PASSWORD</span>
-</pre></div>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>expname</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – The experiment’s name from the elog</p>
