@@ -2,8 +2,8 @@ import logging
 
 import happi
 import lightpath
-from lightpath.config import beamlines
 from happi.loader import load_devices
+from lightpath.config import beamlines
 
 logger = logging.getLogger(__name__)
 
@@ -43,12 +43,9 @@ def get_happi_objs(db, hutch):
     beamline_conf[hutch.upper()] = {}
     # Base beamline
     for beamline, conf in beamline_conf.items():
-        # Assume we want hutch devices that are active and in the bounds
-        # determined by the beamline configuration
-        reqs = dict(beamline=beamline, active=True,
-                    start=conf.get('start', 0),
-                    end=conf.get('end', None))
-        results = client.search_range(key='z', **reqs)
+        # Assume we want hutch devices that are active
+        reqs = dict(beamline=beamline, active=True)
+        results = client.search(**reqs)
         blc = [res.device for res in results]
         # Add the beamline containers to the complete list
         if blc:
