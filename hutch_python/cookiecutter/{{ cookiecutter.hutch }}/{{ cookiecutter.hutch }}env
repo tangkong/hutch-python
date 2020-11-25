@@ -10,7 +10,7 @@ export CONDA_ENVNAME="pcds-3.4.2"
 # Settings
 export HUTCH="{{ cookiecutter.hutch }}"
 export LOCAL_BASE="/u1/{{ cookiecutter.hutch }}opr/conda_envs"
-export NFS_BASE="/cds/group/pcds/pyps/conda/py36"
+export WEKA_BASE="/cds/group/pcds/pyps/conda/py36"
 USE_LOCAL="1"
 
 # Clear the user's old env variables
@@ -27,7 +27,7 @@ if [ -n "${USE_LOCAL}" ] && [ -d "${LOCAL_ENV}" ]; then
   source "${LOCAL_ENV}/bin/activate"
 else
   echo "Loading WEKA python env ${CONDA_ENVNAME}"
-  source "${NFS_BASE}/etc/profile.d/conda.sh"
+  source "${WEKA_BASE}/etc/profile.d/conda.sh"
   conda activate "${CONDA_ENVNAME}"
 fi
 
