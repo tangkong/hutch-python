@@ -91,7 +91,7 @@ def load_conf(conf, hutch_dir=None):
     - Create a ``RunEngine``, ``RE``
     - Import ``plan_defaults`` and include as ``p``, ``plans``
     - Create a ``daq`` object with ``RE`` registered.
-    - Create a ``scan_pvs`` object, and leave it ``disabled``.
+    - Create a ``scan_pvs`` object, and ``enable`` it.
     - Use ``hutch`` and ``daq_platform`` keys to create the ``elog`` object
       and configure it to match the correct experiment.
     - Use ``db`` key to load devices from the ``happi`` beamline database
