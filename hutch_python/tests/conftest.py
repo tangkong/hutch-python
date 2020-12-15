@@ -16,6 +16,7 @@ from ophyd.device import Component as Cpt
 from ophyd.signal import Signal
 from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
+import hutch_python.qs_load
 import hutch_python.utils
 
 # We need to have the tests directory importable to match what we'd have in a
@@ -115,6 +116,13 @@ class QSBackend:
 
     def save(self, *args, **kwargs):
         pass
+
+
+@pytest.fixture(scope='function')
+def fake_qsbackend(monkeypatch):
+    monkeypatch.setattr(hutch_python.qs_load, "QSBackend", QSBackend)
+    QSBackend.empty = False
+    return QSBackend
 
 
 cfg = """\
