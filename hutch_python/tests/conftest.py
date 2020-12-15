@@ -1,9 +1,9 @@
+import logging
 import os
 import sys
-import logging
-from copy import copy
-from contextlib import contextmanager
 from collections import namedtuple
+from contextlib import contextmanager
+from copy import copy
 from logging.handlers import QueueHandler
 from pathlib import Path
 from queue import Queue
@@ -91,7 +91,7 @@ class QSBackend:
             'name': 'inj_x',
             'prefix': 'TST:USR:MMN:01',
             'purpose': 'Injector X',
-            'type': 'Device',
+            'type': 'pcdsdevices.happi.containers.LCLSItem',
             'run': self.expname[-2:],
             'user': self.user,
             'pw': self.pw,
@@ -105,6 +105,9 @@ class QSBackend:
 
     # Dummy methods to make this "look like a database"
     def all_devices(self, *args, **kwargs):
+        pass
+
+    def all_items(self, *args, **kwargs):
         pass
 
     def delete(self, *args, **kwargs):
