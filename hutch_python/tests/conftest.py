@@ -80,6 +80,9 @@ class QSBackend:
         self.pw = pw
         self.kerberos = use_kerberos
 
+        if 'bad' in expname:
+            raise RuntimeError('bad expname')
+
     def find(self, to_match):
         device = {
             '_id': 'TST:USR:MMN:01',

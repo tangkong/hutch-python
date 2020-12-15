@@ -53,7 +53,7 @@ def test_dry_run_args(get_data_mock, items):
             get_data_mock.assert_called_once
 
 
-def test_dry_run_args_exception():
+def test_dry_run_args_exception(fake_qsbackend):
     with pytest.raises(Exception):
         get_items('somebadname')
 
