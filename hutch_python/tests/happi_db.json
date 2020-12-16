@@ -5,7 +5,7 @@
         "args": [],
         "beamline": "TST",
         "creation": "Sat Jan 13 13:48:43 2018",
-        "device_class": "happi.Device",
+        "device_class": "pcdsdevices.happi.containers.LCLSItem",
         "kwargs": {
             "active": "{{active}}",
             "name": "{{name}}"
@@ -19,7 +19,7 @@
         "screen": null,
         "stand": null,
         "system": null,
-        "type": "Device",
+        "type": "pcdsdevices.happi.containers.LCLSItem",
         "z": 1.0
     },
     "Tst:Dev:2": {
@@ -28,7 +28,7 @@
         "args": [],
         "beamline": "TST",
         "creation": "Sat Jan 13 13:49:51 2018",
-        "device_class": "happi.Device",
+        "device_class": "pcdsdevices.happi.containers.LCLSItem",
         "kwargs": {
             "active": "{{active}}",
             "name": "{{name}}"
@@ -42,7 +42,7 @@
         "screen": null,
         "stand": null,
         "system": null,
-        "type": "Device",
+        "type": "pcdsdevices.happi.containers.LCLSItem",
         "z": 2.0
     },
     "Tst:Dev:3": {
@@ -51,7 +51,7 @@
         "args": [],
         "beamline": "TST",
         "creation": "Sat Jan 13 13:50:36 2018",
-        "device_class": "happi.Device",
+        "device_class": "pcdsdevices.happi.containers.LCLSItem",
         "kwargs": {
             "active": "{{active}}",
             "name": "{{name}}"
@@ -65,7 +65,7 @@
         "screen": null,
         "stand": null,
         "system": null,
-        "type": "Device",
+        "type": "pcdsdevices.happi.containers.LCLSItem",
         "z": -1.0
     }
 }

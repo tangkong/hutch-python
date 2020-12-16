@@ -10,11 +10,11 @@ logger = logging.getLogger(__name__)
 
 def get_happi_objs(db, hutch):
     """
-    Get the relevant devices for ``hutch`` from ``db``.
+    Get the relevant items for ``hutch`` from ``db``.
 
     This depends on a JSON ``happi`` database stored somewhere in the file
     system and handles setting up the ``happi.Client`` and querying the data
-    base for devices.
+    base for items.
 
     Parameters
     ----------
@@ -27,14 +27,14 @@ def get_happi_objs(db, hutch):
     Returns
     -------
     objs: ``dict``
-        A mapping from device name to device
+        A mapping from item name to item
     """
     # Load the happi Client
     client = happi.Client(path=db)
     containers = list()
-    # Find upstream devices based on lightpath configuration
+    # Find upstream items based on lightpath configuration
     beamline_conf = beamlines.get(hutch.upper())
-    # Something strange is happening if there are no upstream devices
+    # Something strange is happening if there are no upstream items
     if not beamline_conf:
         logger.warning("Unable to find lightpath for %s",
                        hutch.upper())
@@ -43,15 +43,15 @@ def get_happi_objs(db, hutch):
     beamline_conf[hutch.upper()] = {}
     # Base beamline
     for beamline, conf in beamline_conf.items():
-        # Assume we want hutch devices that are active
+        # Assume we want hutch items that are active
         reqs = dict(beamline=beamline, active=True)
         results = client.search(**reqs)
-        blc = [res.device for res in results]
+        blc = [res.item for res in results]
         # Add the beamline containers to the complete list
         if blc:
             containers.extend(blc)
         else:
-            logger.warning("No devices found in database for %s",
+            logger.warning("No items found in database for %s",
                            beamline.upper())
     # Instantiate the devices needed
     dev_namespace = load_devices(*containers, pprint=False)

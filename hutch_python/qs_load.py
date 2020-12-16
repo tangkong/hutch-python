@@ -1,10 +1,10 @@
 import logging
 import os.path
-from configparser import NoOptionError, ConfigParser
+from configparser import ConfigParser, NoOptionError
 
 import happi
-from happi.loader import load_devices
 from happi.backends.qs_db import QSBackend
+from happi.loader import load_devices
 
 from .utils import safe_load
 
@@ -30,11 +30,11 @@ def get_qs_objs(expname):
         expname = expname.lower()
         qs_client = get_qs_client(expname)
         # Create namespace
-        if not qs_client.all_devices:
-            logger.warning("No devices found in PCDS Questionnaire for %s",
+        if not qs_client.all_items:
+            logger.warning("No items found in PCDS Questionnaire for %s",
                            expname)
             return dict()
-        dev_namespace = load_devices(*qs_client.all_devices, pprint=False)
+        dev_namespace = load_devices(*qs_client.all_items, pprint=False)
         return dev_namespace.__dict__
     return {}
 

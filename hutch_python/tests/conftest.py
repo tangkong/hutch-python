@@ -1,9 +1,9 @@
+import logging
 import os
 import sys
-import logging
-from copy import copy
-from contextlib import contextmanager
 from collections import namedtuple
+from contextlib import contextmanager
+from copy import copy
 from logging.handlers import QueueHandler
 from pathlib import Path
 from queue import Queue
@@ -16,6 +16,7 @@ from ophyd.device import Component as Cpt
 from ophyd.signal import Signal
 from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
+import hutch_python.qs_load
 import hutch_python.utils
 
 # We need to have the tests directory importable to match what we'd have in a
@@ -79,6 +80,9 @@ class QSBackend:
         self.pw = pw
         self.kerberos = use_kerberos
 
+        if 'bad' in expname:
+            raise RuntimeError('bad expname')
+
     def find(self, to_match):
         device = {
             '_id': 'TST:USR:MMN:01',
@@ -91,7 +95,7 @@ class QSBackend:
             'name': 'inj_x',
             'prefix': 'TST:USR:MMN:01',
             'purpose': 'Injector X',
-            'type': 'Device',
+            'type': 'pcdsdevices.happi.containers.LCLSItem',
             'run': self.expname[-2:],
             'user': self.user,
             'pw': self.pw,
@@ -107,11 +111,21 @@ class QSBackend:
     def all_devices(self, *args, **kwargs):
         pass
 
+    def all_items(self, *args, **kwargs):
+        pass
+
     def delete(self, *args, **kwargs):
         pass
 
     def save(self, *args, **kwargs):
         pass
+
+
+@pytest.fixture(scope='function')
+def fake_qsbackend(monkeypatch):
+    monkeypatch.setattr(hutch_python.qs_load, "QSBackend", QSBackend)
+    QSBackend.empty = False
+    return QSBackend
 
 
 cfg = """\

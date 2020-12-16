@@ -53,7 +53,7 @@ def test_dry_run_args(get_data_mock, items):
             get_data_mock.assert_called_once
 
 
-def test_dry_run_args_exception():
+def test_dry_run_args_exception(fake_qsbackend):
     with pytest.raises(Exception):
         get_items('somebadname')
 
@@ -121,7 +121,7 @@ all_items = json.loads("""{
                 "lightpath": false,
                 "name": "tape_x",
                 "prefix": "XPP:LBL:MMN:04",
-                "type": "pcdsdevices.happi.containers.Motor",
+                "type": "pcdsdevices.happi.containers.LCLSItem",
                 "location": "XPP goniometer",
                 "purpose": "Tape X",
                 "pvbase": "XPP:LBL:MMN:04",
@@ -136,7 +136,7 @@ all_items = json.loads("""{
                 "lightpath": false,
                 "name": "transducer_y",
                 "prefix": "XPP:LBL:MMN:05",
-                "type": "pcdsdevices.happi.containers.Motor",
+                "type": "pcdsdevices.happi.containers.LCLSItem",
                 "location": "XPP goniometer",
                 "purpose": "Transducer Y",
                 "stageidentity": "Newport",
@@ -151,7 +151,7 @@ all_items = json.loads("""{
                 "lightpath": false,
                 "name": "xes_y",
                 "prefix": "XPP:LBL:MMN:06",
-                "type": "pcdsdevices.happi.containers.Motor",
+                "type": "pcdsdevices.happi.containers.LCLSItem",
                 "location": "XPP goniometer",
                 "stageidentity": "Newport",
                 "purpose": "Xes Epix Y",
@@ -166,7 +166,7 @@ all_items = json.loads("""{
                 "lightpath": false,
                 "name": "lbl",
                 "prefix": "XPP:USR:EVR:TRIG0",
-                "type": "pcdsdevices.happi.containers.Trigger",
+                "type": "pcdsdevices.happi.containers.LCLSItem",
                 "purpose": "LBL",
                 "width": "1e-5",
                 "polarity": "positiv",
@@ -183,7 +183,7 @@ all_items = json.loads("""{
                 "lightpath": false,
                 "name": "acromag",
                 "prefix": "XPP:USR:ao1",
-                "type": "pcdsdevices.happi.containers.Acromag",
+                "type": "pcdsdevices.happi.containers.LCLSItem",
                 "device": "Acromag IP231 16-bit",
                 "pvbase": "XPP:USR:ao1",
                 "purpose": "Evo Shutter 1",

@@ -20,7 +20,7 @@ from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdevices.interface import setup_preset_paths
 
-from . import plan_defaults, sim
+from . import calc_defaults, plan_defaults, sim
 from .cache import LoadCache
 from .cam_load import read_camviewer_cfg
 from .constants import CAMVIEWER_CFG, VALID_KEYS
@@ -91,7 +91,7 @@ def load_conf(conf, hutch_dir=None):
     - Create a ``RunEngine``, ``RE``
     - Import ``plan_defaults`` and include as ``p``, ``plans``
     - Create a ``daq`` object with ``RE`` registered.
-    - Create a ``scan_pvs`` object, and leave it ``disabled``.
+    - Create a ``scan_pvs`` object, and ``enable`` it.
     - Use ``hutch`` and ``daq_platform`` keys to create the ``elog`` object
       and configure it to match the correct experiment.
     - Use ``db`` key to load devices from the ``happi`` beamline database
@@ -217,16 +217,22 @@ def load_conf(conf, hutch_dir=None):
     cache = LoadCache((hutch or 'hutch') + '.db', hutch_dir=hutch_dir)
 
     # Make RunEngine
-    RE = RunEngine({})
-    initialize_qt_teleporter()
-    bec = BestEffortCallback()
-    RE.subscribe(bec)
-    cache(RE=RE)
+    with safe_load('run engine'):
+        RE = RunEngine({})
+        initialize_qt_teleporter()
+        bec = BestEffortCallback()
+        RE.subscribe(bec)
+        cache(RE=RE)
 
     # Collect Plans
-    cache(bp=plan_defaults.plans)
-    cache(bps=plan_defaults.plan_stubs)
-    cache(bpp=plan_defaults.preprocessors)
+    with safe_load('bluesky plans'):
+        cache(bp=plan_defaults.plans)
+        cache(bps=plan_defaults.plan_stubs)
+        cache(bpp=plan_defaults.preprocessors)
+
+    # Inline calculations
+    with safe_load('calc utils'):
+        cache(calc=calc_defaults.calc_namespace)
 
     # Daq
     with safe_load('daq'):
