@@ -1,6 +1,27 @@
 Release History
 ###############
 
+v1.9.0 (2020-12-22)
+===================
+
+Features
+--------
+- Add ``epicsarch-qs`` script that will handle creating ``epicsArch`` files
+  from the LCLS questionnaire.
+- Include plans from ``nabs`` in the default namespaces.
+- Include calcs from ``pcdsdevices`` in the default namespaces.
+
+Bugfixes
+--------
+- Fix issue where tab completion filters would not work due to ``IPython``
+  quirks in cases where ``jedi`` is disabled.
+- Fix issue where devices with negative z would not load from ``happi``.
+
+Maintenance
+-----------
+- Update the hutch environment templates.
+
+
 v1.8.0 (2020-10-23)
 ===================
 
