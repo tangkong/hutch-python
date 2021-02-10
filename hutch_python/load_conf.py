@@ -222,7 +222,7 @@ def load_conf(conf, hutch_dir=None):
         initialize_qt_teleporter()
         bec = BestEffortCallback()
         RE.subscribe(bec)
-        cache(RE=RE)
+        cache(RE=RE, bec=bec)
 
     # Collect Plans
     with safe_load('bluesky plans'):
