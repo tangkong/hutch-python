@@ -14,6 +14,7 @@ import yaml
 from archapp.interactive import EpicsArchive
 from bluesky import RunEngine
 from bluesky.callbacks.best_effort import BestEffortCallback
+from bluesky.callbacks.core import LiveTable
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
 from elog import HutchELog
 from pcdsdaq.daq import Daq
@@ -222,6 +223,8 @@ def load_conf(conf, hutch_dir=None):
         initialize_qt_teleporter()
         bec = BestEffortCallback()
         RE.subscribe(bec)
+        # Enable scientific notation for big/small numbers in LiveTable
+        LiveTable._FMT_MAP['number'] = 'g'
         cache(RE=RE)
 
     # Collect Plans
