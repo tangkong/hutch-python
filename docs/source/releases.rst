@@ -1,6 +1,17 @@
 Release History
 ###############
 
+v1.9.1 (2021-02-10)
+===================
+
+Bugfixes
+--------
+- Display small values in scientific notation during scans, rather than as
+  0.000000. Similarly handle very large values.
+- Include the BestEffortCallback that we are using in the hutch's namespace
+  for easy access.
+
+
 v1.9.0 (2020-12-22)
 ===================
 
