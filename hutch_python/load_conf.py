@@ -225,7 +225,7 @@ def load_conf(conf, hutch_dir=None):
         RE.subscribe(bec)
         # Enable scientific notation for big/small numbers in LiveTable
         LiveTable._FMT_MAP['number'] = 'g'
-        cache(RE=RE)
+        cache(RE=RE, bec=bec)
 
     # Collect Plans
     with safe_load('bluesky plans'):
