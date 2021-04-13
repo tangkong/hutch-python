@@ -359,10 +359,7 @@ def load_conf(conf, hutch_dir=None):
         for name, obj in qs_objs.items():
             setattr(user, name, obj)
         cache(x=user, user=user)
-        cache.doc(
-            x='User experiment object (shorthand)',
-            user='User experiment object',
-            )
+        cache.doc(user='User experiment object')
 
     # Default namespaces
     with safe_load('default groups'):
@@ -384,13 +381,9 @@ def load_conf(conf, hutch_dir=None):
         cache(a=all_objs, all_objects=all_objs)
         cache.doc(
             motors='Namespace of all positioner objects.',
-            m='Namespace of all positioner objects (shorthand).',
             slits='Namespace of all slits objects.',
-            s='Namesspace of all slits objects (shorthand).',
             detectors='Namespace of all ami detector objects.',
-            d='Namespace of all ami detector objects (shorthand).',
             all_objects='Namespace of all loaded objects.',
-            a='Namespace of all loaded objects (shorthand).',
             )
 
     # Install Presets

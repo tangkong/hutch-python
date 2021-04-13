@@ -108,7 +108,7 @@ class LoadCache:
         for key, value in docs.items():
             obj = self.objs[key]
             if obj.__doc__:
-                obj.__doc__ = value + '\n\n' + obj.__doc__
+                obj.__doc__ = '\n' + value + '\n' + obj.__doc__
             else:
                 obj.__doc__ = value
 
