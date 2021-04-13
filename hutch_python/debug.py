@@ -12,5 +12,6 @@ debug_tools = {
     'debug_wrapper': debug_wrapper,
     }
 
+
 def load_debug(cache):
     cache(**debug_tools)
