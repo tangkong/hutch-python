@@ -107,7 +107,10 @@ class LoadCache:
         """
         for key, value in docs.items():
             obj = self.objs[key]
-            obj.__doc__ = value + '\n\n' + obj.__doc__
+            if obj.__doc__:
+                obj.__doc__ = value + '\n\n' + obj.__doc__
+            else:
+                obj.__doc__ = value
 
     def show_doc(self):
         """
