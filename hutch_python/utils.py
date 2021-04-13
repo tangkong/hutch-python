@@ -111,7 +111,15 @@ class HelpfulNamespace(SimpleNamespace):
             return ""
         return str(table)
 
-    def _as_table_(self):
+    def _as_table_(self, *, nest_html=False):
+        """
+        Represent the namespace as a PrettyTable.
+
+        Parameters
+        ----------
+        nest_html : bool, optional
+            For nested tables, use HTML if set, or plain ASCII text if not.
+        """
         table = prettytable.PrettyTable()
         table.add_column("Attribute", [])
         table.add_column("Class", [])
@@ -121,6 +129,10 @@ class HelpfulNamespace(SimpleNamespace):
             if attr.startswith('_'):
                 continue
             if isinstance(obj, HelpfulNamespace):
+                # TODO: in the future, we can try to embed a table. However,
+                # prettytable will escape the HTML and cause it to render
+                # as &lt;tr&gt; instead of <tr>. Oh well.
+                # docs = obj._as_table_(nest_html=True).get_html_string()
                 docs = inspect.getdoc(obj)
                 multiline_rows = True
             else:
@@ -133,7 +145,8 @@ class HelpfulNamespace(SimpleNamespace):
         return table
 
     def _repr_html_(self):
-        table = self._as_table_()
+        """This is an IPython hook for returning the html representation."""
+        table = self._as_table_(nest_html=True)
         if table.rowcount == 0:
             return (
                 f"This {type(self).__name__} has no available attributes.<br/>"
@@ -145,6 +158,7 @@ This {type(self).__name__} has the following attributes available:
 """
 
     def _repr_pretty_(self, pretty, cycle):
+        """This is an IPython hook for returning an ASCII representation."""
         table = self._as_table_()
         if table.rowcount == 0:
             pretty.text(f"""\

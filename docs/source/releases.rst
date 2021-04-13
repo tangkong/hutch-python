@@ -1,6 +1,18 @@
 Release History
 ###############
 
+v1.9.5 (2021-??-??)
+===================
+
+Features
+--------
+- ``IterableNamespace`` has been upgraded to be ``HelpfulNamespace``, while
+  maintaining a backward-compatible import name.  This class supports the
+  IPython "pretty repr" and HTML repr hooks to provide user-friendly tables of
+  items available in the namespace.  It also now allows for dictionary-like
+  access by way of ``collections.Mapping``.
+
+
 v1.9.1 (2021-02-10)
 ===================
 
