@@ -1,13 +1,13 @@
-from types import SimpleNamespace
-
 from pcdsdevices.sim import FastMotor, SlowMotor
+
+from .utils import HelpfulNamespace
 
 
 def get_hw():
     """
     Create and return a standard namespace of simulated hardware.
     """
-    ns = SimpleNamespace(
+    ns = HelpfulNamespace(
         fast_motor1=FastMotor(name='fast_motor1'),
         fast_motor2=FastMotor(name='fast_motor2'),
         fast_motor3=FastMotor(name='fast_motor3'),
