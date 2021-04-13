@@ -118,8 +118,7 @@ class HelpfulNamespace(SimpleNamespace):
                     yield attr, obj
 
     def __iter__(self):
-        # Sorts alphabetically by key
-        for attr, obj in self._get_items():
+        for _, obj in self._get_items():
             yield obj
 
     def __len__(self):
