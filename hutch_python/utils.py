@@ -93,18 +93,37 @@ class HelpfulNamespace(SimpleNamespace):
     This class also has the added feature where ``len`` will correctly tell you
     the number of objects in the ``namespace``.
     """
+    _ignore_attrs = {"__doc__"}
+    _ignore_underscore = False
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.__doc__ = self._get_docstring()
-        self._items_ = kwargs
+
+    def _get_items(self):
+        """
+        Get all items contained in this namespace, sorted by attribute name.
+
+        Yields
+        ------
+        attr : str
+            The attribute name.
+        obj : object
+            The object associated with attr. i.e., ``self.{attr}``
+        """
+        # Sorts alphabetically by key
+        for attr, obj in sorted(self.__dict__.items()):
+            if attr not in self._ignore_attrs:
+                if not self._ignore_underscore or not attr.startswith("_"):
+                    yield attr, obj
 
     def __iter__(self):
         # Sorts alphabetically by key
-        for _, obj in sorted(self._items_.items()):
+        for attr, obj in self._get_items():
             yield obj
 
     def __len__(self):
-        return len(self._items_)
+        return len(list(self._get_items()))
 
     def _get_docstring(self):
         table = self._as_table_()
@@ -126,20 +145,20 @@ class HelpfulNamespace(SimpleNamespace):
         table.add_column("Class", [])
         table.add_column("Description", [], align="l")
         multiline_rows = False
-        for attr, obj in sorted(inspect.getmembers(self)):
+        for attr, obj in self._get_items():
             if attr.startswith('_'):
                 continue
+            docs = inspect.getdoc(obj) or ""
             if isinstance(obj, HelpfulNamespace):
                 # TODO: in the future, we can try to embed a table. However,
                 # prettytable will escape the HTML and cause it to render
                 # as &lt;tr&gt; instead of <tr>. Oh well.
                 # docs = obj._as_table_(nest_html=True).get_html_string()
-                docs = inspect.getdoc(obj)
                 multiline_rows = True
-            else:
-                docs = inspect.getdoc(obj) or ""
-                if docs:
-                    docs = docs.splitlines()[0]
+                # Full docstring from the sub-namespace will be included.
+            elif docs:
+                # For everything else, include just the first line
+                docs = docs.splitlines()[0]
             table.add_row([attr, type(obj).__name__, docs])
         if multiline_rows:
             table.hrules = prettytable.ALL
