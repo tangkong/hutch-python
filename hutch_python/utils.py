@@ -3,6 +3,7 @@ Module that contains general-use utilities. Some of these are useful outside of
 ``hutch-python``, while others are used in multiple places throughout the
 module.
 """
+import inspect
 import logging
 import sys
 import time
@@ -12,6 +13,7 @@ from importlib import import_module
 from subprocess import check_output
 from types import SimpleNamespace
 
+import prettytable
 import pyfiglet
 
 from .constants import (CLASS_SEARCH_PATH, CUR_EXP_SCRIPT, HUTCH_COLORS,
@@ -80,9 +82,9 @@ def get_current_experiment(hutch):
     return check_output(script.split(' '), universal_newlines=True).strip('\n')
 
 
-class IterableNamespace(SimpleNamespace):
+class HelpfulNamespace(SimpleNamespace):
     """
-    ``SimpleNamespace`` that can be iterated through.
+    ``SimpleNamespace`` that can be iterated over, with a fancy table repr.
 
     This means we can call funtions like ``list`` on these objects to see all
     of their contents, we can put them into ``for loops``, and we can use them
@@ -91,13 +93,106 @@ class IterableNamespace(SimpleNamespace):
     This class also has the added feature where ``len`` will correctly tell you
     the number of objects in the ``namespace``.
     """
-    def __iter__(self):
+    _ignore_attrs = {"__doc__"}
+    _ignore_underscore = False
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.__doc__ = self._get_docstring()
+
+    def _get_items(self):
+        """
+        Get all items contained in this namespace, sorted by attribute name.
+
+        Yields
+        ------
+        attr : str
+            The attribute name.
+        obj : object
+            The object associated with attr. i.e., ``self.{attr}``
+        """
         # Sorts alphabetically by key
-        for _, obj in sorted(self.__dict__.items()):
+        for attr, obj in sorted(self.__dict__.items()):
+            if attr not in self._ignore_attrs:
+                if not self._ignore_underscore or not attr.startswith("_"):
+                    yield attr, obj
+
+    def __iter__(self):
+        for _, obj in self._get_items():
             yield obj
 
     def __len__(self):
-        return len(self.__dict__)
+        return len(list(self._get_items()))
+
+    def _get_docstring(self):
+        table = self._as_table_()
+        if table.rowcount == 0:
+            return ""
+        return str(table)
+
+    def _as_table_(self, *, nest_html=False):
+        """
+        Represent the namespace as a PrettyTable.
+
+        Parameters
+        ----------
+        nest_html : bool, optional
+            For nested tables, use HTML if set, or plain ASCII text if not.
+        """
+        table = prettytable.PrettyTable()
+        table.add_column("Attribute", [])
+        table.add_column("Class", [])
+        table.add_column("Description", [], align="l")
+        multiline_rows = False
+        for attr, obj in self._get_items():
+            if attr.startswith('_'):
+                continue
+            docs = inspect.getdoc(obj) or ""
+            if isinstance(obj, HelpfulNamespace):
+                # TODO: in the future, we can try to embed a table. However,
+                # prettytable will escape the HTML and cause it to render
+                # as &lt;tr&gt; instead of <tr>. Oh well.
+                # docs = obj._as_table_(nest_html=True).get_html_string()
+                multiline_rows = True
+                # Full docstring from the sub-namespace will be included.
+            elif docs:
+                # For everything else, include just the first line
+                docs = docs.splitlines()[0]
+            table.add_row([attr, type(obj).__name__, docs])
+        if multiline_rows:
+            table.hrules = prettytable.ALL
+        return table
+
+    def _repr_html_(self):
+        """This is an IPython hook for returning the html representation."""
+        table = self._as_table_(nest_html=True)
+        if table.rowcount == 0:
+            return (
+                f"This {type(self).__name__} has no available attributes.<br/>"
+            )
+        return f"""
+This {type(self).__name__} has the following attributes available:
+<br/>
+{table.get_html_string()}
+"""
+
+    def _repr_pretty_(self, pretty, cycle):
+        """This is an IPython hook for returning an ASCII representation."""
+        table = self._as_table_()
+        if table.rowcount == 0:
+            pretty.text(f"""\
+This {type(self).__name__} has no available attributes.
+""")
+        else:
+            pretty.text(f"""\
+This {type(self).__name__} has the following attributes available:
+
+{self._as_table_()}
+""")
+
+
+# Back-compat; it's extra helpful now!
+IterableNamespace = HelpfulNamespace
 
 
 def count_ns_leaves(namespace):

@@ -1,5 +1,6 @@
 import logging
 
+import IPython.lib.pretty as pretty
 import pytest
 
 from hutch_python import utils
@@ -32,6 +33,29 @@ def test_iterable_namespace():
 
     assert list(ns) == [1, 2, 3]
     assert len(ns) == 3
+
+
+def test_helpful_namespace_pretty_print():
+    class Obj:
+        """Docstring"""
+
+    ns = utils.HelpfulNamespace(obj_a=Obj(), obj_b=Obj())
+    pretty_ns = pretty.pretty(ns)
+    print("Pretty repr is", pretty_ns)
+    assert "obj_a" in pretty_ns
+    assert "obj_b" in pretty_ns
+    assert "Docstring" in pretty_ns
+
+
+def test_helpful_namespace_html_print():
+    class Obj:
+        """Docstring"""
+
+    ns = utils.HelpfulNamespace(obj_a=Obj(), obj_b=Obj())
+    html_ns = ns._repr_html_()
+    assert "<td>obj_a</td>" in html_ns
+    assert "<td>obj_b</td>" in html_ns
+    assert "<td>Docstring</td>" in html_ns
 
 
 def test_count_leaves():

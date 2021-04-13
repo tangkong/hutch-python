@@ -3,13 +3,13 @@ This module is responsible for accumulating all loaded objects and making sure
 they are available in the ``xxx.db`` virtual module. It is used extensively in
 `load_conf.load_conf`.
 """
-from importlib import import_module
-from pathlib import Path
 import datetime
 import logging
 import sys
+from importlib import import_module
+from pathlib import Path
 
-from .utils import IterableNamespace
+from .utils import HelpfulNamespace
 
 logger = logging.getLogger(__name__)
 
@@ -35,12 +35,12 @@ class LoadCache:
 
     Attributes
     ----------
-    objs: `IterableNamespace`
+    objs: `HelpfulNamespace`
         This is a namespace containing all the objects that have been attached
         to the ``LoadCache``.
     """
     def __init__(self, module, hutch_dir=None, **objs):
-        self.objs = IterableNamespace(**objs)
+        self.objs = HelpfulNamespace(**objs)
         self.hutch_dir = hutch_dir
         self.module = module
         self.spoof_module(module)

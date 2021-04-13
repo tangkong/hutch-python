@@ -1,6 +1,5 @@
 import logging
 from importlib import import_module
-from types import SimpleNamespace
 
 from . import utils
 
@@ -26,7 +25,7 @@ def get_exp_objs(exp_module, *, ask_on_failure=True):
 
     Returns
     -------
-    user: ``object`` or ``SimpleNamespace``
+    user: ``object`` or ``HelpfulNamespace``
         Either the user's class instantiated or a blank namespace for other
         experiment-specific objects to be attached to.
     """
@@ -37,10 +36,14 @@ def get_exp_objs(exp_module, *, ask_on_failure=True):
             module = import_module(module_name)
             return module.User()
         except Exception as ex:
+            error_ns = utils.HelpfulNamespace()
+            error_ns.__doc__ = (
+                f"Skipped missing experiment file {exp_module}.py: {ex}"
+            )
             import_err = isinstance(ex, ImportError) and module_name in ex.msg
             if import_err or not ask_on_failure:
                 logger.info('Skip missing experiment file %s.py', exp_module)
-                return SimpleNamespace()
+                return error_ns
 
             utils.maybe_exit(
                 logger,
@@ -52,4 +55,4 @@ def get_exp_objs(exp_module, *, ask_on_failure=True):
                 exception_message=f'Failed to load {module_name}',
             )
 
-    return SimpleNamespace()
+    return error_ns

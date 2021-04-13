@@ -6,7 +6,6 @@ import logging
 from copy import copy
 from pathlib import Path
 from socket import gethostname
-from types import SimpleNamespace
 
 from . import mpl_config  # noqa: F401
 
@@ -31,7 +30,8 @@ from .lcls import global_devices
 from .namespace import class_namespace
 from .qs_load import get_qs_objs
 from .user_load import get_user_objs
-from .utils import get_current_experiment, hutch_banner, safe_load
+from .utils import (get_current_experiment, hutch_banner, safe_load,
+                    HelpfulNamespace)
 
 logger = logging.getLogger(__name__)
 
@@ -283,7 +283,7 @@ def load_conf(conf, hutch_dir=None):
     if hutch is not None:
         with safe_load('camviewer config'):
             objs = read_camviewer_cfg(CAMVIEWER_CFG.format(hutch))
-            cache(camviewer=SimpleNamespace(**objs))
+            cache(camviewer=HelpfulNamespace(**objs))
 
     # Simulated hardware
     with safe_load('simulated hardware'):
