@@ -113,16 +113,6 @@ class LoadCache:
             else:
                 obj.__doc__ = value
 
-    def show_doc(self):
-        """
-        Generate a documentation table for the objects in the cache.
-
-        This will only include objects that were documented using the
-        "doc" method, and will omit objects that were added without
-        documentation.
-        """
-        pass
-
 
 # For writing the files
 header = """
