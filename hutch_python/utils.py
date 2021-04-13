@@ -132,6 +132,18 @@ class HelpfulNamespace(SimpleNamespace):
             table.hrules = prettytable.ALL
         return table
 
+    def _repr_html_(self):
+        table = self._as_table_()
+        if table.rowcount == 0:
+            return (
+                f"This {type(self).__name__} has no available attributes.<br/>"
+            )
+        return f"""
+This {type(self).__name__} has the following attributes available:
+<br/>
+{table.get_html_string()}
+"""
+
     def _repr_pretty_(self, pretty, cycle):
         table = self._as_table_()
         if table.rowcount == 0:
