@@ -9,7 +9,6 @@ import os
 import sys
 import time
 from contextlib import contextmanager
-from collections.abc import Mapping
 from functools import partial
 from importlib import import_module
 from subprocess import check_output
@@ -84,7 +83,7 @@ def get_current_experiment(hutch):
     return check_output(script.split(' '), universal_newlines=True).strip('\n')
 
 
-class HelpfulNamespace(SimpleNamespace, Mapping):
+class HelpfulNamespace(SimpleNamespace):
     """
     ``SimpleNamespace`` that can be iterated over, with a fancy table repr.
 
