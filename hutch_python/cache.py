@@ -6,6 +6,7 @@ they are available in the ``xxx.db`` virtual module. It is used extensively in
 import datetime
 import logging
 import sys
+import textwrap
 from importlib import import_module
 from pathlib import Path
 
@@ -108,7 +109,7 @@ class LoadCache:
         for key, value in docs.items():
             obj = self.objs[key]
             if obj.__doc__:
-                obj.__doc__ = '\n' + value + '\n' + obj.__doc__
+                obj.__doc__ = value + '\n' + textwrap.dedent(obj.__doc__)
             else:
                 obj.__doc__ = value
 
