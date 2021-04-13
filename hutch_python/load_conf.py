@@ -239,8 +239,8 @@ def load_conf(conf, hutch_dir=None):
         LiveTable._FMT_MAP['number'] = 'g'
         cache(RE=RE, bec=bec)
         cache.doc(
-            RE='Bluesky RunEngine',
-            bec='Bluesky best-effort callback for visualization.',
+            RE='Bluesky plan executor.',
+            bec='Bluesky best-effort callback for visualization settings.',
             )
 
     # Collect Plans
@@ -308,7 +308,7 @@ def load_conf(conf, hutch_dir=None):
     # ArchApp
     with safe_load('archapp'):
         cache(archive=EpicsArchive())
-        cache.doc(archive='Epics archive appliance interface.')
+        cache.doc(archive='Archiver interface for getting historical data.')
 
     # Camviewer
     if hutch is not None:
