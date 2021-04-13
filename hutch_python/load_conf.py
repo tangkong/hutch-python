@@ -222,11 +222,11 @@ def load_conf(conf, hutch_dir=None):
     cache = LoadCache((hutch or 'hutch') + '.db', hutch_dir=hutch_dir)
 
     # Load debug tools
-    with safe_load('debug tools')
+    with safe_load('debug tools'):
         load_debug(cache)
 
     # Load options
-    with safe_load('options')
+    with safe_load('options'):
         load_options(cache)
 
     # Make RunEngine

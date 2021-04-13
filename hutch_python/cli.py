@@ -16,7 +16,7 @@ from traitlets.config import Config
 
 from .constants import CONDA_BASE, DIR_MODULE
 from .load_conf import load
-from .log_setup import setup_logging
+from .log_setup import debug_mode, setup_logging
 
 logger = logging.getLogger(__name__)
 opts_cache = {}

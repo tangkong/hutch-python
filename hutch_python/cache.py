@@ -97,7 +97,7 @@ class LoadCache:
 
     def doc(self, **docs):
         """
-        Add docstrings to the cache corresponding with cached objects.
+        Add docstrings to the cached objects.
 
         Parameters
         ----------
@@ -105,7 +105,9 @@ class LoadCache:
             The key should be the object name, the value should be
             documentation about that object and why it is included.
         """
-        self.docs.update(**docs)
+        for key, value in docs.items():
+            obj = self.objs[key]
+            obj.__doc__ = value + '\n\n' + obj.__doc__
 
     def show_doc(self):
         """

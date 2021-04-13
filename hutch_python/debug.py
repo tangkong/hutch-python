@@ -10,7 +10,6 @@ debug_tools = {
     'debug_mode': debug_mode,
     'debug_context': debug_context,
     'debug_wrapper': debug_wrapper,
-    'set_engineering_mode': set_engineering_mode,
     }
 
 
