@@ -96,14 +96,15 @@ class HelpfulNamespace(SimpleNamespace):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.__doc__ = self._get_docstring()
+        self._items_ = kwargs
 
     def __iter__(self):
         # Sorts alphabetically by key
-        for _, obj in sorted(self.__dict__.items()):
+        for _, obj in sorted(self._items_.items()):
             yield obj
 
     def __len__(self):
-        return len(self.__dict__)
+        return len(self._items_)
 
     def _get_docstring(self):
         table = self._as_table_()
