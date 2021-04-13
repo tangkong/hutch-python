@@ -3,6 +3,7 @@ Module that contains general-use utilities. Some of these are useful outside of
 ``hutch-python``, while others are used in multiple places throughout the
 module.
 """
+import inspect
 import logging
 import sys
 import time
@@ -12,6 +13,7 @@ from importlib import import_module
 from subprocess import check_output
 from types import SimpleNamespace
 
+import prettytable
 import pyfiglet
 
 from .constants import (CLASS_SEARCH_PATH, CUR_EXP_SCRIPT, HUTCH_COLORS,
@@ -80,9 +82,9 @@ def get_current_experiment(hutch):
     return check_output(script.split(' '), universal_newlines=True).strip('\n')
 
 
-class IterableNamespace(SimpleNamespace):
+class HelpfulNamespace(SimpleNamespace):
     """
-    ``SimpleNamespace`` that can be iterated through.
+    ``SimpleNamespace`` that can be iterated over, with a fancy table repr.
 
     This means we can call funtions like ``list`` on these objects to see all
     of their contents, we can put them into ``for loops``, and we can use them
@@ -91,6 +93,10 @@ class IterableNamespace(SimpleNamespace):
     This class also has the added feature where ``len`` will correctly tell you
     the number of objects in the ``namespace``.
     """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.__doc__ = self._get_docstring()
+
     def __iter__(self):
         # Sorts alphabetically by key
         for _, obj in sorted(self.__dict__.items()):
@@ -98,6 +104,50 @@ class IterableNamespace(SimpleNamespace):
 
     def __len__(self):
         return len(self.__dict__)
+
+    def _get_docstring(self):
+        table = self._as_table_()
+        if table.rowcount == 0:
+            return ""
+        return str(table)
+
+    def _as_table_(self):
+        table = prettytable.PrettyTable()
+        table.add_column("Attribute", [])
+        table.add_column("Class", [])
+        table.add_column("Description", [], align="l")
+        multiline_rows = False
+        for attr, obj in sorted(inspect.getmembers(self)):
+            if attr.startswith('_'):
+                continue
+            if isinstance(obj, HelpfulNamespace):
+                docs = inspect.getdoc(obj)
+                multiline_rows = True
+            else:
+                docs = inspect.getdoc(obj) or ""
+                if docs:
+                    docs = docs.splitlines()[0]
+            table.add_row([attr, type(obj).__name__, docs])
+        if multiline_rows:
+            table.hrules = prettytable.ALL
+        return table
+
+    def _repr_pretty_(self, pretty, cycle):
+        table = self._as_table_()
+        if table.rowcount == 0:
+            pretty.text(f"""\
+This {type(self).__name__} has no available attributes.
+""")
+        else:
+            pretty.text(f"""\
+This {type(self).__name__} has the following attributes available:
+
+{self._as_table_()}
+""")
+
+
+# Back-compat; it's extra helpful now!
+IterableNamespace = HelpfulNamespace
 
 
 def count_ns_leaves(namespace):

@@ -1,5 +1,6 @@
 from importlib import import_module
-from types import SimpleNamespace
+
+from . import utils
 
 
 def collect_plans(modules):
@@ -28,7 +29,7 @@ def collect_plans(modules):
             except AttributeError:
                 # obj did not have __module__, probably a builtin
                 pass
-    return SimpleNamespace(**plans)
+    return utils.HelpfulNamespace(**plans)
 
 
 plans = collect_plans(['bluesky.plans',
