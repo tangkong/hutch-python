@@ -12,13 +12,11 @@ import IPython
 from cookiecutter.main import cookiecutter
 from IPython import start_ipython
 from pcdsdaq.sim import set_sim_mode as set_daq_sim
-from pcdsdevices.interface import set_engineering_mode
 from traitlets.config import Config
 
 from .constants import CONDA_BASE, DIR_MODULE
 from .load_conf import load
-from .log_setup import (debug_context, debug_mode, debug_wrapper,
-                        set_console_level, setup_logging)
+from .log_setup import setup_logging
 
 logger = logging.getLogger(__name__)
 opts_cache = {}
@@ -149,16 +147,6 @@ def main():
 
     # Load objects based on the configuration file
     objs = load(cfg=args.cfg, args=args)
-
-    # Add cli debug tools
-    objs['debug_console_level'] = set_console_level
-    objs['debug_mode'] = debug_mode
-    objs['debug_context'] = debug_context
-    objs['debug_wrapper'] = debug_wrapper
-
-    # Turn engineering mode off by default and add to namespace
-    set_engineering_mode(False)
-    objs['set_engineering_mode'] = set_engineering_mode
 
     script = opts_cache.get('script')
     if script is None:

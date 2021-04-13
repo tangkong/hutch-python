@@ -95,6 +95,28 @@ class LoadCache:
             with db_path.open('w') as f:
                 f.write(text)
 
+    def doc(self, **docs):
+        """
+        Add docstrings to the cache corresponding with cached objects.
+
+        Parameters
+        ----------
+        **objs: kwargs
+            The key should be the object name, the value should be
+            documentation about that object and why it is included.
+        """
+        self.docs.update(**docs)
+
+    def show_doc(self):
+        """
+        Generate a documentation table for the objects in the cache.
+
+        This will only include objects that were documented using the
+        "doc" method, and will omit objects that were added without
+        documentation.
+        """
+        pass
+
 
 # For writing the files
 header = """

@@ -24,10 +24,12 @@ from . import calc_defaults, plan_defaults, sim
 from .cache import LoadCache
 from .cam_load import read_camviewer_cfg
 from .constants import CAMVIEWER_CFG, VALID_KEYS
+from .debug import load_debug
 from .exp_load import get_exp_objs
 from .happi import get_happi_objs, get_lightpath
-from .lcls import global_devices
+from .lcls import global_devices, global_device_docs
 from .namespace import class_namespace
+from .options import load_options
 from .qs_load import get_qs_objs
 from .user_load import get_user_objs
 from .utils import (get_current_experiment, hutch_banner, safe_load,
@@ -89,6 +91,8 @@ def load_conf(conf, hutch_dir=None):
     - Use ``hutch`` key to create ``hutch.db`` importable namespace to
       stash the objects. This will be literally ``hutch.db`` if hutch is
       not provided, or the hutch name e.g. ``mfx.db``.
+    - Load debug tools
+    - Load options
     - Create a ``RunEngine``, ``RE``
     - Import ``plan_defaults`` and include as ``p``, ``plans``
     - Create a ``daq`` object with ``RE`` registered.
@@ -217,6 +221,14 @@ def load_conf(conf, hutch_dir=None):
     # Make cache namespace
     cache = LoadCache((hutch or 'hutch') + '.db', hutch_dir=hutch_dir)
 
+    # Load debug tools
+    with safe_load('debug tools')
+        load_debug(cache)
+
+    # Load options
+    with safe_load('options')
+        load_options(cache)
+
     # Make RunEngine
     with safe_load('run engine'):
         RE = RunEngine({})
@@ -226,20 +238,33 @@ def load_conf(conf, hutch_dir=None):
         # Enable scientific notation for big/small numbers in LiveTable
         LiveTable._FMT_MAP['number'] = 'g'
         cache(RE=RE, bec=bec)
+        cache.doc(
+            RE='Bluesky RunEngine',
+            bec='Bluesky best-effort callback for visualization.',
+            )
 
     # Collect Plans
     with safe_load('bluesky plans'):
-        cache(bp=plan_defaults.plans)
-        cache(bps=plan_defaults.plan_stubs)
-        cache(bpp=plan_defaults.preprocessors)
+        cache(
+            bp=plan_defaults.plans,
+            bps=plan_defaults.plan_stubs,
+            bpp=plan_defaults.preprocessors,
+            )
+        cache.doc(
+            bp='Namespace of full bluesky plans.',
+            bps='Namespace of bluesky plan building blocks (stubs).',
+            bpp='Namespace of bluesky plan preprocessors.',
+            )
 
     # Inline calculations
     with safe_load('calc utils'):
         cache(calc=calc_defaults.calc_namespace)
+        cache.doc(calc='Namespace of calculation utilities.')
 
     # Daq
     with safe_load('daq'):
         cache(daq=Daq(RE=RE, hutch_name=hutch))
+        cache.doc(daq='LCLS1 DAQ interface object.')
 
     # Scan PVs
     if hutch is not None:
@@ -248,6 +273,7 @@ def load_conf(conf, hutch_dir=None):
                                 name='scan_pvs', RE=RE)
             scan_pvs.enable()
             cache(scan_pvs=scan_pvs)
+            cache.doc(scan_pvs='LCLS scan status PVs.')
 
     # Elog
     if hutch is not None:
@@ -261,10 +287,12 @@ def load_conf(conf, hutch_dir=None):
                 logger.info("Configuring ELog to post to secondary experiment")
                 kwargs = {'station': '1'}
             cache(elog=HutchELog.from_conf(hutch.upper(), **kwargs))
+            cache.doc(elog='Elog posting interface object.')
 
     # Shared global devices for LCLS
     with safe_load('lcls PVs'):
         cache(**global_devices())
+        cache.doc(**global_device_docs)
 
     # Happi db and Lightpath
     if db is not None:
@@ -273,21 +301,26 @@ def load_conf(conf, hutch_dir=None):
             cache(**happi_objs)
             bp = get_lightpath(db, hutch)
             if bp.devices:
-                cache(**{"{}_beampath".format(hutch.lower()): bp})
+                beampath_name = "{}_beampath".format(hutch.lower())
+                cache(**{beampath_name: bp})
+                cache.doc(**{beampath_name: 'Lightpath beam path object.'})
 
     # ArchApp
     with safe_load('archapp'):
         cache(archive=EpicsArchive())
+        cache.doc(archive='Epics archive appliance interface.')
 
     # Camviewer
     if hutch is not None:
         with safe_load('camviewer config'):
             objs = read_camviewer_cfg(CAMVIEWER_CFG.format(hutch))
             cache(camviewer=HelpfulNamespace(**objs))
+            cache.doc(camviewer='Namespace of configured camviewer cameras.')
 
     # Simulated hardware
     with safe_load('simulated hardware'):
         cache(sim=sim.get_hw())
+        cache.doc(sim='Namespace of simulated hardware.')
 
     # Auto select experiment if we need to
     if experiment is None:
@@ -326,6 +359,10 @@ def load_conf(conf, hutch_dir=None):
         for name, obj in qs_objs.items():
             setattr(user, name, obj)
         cache(x=user, user=user)
+        cache.doc(
+            x='User experiment object (shorthand)',
+            user='User experiment object',
+            )
 
     # Default namespaces
     with safe_load('default groups'):
@@ -345,6 +382,16 @@ def load_conf(conf, hutch_dir=None):
 
         all_objs = copy(cache.objs)
         cache(a=all_objs, all_objects=all_objs)
+        cache.doc(
+            motors='Namespace of all positioner objects.',
+            m='Namespace of all positioner objects (shorthand).',
+            slits='Namespace of all slits objects.',
+            s='Namesspace of all slits objects (shorthand).',
+            detectors='Namespace of all ami detector objects.',
+            d='Namespace of all ami detector objects (shorthand).',
+            all_objects='Namespace of all loaded objects.',
+            a='Namespace of all loaded objects (shorthand).',
+            )
 
     # Install Presets
     if hutch_dir is not None:
