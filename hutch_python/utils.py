@@ -5,6 +5,7 @@ module.
 """
 import inspect
 import logging
+import os
 import sys
 import time
 from contextlib import contextmanager
@@ -188,10 +189,11 @@ This {type(self).__name__} has the following attributes available:
 This {type(self).__name__} has no available attributes.
 """)
         else:
+            table.max_table_width = os.get_terminal_size()[0]
             pretty.text(f"""\
 This {type(self).__name__} has the following attributes available:
 
-{self._as_table_()}
+{table}
 """)
 
 
