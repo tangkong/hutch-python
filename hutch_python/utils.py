@@ -188,7 +188,11 @@ This {type(self).__name__} has the following attributes available:
 This {type(self).__name__} has no available attributes.
 """)
         else:
-            table.max_table_width = os.get_terminal_size()[0]
+            try:
+                table.max_table_width = os.get_terminal_size()[0]
+            except OSError:
+                # This means we aren't actually in a terminal
+                pass
             pretty.text(f"""\
 This {type(self).__name__} has the following attributes available:
 
