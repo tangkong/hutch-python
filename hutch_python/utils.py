@@ -5,6 +5,7 @@ module.
 """
 import inspect
 import logging
+import os
 import sys
 import time
 from contextlib import contextmanager
@@ -124,6 +125,9 @@ class HelpfulNamespace(SimpleNamespace):
     def __len__(self):
         return len(list(self._get_items()))
 
+    def __getitem__(self, item):
+        return self.__dict__[item]
+
     def _get_docstring(self):
         table = self._as_table_()
         if table.rowcount == 0:
@@ -184,10 +188,15 @@ This {type(self).__name__} has the following attributes available:
 This {type(self).__name__} has no available attributes.
 """)
         else:
+            try:
+                table.max_table_width = os.get_terminal_size()[0]
+            except OSError:
+                # This means we aren't actually in a terminal
+                pass
             pretty.text(f"""\
 This {type(self).__name__} has the following attributes available:
 
-{self._as_table_()}
+{table}
 """)
 
 

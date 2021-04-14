@@ -1,7 +1,7 @@
 Release History
 ###############
 
-v1.9.5 (2021-??-??)
+v1.9.2 (2021-??-??)
 ===================
 
 Features
@@ -9,8 +9,16 @@ Features
 - ``IterableNamespace`` has been upgraded to be ``HelpfulNamespace``, while
   maintaining a backward-compatible import name.  This class supports the
   IPython "pretty repr" and HTML repr hooks to provide user-friendly tables of
-  items available in the namespace.  It also now allows for dictionary-like
-  access by way of ``collections.Mapping``.
+  items available in the namespace, as well as direct keyword-access to
+  elements of the namespace.
+- All objects loaded in load_conf have been annotated with what they are used
+  for in the Python session. These annotations are available when viewing
+  the ``HelpfulNamespace`` pretty and HTML reprs.
+
+Bugfixes
+--------
+- Fix an issue where the get_current_hutch scripts were using a deprecated and
+  removed argument structure.
 
 
 v1.9.1 (2021-02-10)

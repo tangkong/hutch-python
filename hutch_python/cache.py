@@ -6,6 +6,7 @@ they are available in the ``xxx.db`` virtual module. It is used extensively in
 import datetime
 import logging
 import sys
+import textwrap
 from importlib import import_module
 from pathlib import Path
 
@@ -94,6 +95,23 @@ class LoadCache:
                 db_path.chmod(0o666)
             with db_path.open('w') as f:
                 f.write(text)
+
+    def doc(self, **docs):
+        """
+        Add docstrings to the cached objects.
+
+        Parameters
+        ----------
+        **objs: kwargs
+            The key should be the object name, the value should be
+            documentation about that object and why it is included.
+        """
+        for key, value in docs.items():
+            obj = self.objs[key]
+            if obj.__doc__:
+                obj.__doc__ = value + '\n' + textwrap.dedent(obj.__doc__)
+            else:
+                obj.__doc__ = value
 
 
 # For writing the files

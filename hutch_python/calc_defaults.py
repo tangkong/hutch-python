@@ -1,5 +1,6 @@
 from importlib import import_module
-from types import SimpleNamespace
+
+from .utils import HelpfulNamespace
 
 
 def collect_functions(modules):
@@ -28,10 +29,10 @@ def collect_functions(modules):
             except AttributeError:
                 # obj did not have __module__, probably a builtin
                 pass
-    return SimpleNamespace(**functions)
+    return HelpfulNamespace(**functions)
 
 
-calc_namespace = SimpleNamespace(
+calc_namespace = HelpfulNamespace(
     be_lens=collect_functions(['pcdscalc.be_lens_calcs']),
     common=collect_functions(['pcdscalc.common']),
     diffraction=collect_functions(['pcdscalc.diffraction']),
