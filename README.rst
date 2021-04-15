@@ -4,9 +4,6 @@ Hutch Python
 .. image:: https://travis-ci.org/pcdshub/hutch-python.svg?branch=master
    :target: https://travis-ci.org/pcdshub/hutch-python
    :alt: Build Status
-.. image:: https://codecov.io/gh/pcdshub/hutch-python/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/pcdshub/hutch-python
-   :alt: Code Coverage
 
 ``hutch-python`` is the launcher and config reader for LCLS interactive IPython
 sessions. The documentation is hosted at
