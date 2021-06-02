@@ -174,7 +174,7 @@ class ObjectFilter(logging.Filter):
     def filter(self, record):
         return (
             hasattr(record, 'ophyd_object_name')
-            and self.levelno >= record.levelno
+            and self.levelno <= record.levelno
             and any(
                 record.ophyd_object_name == obj.name
                 for obj in self.objects
