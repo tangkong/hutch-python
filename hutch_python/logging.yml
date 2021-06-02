@@ -1,13 +1,18 @@
 version: 1
 disable_existing_loggers: false
 
-# Define two formatters, one for the console and one for the the log files.
 formatters:
+  # For the console:
   custom:
     (): 'coloredlogs.ColoredFormatter'
     fmt: '%(levelname)-8s %(message)s'
+  # For log files:
   file:
     format: '%(asctime)s - PID %(process)d %(filename)18s: %(lineno)-3s %(funcName)-18s %(levelname)-8s %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  # For object-specific log files:
+  object:
+    format: '%(asctime)s - PID %(process)d %(filename)18s: %(lineno)-3s %(funcName)-18s %(levelname)-8s %(ophyd_object_name)s %(message)s'
     datefmt: '%Y-%m-%d %H:%M:%S'
 
 handlers:

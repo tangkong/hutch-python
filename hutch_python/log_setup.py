@@ -8,6 +8,7 @@ import os
 import time
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Optional, Union
 
 import pcdsutils.log
 import yaml
@@ -16,9 +17,71 @@ from .constants import FILE_YAML, NO_LOG_EXCEPTIONS
 
 logger = logging.getLogger(__name__)
 central_logger = pcdsutils.log.logger
+LOG_DIR = None
 
 
-def setup_logging(dir_logs=None):
+class LoggingNotConfiguredError(Exception):
+    ...
+
+
+def get_log_filename(extension: str = '.log') -> Path:
+    """
+    Get a logger filename and ready it for usage.
+
+    Parameters
+    ----------
+    extension : str
+        The log file extension.
+
+    Returns
+    -------
+    pathlib.Path :
+        The log file path.
+    """
+    if LOG_DIR is None:
+        raise LoggingNotConfiguredError(
+            "Logging was not configured (LOG_DIR unset).  If in production "
+            "mode, please call `configure_log_directory` first."
+        )
+
+    # Subdirectory for year/month
+    dir_month = LOG_DIR / time.strftime('%Y_%m')
+
+    # Make the log directories if they don't exist
+    # Make sure each level is all permissions
+    for directory in (LOG_DIR, dir_month):
+        if not directory.exists():
+            directory.mkdir()
+            directory.chmod(0o777)
+
+    user = os.environ['USER']
+    timestamp = time.strftime('%d_%Hh%Mm%Ss')
+    log_file = f'{user}_{timestamp}{extension}'
+    path_log_file = dir_month / log_file
+    path_log_file.touch()
+    return path_log_file
+
+
+def _read_logging_config() -> dict:
+    """Read the logging configuration file into a dictionary."""
+    with open(FILE_YAML, 'rt') as f:
+        return yaml.safe_load(f.read())
+
+
+def configure_log_directory(dir_logs: Optional[Union[str, Path]]):
+    """
+    Configure the logging path.
+
+    Parameters
+    ----------
+    dir_logs: ``str`` or ``Path``, optional
+        Path to the log directory. If omitted, we won't use a log file.
+    """
+    global LOG_DIR
+    LOG_DIR = Path(dir_logs) if dir_logs else None
+
+
+def setup_logging():
     """
     Sets up the ``logging`` configuration.
 
@@ -26,47 +89,159 @@ def setup_logging(dir_logs=None):
     and manages the ``log`` directory paths.
 
     Also sets up the standard pcds logstash handler.
-
-    Parameters
-    ----------
-    dir_logs: ``str`` or ``Path``, optional
-        Path to the log directory. If omitted, we won't use a log file.
     """
-    with open(FILE_YAML, 'rt') as f:
-        config = yaml.safe_load(f.read())
+    config = _read_logging_config()
 
-    if dir_logs is None:
+    if LOG_DIR is None:
         # Remove debug file from the config
         del config['handlers']['debug']
         config['root']['handlers'].remove('debug')
     else:
-        # Ensure Path object
-        dir_logs = Path(dir_logs)
-
-        # Subdirectory for year/month
-        dir_month = dir_logs / time.strftime('%Y_%m')
-
-        # Make the log directories if they don't exist
-        # Make sure each level is all permissions
-        for directory in (dir_logs, dir_month):
-            if not directory.exists():
-                directory.mkdir()
-                directory.chmod(0o777)
-
-        user = os.environ['USER']
-        timestamp = time.strftime('%d_%Hh%Mm%Ss')
-        log_file = '{}_{}.{}'.format(user, timestamp, 'log')
-        path_log_file = dir_month / log_file
-        path_log_file.touch()
-        config['handlers']['debug']['filename'] = str(path_log_file)
+        config['handlers']['debug']['filename'] = str(get_log_filename())
 
     # Configure centralized PCDS logging:
     pcdsutils.log.configure_pcds_logging()
+
+    # This ensures that centralized logging messages do not make it to the
+    # user or other log files.
     central_logger.propagate = False
 
     logging.config.dictConfig(config)
     noisy_loggers = ['parso', 'pyPDB.dbd.yacc', 'ophyd', 'bluesky']
     hush_noisy_loggers(noisy_loggers)
+
+
+def validate_log_level(level: Union[str, int]) -> int:
+    '''
+    Return a logging level integer for level comparison.
+
+    Parameters
+    ----------
+    level : str or int
+        The logging level string or integer value.
+
+    Returns
+    -------
+    log_level : int
+        The integral log level.
+
+    Raises
+    ------
+    ValueError
+        If the logging level is invalid.
+    '''
+    if isinstance(level, int):
+        return level
+    if isinstance(level, str):
+        levelno = logging.getLevelName(level)
+
+    if not isinstance(levelno, int):
+        raise ValueError("Invalid logging level (use e.g., DEBUG or 6)")
+
+    return levelno
+
+
+class ObjectFilter(logging.Filter):
+    '''
+    A logging filter that limits log messages to a specific object or objects.
+
+    To be paired with a logging handler added to the ophyd object logger.
+
+    Parameters
+    ----------
+    objs : iterable of OphydObject
+        Ophyd objects to filter.
+
+    level : str or int
+        Cut-off level for log messages.
+        Default is 'WARNING'. Python log level names or their corresponding
+        integers are accepted.
+    '''
+    def __init__(self, *objects, level='WARNING', exclusive=True):
+        self.objects = frozenset(objects)
+        self.levelno = validate_log_level(level)
+
+    def __repr__(self):
+        levelname = logging.getLevelName(self.levelno)
+        objects = ", ".join(obj.name for obj in self.objects)
+        return (
+            f"{self.__class__.__name__}("
+            f"level={levelname}, "
+            f"objects={objects}"
+            f")"
+        )
+
+    def filter(self, record):
+        return (
+            hasattr(record, 'ophyd_object_name')
+            and self.levelno >= record.levelno
+            and any(
+                record.ophyd_object_name == obj.name
+                for obj in self.objects
+            )
+        )
+
+
+def disable_object_logging(*objects):
+    obj, *_ = objects
+    matches = [handler for handler in obj.log.logger.handlers
+               if getattr(handler, "objects", None) == frozenset(objects)]
+    for matching_handler in matches:
+        logger.info("Removing handler %s", matching_handler)
+        obj.log.logger.removeHandler(matching_handler)
+
+
+def log_objects(
+    *objects, handler: logging.Handler,
+    level: str = "DEBUG",
+):
+    """
+    Configure a custom logging handler on the specified object(s), and record
+    log messages to a file.
+    """
+    filter = ObjectFilter(*objects, level=level)
+    handler.addFilter(filter)
+
+    obj, *_ = objects
+    obj.log.logger.addHandler(handler)
+    if obj.log.logger.level < filter.levelno:
+        obj.log.logger.setLevel(filter.levelno)
+
+    for obj in objects:
+        obj.log.log(
+            filter.levelno,
+            "Recording log messages from %s (level >=%s)",
+            obj.name, level
+        )
+
+
+def get_formatter(
+    format_key: str,
+    fallback_format="%(levelname)-8s %(message)s"
+) -> logging.Formatter:
+    conf = _read_logging_config()["formatters"][format_key]
+    format_str = conf.get("fmt", conf.get("format", fallback_format))
+    return logging.Formatter(fmt=format_str)
+
+
+def log_objects_to_file(
+    *objects,
+    filename: Optional[Union[str, Path]] = None,
+    level: str = "DEBUG",
+    format_key: str = "object",
+):
+    if filename is None:
+        object_names = ".".join(obj.name for obj in objects)
+        filename = get_log_filename(extension=f".{object_names}.log")
+
+    handler = logging.FileHandler(filename=str(filename), mode="wt")
+    handler.setLevel(level)
+    handler.formatter = get_formatter(format_key)
+    return log_objects(
+        *objects,
+        handler=handler,
+        level=level,
+    )
 
 
 def hush_noisy_loggers(modules, level=logging.WARNING):
