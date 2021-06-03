@@ -12,7 +12,7 @@ Bugfixes
   get "stuck" in a "set_and_wait" that would never end. In ophyd, this default
   is intentionally left to infinite to satisfy the common case where signals
   don't update to the final value for a long period of time.
-  These cases do not exist at LCLS.
+  These cases are very uncommon at the LCLS.
 
 
 v1.10.0 (2021-04-15)
