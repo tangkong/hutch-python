@@ -1,6 +1,20 @@
 Release History
 ###############
 
+v1.10.1 (2021-06-03)
+===================
+
+Bugfixes
+--------
+- Fix an issue where ophyd signals were configured to wait "forever" for their
+  write timeouts. By default, this is now a 5 second timeout instead of no
+  timeout. This unfortunate default resulted in some cases where PVs would
+  get "stuck" in a "set_and_wait" that would never end. In ophyd, this default
+  is intentionally left to infinite to satisfy the common case where signals
+  don't update to the final value for a long period of time.
+  These cases do not exist at LCLS.
+
+
 v1.10.0 (2021-04-15)
 ===================
 
