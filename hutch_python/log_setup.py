@@ -1,6 +1,25 @@
 """
 This module is used to set up and manipulate the ``logging`` configuration for
 utilities like debug mode.
+
+Goals:
+
+Log to {{LOG_DIR}}/year_month/user_timestamp.log:
+* All IPython input
+* Any DEBUG message (well, _level 5+_)
+  -> Exceptions include hushed loggers below
+  -> Exception: Only whitelisted ophyd object logs, down to DEBUG level (or 5)
+  -> Filter out bluesky super-verbose messages?
+
+Log to both the above file and console:
+* Any INFO, WARNING, ERROR, CRITICAL messages
+
+console exceptions:
+* ophydobject INFO should be treated as DEBUG
+
+Hush entirely - neither the file nor the console should see:
+  -> parso
+  -> pyPDB.dbd.yacc
 """
 import logging
 import logging.config
@@ -10,6 +29,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Optional, Union
 
+import coloredlogs
 import pcdsutils.log
 import yaml
 
@@ -22,6 +42,25 @@ LOG_DIR = None
 
 class LoggingNotConfiguredError(Exception):
     ...
+
+
+class DefaultFormatter(logging.Formatter):
+    """
+    A small ``logging.Formatter`` class to patch in a default
+    'ophyd_object_name' as needed to logging records.
+    """
+
+    def format(self, record):
+        record.__dict__.setdefault("ophyd_object_name", "-")
+        return super().format(record)
+
+
+class ColoredFormatter(coloredlogs.ColoredFormatter):
+    """The ``coloredlogs`` version of ``DefaultFormatter``, above."""
+
+    def format(self, record):
+        record.__dict__.setdefault("ophyd_object_name", "-")
+        return super().format(record)
 
 
 def get_log_filename(extension: str = '.log') -> Path:
@@ -56,10 +95,10 @@ def get_log_filename(extension: str = '.log') -> Path:
 
     user = os.environ['USER']
     timestamp = time.strftime('%d_%Hh%Mm%Ss')
-    log_file = f'{user}_{timestamp}{extension}'
-    path_log_file = dir_month / log_file
-    path_log_file.touch()
-    return path_log_file
+
+    logfile = dir_month / f'{user}_{timestamp}{extension}'
+    logfile.touch()
+    return logfile
 
 
 def _read_logging_config() -> dict:
@@ -107,7 +146,7 @@ def setup_logging():
     central_logger.propagate = False
 
     logging.config.dictConfig(config)
-    noisy_loggers = ['parso', 'pyPDB.dbd.yacc', 'ophyd', 'bluesky']
+    noisy_loggers = ['parso', 'pyPDB.dbd.yacc', 'bluesky']
     hush_noisy_loggers(noisy_loggers)
 
 
@@ -156,60 +195,148 @@ class ObjectFilter(logging.Filter):
         Cut-off level for log messages.
         Default is 'WARNING'. Python log level names or their corresponding
         integers are accepted.
+
+    allow_other_messages : bool, optional
+        Allow messages through the filter that are not specific to ophyd
+        objects.  Ophyd object-related messages _must_ pass the filter.
     '''
-    def __init__(self, *objects, level='WARNING', exclusive=True):
-        self.objects = frozenset(objects)
-        self.levelno = validate_log_level(level)
+    def __init__(self, *objects, level='WARNING',
+                 whitelist_all_level='WARNING', allow_other_messages=True):
+        self._objects = frozenset(objects)
+        self.allow_other_messages = bool(allow_other_messages)
+        self.whitelist_all_level = whitelist_all_level
+        self.level = level
 
     def __repr__(self):
-        levelname = logging.getLevelName(self.levelno)
         objects = ", ".join(obj.name for obj in self.objects)
         return (
             f"{self.__class__.__name__}("
-            f"level={levelname}, "
-            f"objects={objects}"
+            f"level={self.level}, "
+            f"allow_other_messages={self.allow_other_messages}, "
+            f"objects=[{objects}]"
             f")"
         )
 
+    def disable(self):
+        """Disable the filter."""
+        self.objects = []
+        self.allow_other_messages = True
+
+    @property
+    def objects(self):
+        """The objects to log."""
+        return list(sorted(self._objects, key=lambda obj: obj.name))
+
+    @objects.setter
+    def objects(self, objects):
+        self._objects = frozenset(objects)
+
+    @property
+    def levelno(self) -> str:
+        """The logging level number."""
+        return self._levelno
+
+    @property
+    def level(self) -> str:
+        """The logging level name."""
+        return logging.getLevelName(self._levelno)
+
+    @level.setter
+    def level(self, value):
+        self._levelno = validate_log_level(value)
+
+    @property
+    def whitelist_all_level(self) -> str:
+        """The logging level at which we whitelist *all* objects."""
+        return logging.getLevelName(self._whitelist_all_levelno)
+
+    @whitelist_all_level.setter
+    def whitelist_all_level(self, value):
+        self._whitelist_all_levelno = validate_log_level(value)
+
+    @property
+    def object_names(self):
+        """The names of all contained objects."""
+        return set(obj.name for obj in self.objects)
+
     def filter(self, record):
-        return (
-            hasattr(record, 'ophyd_object_name')
-            and self.levelno <= record.levelno
-            and any(
-                record.ophyd_object_name == obj.name
-                for obj in self.objects
-            )
-        )
+        if not hasattr(record, 'ophyd_object_name'):
+            return self.allow_other_messages
+
+        if record.levelno == logging.INFO:
+            # This is rather dastardly, but we consider ophydobj INFO to be
+            # closer to DEBUG.  Make it so.
+            record.levelno = logging.DEBUG
+            record.levelname = "DEBUG"
+
+        if record.levelno >= self._whitelist_all_levelno:
+            return True
+
+        # if record.levelno < self.levelno:
+        #     return self.allow_other_messages
+
+        return record.ophyd_object_name in self.object_names
 
 
-def disable_object_logging(*objects):
-    obj, *_ = objects
-    matches = [handler for handler in obj.log.logger.handlers
-               if getattr(handler, "objects", None) == frozenset(objects)]
-    for matching_handler in matches:
-        logger.info("Removing handler %s", matching_handler)
-        obj.log.logger.removeHandler(matching_handler)
+def find_root_object_filters():
+    """
+    Find all ``ObjectFilter``s configured on the root logger.
+
+    This is useful as we configure the filters in ``logging.yaml``.
+
+    Yields
+    ------
+    handler : logging.Handler
+    filter : ObjectFilter
+    """
+    for handler in logging.root.handlers:
+        for filter in handler.filters:
+            if isinstance(filter, ObjectFilter):
+                yield handler, filter
+
+
+def log_objects_disable():
+    """
+    Return to default logging behavior and do not treat objects specially.
+    """
+    log_objects(level="WARNING", console=True)
 
 
 def log_objects(
-    *objects, handler: logging.Handler,
+    *objects,
     level: str = "DEBUG",
+    console: bool = True,
 ):
     """
     Configure a custom logging handler on the specified object(s), and record
-    log messages to a file.
-    """
-    filter = ObjectFilter(*objects, level=level)
-    handler.addFilter(filter)
+    log messages to files and (optionally) to the console.
 
-    obj, *_ = objects
-    obj.log.logger.addHandler(handler)
-    if obj.log.logger.level < filter.levelno:
-        obj.log.logger.setLevel(filter.levelno)
+    Parameters
+    ----------
+    *objects :
+        The ``OphydObject`` instances.
+
+    level : str, optional
+        The minimum logging level to allow.  Note that the console logger
+        must still have its level set appropriately. The file logger should be
+        OK as it has a low default level (5, below DEBUG).
+
+    console : bool, optional
+        Apply object logging to the console as well as the rotating log file.
+    """
+    notification_level = 0
+
+    for handler, filter in find_root_object_filters():
+        if isinstance(handler, logging.StreamHandler) and not console:
+            continue
+
+        filter.objects = objects
+        filter.level = level
+        notification_level = max((notification_level, handler.level))
 
     for obj in objects:
         obj.log.log(
-            filter.levelno,
+            notification_level,
             "Recording log messages from %s (level >=%s)",
             obj.name, level
         )
@@ -222,26 +349,6 @@ def get_formatter(
     conf = _read_logging_config()["formatters"][format_key]
     format_str = conf.get("fmt", conf.get("format", fallback_format))
     return logging.Formatter(fmt=format_str)
-
-
-def log_objects_to_file(
-    *objects,
-    filename: Optional[Union[str, Path]] = None,
-    level: str = "DEBUG",
-    format_key: str = "object",
-):
-    if filename is None:
-        object_names = ".".join(obj.name for obj in objects)
-        filename = get_log_filename(extension=f".{object_names}.log")
-
-    handler = logging.FileHandler(filename=str(filename), mode="wt")
-    handler.setLevel(level)
-    handler.formatter = get_formatter(format_key)
-    return log_objects(
-        *objects,
-        handler=handler,
-        level=level,
-    )
 
 
 def hush_noisy_loggers(modules, level=logging.WARNING):
