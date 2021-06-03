@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>hutch_python.load_conf.load_conf &mdash; hutch-python 1.10.0 documentation</title>
+  <title>hutch_python.load_conf.load_conf &mdash; hutch-python 1.10.0+6.g060ee48 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -64,7 +67,7 @@
             
             
               <div class="version">
-                1.10.0
+                1.10.0+6.g060ee48
               </div>
             
           
@@ -227,8 +230,8 @@
 <div class="section" id="hutch-python-load-conf-load-conf">
 <h1>hutch_python.load_conf.load_conf<a class="headerlink" href="#hutch-python-load-conf-load-conf" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="hutch_python.load_conf.load_conf">
-<code class="sig-prename descclassname"><span class="pre">hutch_python.load_conf.</span></code><code class="sig-name descname"><span class="pre">load_conf</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hutch_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.load_conf.load_conf" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hutch_python.load_conf.load_conf">
+<span class="sig-prename descclassname"><span class="pre">hutch_python.load_conf.</span></span><span class="sig-name descname"><span class="pre">load_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hutch_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.load_conf.load_conf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Step through the object loading procedure, given a configuration.</p>
 <p>The procedure is:</p>
 <ul>
@@ -239,6 +242,7 @@ stash the objects. This will be literally <code class="docutils literal notransl
 not provided, or the hutch name e.g. <code class="docutils literal notranslate"><span class="pre">mfx.db</span></code>.</p></li>
 <li><p>Load debug tools</p></li>
 <li><p>Load options</p></li>
+<li><p>Set ophyd signal default timeouts</p></li>
 <li><p>Create a <code class="docutils literal notranslate"><span class="pre">RunEngine</span></code>, <code class="docutils literal notranslate"><span class="pre">RE</span></code></p></li>
 <li><p>Import <code class="docutils literal notranslate"><span class="pre">plan_defaults</span></code> and include as <code class="docutils literal notranslate"><span class="pre">p</span></code>, <code class="docutils literal notranslate"><span class="pre">plans</span></code></p></li>
 <li><p>Create a <code class="docutils literal notranslate"><span class="pre">daq</span></code> object with <code class="docutils literal notranslate"><span class="pre">RE</span></code> registered.</p></li>

@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>ipython_log.py &mdash; hutch-python 1.10.0 documentation</title>
+  <title>ipython_log.py &mdash; hutch-python 1.10.0+6.g060ee48 documentation</title>
   
 
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -64,7 +67,7 @@
             
             
               <div class="version">
-                1.10.0
+                1.10.0+6.g060ee48
               </div>
             
           
@@ -223,8 +226,8 @@
 tracebacks to a custom <code class="docutils literal notranslate"><span class="pre">logger.input</span></code> level. The <code class="docutils literal notranslate"><span class="pre">INPUT</span></code> level is lower
 than the <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code> level to avoid a terminal echo in debug mode.</p>
 <dl class="py class">
-<dt id="hutch_python.ipython_log.IPythonLogger">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">hutch_python.ipython_log.</span></code><code class="sig-name descname"><span class="pre">IPythonLogger</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipython</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.ipython_log.IPythonLogger" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hutch_python.ipython_log.IPythonLogger">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">hutch_python.ipython_log.</span></span><span class="sig-name descname"><span class="pre">IPythonLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipython</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.ipython_log.IPythonLogger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class that logs the most recent inputs, outputs, and exceptions at the
 custom <code class="docutils literal notranslate"><span class="pre">INPUT</span></code> level.</p>
 <dl class="field-list simple">
@@ -234,8 +237,8 @@ custom <code class="docutils literal notranslate"><span class="pre">INPUT</span>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="hutch_python.ipython_log.IPythonLogger.log">
-<code class="sig-name descname"><span class="pre">log</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.ipython_log.IPythonLogger.log" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hutch_python.ipython_log.IPythonLogger.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.ipython_log.IPythonLogger.log" title="Permalink to this definition">¶</a></dt>
 <dd><p>Logs the most recent inputs, outputs and exceptions.</p>
 <ul class="simple">
 <li><p>Always logs the most recent input</p></li>
@@ -248,8 +251,8 @@ call to <a class="reference internal" href="#hutch_python.ipython_log.IPythonLog
 </dd></dl>
 
 <dl class="py function">
-<dt id="hutch_python.ipython_log.load_ipython_extension">
-<code class="sig-prename descclassname"><span class="pre">hutch_python.ipython_log.</span></code><code class="sig-name descname"><span class="pre">load_ipython_extension</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipython</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.ipython_log.load_ipython_extension" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hutch_python.ipython_log.load_ipython_extension">
+<span class="sig-prename descclassname"><span class="pre">hutch_python.ipython_log.</span></span><span class="sig-name descname"><span class="pre">load_ipython_extension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipython</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.ipython_log.load_ipython_extension" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the <a class="reference internal" href="#hutch_python.ipython_log.IPythonLogger" title="hutch_python.ipython_log.IPythonLogger"><code class="xref any py py-class docutils literal notranslate"><span class="pre">IPythonLogger</span></code></a>.</p>
 <p>This involves adding the <code class="docutils literal notranslate"><span class="pre">INPUT</span></code> log level and registering
 <a class="reference internal" href="#hutch_python.ipython_log.IPythonLogger.log" title="hutch_python.ipython_log.IPythonLogger.log"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">IPythonLogger.log</span></code></a> to run on the <code class="docutils literal notranslate"><span class="pre">post-execute</span></code> event.</p>

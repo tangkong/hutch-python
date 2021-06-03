@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>namespace.py &mdash; hutch-python 1.10.0 documentation</title>
+  <title>namespace.py &mdash; hutch-python 1.10.0+6.g060ee48 documentation</title>
   
 
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -64,7 +67,7 @@
             
             
               <div class="version">
-                1.10.0
+                1.10.0+6.g060ee48
               </div>
             
           
@@ -221,8 +224,8 @@
 <span id="namespace-py"></span><h1>namespace.py<a class="headerlink" href="#module-hutch_python.namespace" title="Permalink to this headline">¶</a></h1>
 <p>This module provides utilities for grouping objects into namespaces.</p>
 <dl class="py function">
-<dt id="hutch_python.namespace.class_namespace">
-<code class="sig-prename descclassname"><span class="pre">hutch_python.namespace.</span></code><code class="sig-name descname"><span class="pre">class_namespace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.namespace.class_namespace" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hutch_python.namespace.class_namespace">
+<span class="sig-prename descclassname"><span class="pre">hutch_python.namespace.</span></span><span class="sig-name descname"><span class="pre">class_namespace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.namespace.class_namespace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <code class="docutils literal notranslate"><span class="pre">namespace</span></code> that contains objects of a specific type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -247,8 +250,8 @@ will continue recursively, skipping lazy and dynamic components.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="hutch_python.namespace.tree_namespace">
-<code class="sig-prename descclassname"><span class="pre">hutch_python.namespace.</span></code><code class="sig-name descname"><span class="pre">tree_namespace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.namespace.tree_namespace" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="hutch_python.namespace.tree_namespace">
+<span class="sig-prename descclassname"><span class="pre">hutch_python.namespace.</span></span><span class="sig-name descname"><span class="pre">tree_namespace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hutch_python.namespace.tree_namespace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a <code class="docutils literal notranslate"><span class="pre">namespace</span></code> that accumulates objects and creates a tree.</p>
 <p>This tree is a nested set of <a class="reference internal" href="generated/hutch_python.utils.IterableNamespace.html#hutch_python.utils.IterableNamespace" title="hutch_python.utils.IterableNamespace"><code class="xref any py py-attr docutils literal notranslate"><span class="pre">IterableNamespace</span></code></a> objects based on the
 object names as defined in scope. We will split on underscores and use the
