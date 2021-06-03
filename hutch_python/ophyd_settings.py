@@ -42,4 +42,3 @@ def setup_ophyd():
         write_timeout=os.environ.get(WRITE_VAR, 5.0),
         auto_monitor=os.environ.get(AUTO_VAR, False),
         )
-
