@@ -29,6 +29,7 @@ from .exp_load import get_exp_objs
 from .happi import get_happi_objs, get_lightpath
 from .lcls import global_devices, global_device_docs
 from .namespace import class_namespace
+from .ophyd_settings import setup_ophyd
 from .options import load_options
 from .qs_load import get_qs_objs
 from .user_load import get_user_objs
@@ -93,6 +94,7 @@ def load_conf(conf, hutch_dir=None):
       not provided, or the hutch name e.g. ``mfx.db``.
     - Load debug tools
     - Load options
+    - Set ophyd signal default timeouts
     - Create a ``RunEngine``, ``RE``
     - Import ``plan_defaults`` and include as ``p``, ``plans``
     - Create a ``daq`` object with ``RE`` registered.
@@ -228,6 +230,10 @@ def load_conf(conf, hutch_dir=None):
     # Load options
     with safe_load('options'):
         load_options(cache)
+
+    # Configure ophyd
+    with safe_load('configure ophyd'):
+        setup_ophyd()
 
     # Make RunEngine
     with safe_load('run engine'):
