@@ -94,6 +94,7 @@ def load_conf(conf, hutch_dir=None):
       not provided, or the hutch name e.g. ``mfx.db``.
     - Load debug tools
     - Load options
+    - Set ophyd signal default timeouts
     - Create a ``RunEngine``, ``RE``
     - Import ``plan_defaults`` and include as ``p``, ``plans``
     - Create a ``daq`` object with ``RE`` registered.
