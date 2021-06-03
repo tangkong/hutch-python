@@ -12,6 +12,9 @@ READ_VAR = 'HUTCH_PYTHON_READ_TIMEOUT'
 WRITE_VAR = 'HUTCH_PYTHON_WRITE_TIMEOUT'
 AUTO_VAR = 'HUTCH_PYTHON_AUTO_MONITOR'
 
+# Acceptable values to make auto_monitor True
+AUTO_TRUE = {'true', 't', 'yes', 'y', '1'}
+
 
 def setup_ophyd():
     """
@@ -37,8 +40,8 @@ def setup_ophyd():
       - write timeout (we don't want to wait forever)
     """
     EpicsSignalBase.set_defaults(
-        connection_timeout=os.environ.get(CONN_VAR, 1.0),
-        timeout=os.environ.get(READ_VAR, 2.0),
-        write_timeout=os.environ.get(WRITE_VAR, 5.0),
-        auto_monitor=os.environ.get(AUTO_VAR, False),
+        connection_timeout=float(os.environ.get(CONN_VAR, 1.0)),
+        timeout=float(os.environ.get(READ_VAR, 2.0)),
+        write_timeout=float(os.environ.get(WRITE_VAR, 5.0)),
+        auto_monitor=os.environ.get(AUTO_VAR, 'false').lower() in AUTO_TRUE,
         )
