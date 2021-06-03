@@ -196,6 +196,11 @@ class ObjectFilter(logging.Filter):
         Default is 'WARNING'. Python log level names or their corresponding
         integers are accepted.
 
+    whitelist_all_level : str or int
+        Cut-off level for log messages.
+        Default is 'WARNING'. Python log level names or their corresponding
+        integers are accepted.
+
     allow_other_messages : bool, optional
         Allow messages through the filter that are not specific to ophyd
         objects.  Ophyd object-related messages _must_ pass the filter.
@@ -340,15 +345,6 @@ def log_objects(
             "Recording log messages from %s (level >=%s)",
             obj.name, level
         )
-
-
-def get_formatter(
-    format_key: str,
-    fallback_format="%(levelname)-8s %(message)s"
-) -> logging.Formatter:
-    conf = _read_logging_config()["formatters"][format_key]
-    format_str = conf.get("fmt", conf.get("format", fallback_format))
-    return logging.Formatter(fmt=format_str)
 
 
 def hush_noisy_loggers(modules, level=logging.WARNING):
