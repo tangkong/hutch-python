@@ -18,6 +18,7 @@ console exceptions:
 * ophydobject INFO should be treated as DEBUG
 
 Hush entirely - neither the file nor the console should see:
+  -> ophyd.event_dispatcher
   -> parso
   -> pyPDB.dbd.yacc
 """
@@ -151,7 +152,7 @@ def setup_logging():
     central_logger.propagate = False
 
     logging.config.dictConfig(config)
-    noisy_loggers = ['parso', 'pyPDB.dbd.yacc', 'bluesky']
+    noisy_loggers = ['ophyd.event_dispatcher', 'parso', 'pyPDB.dbd.yacc', 'bluesky']
     hush_noisy_loggers(noisy_loggers)
 
 
@@ -369,7 +370,7 @@ def hush_noisy_loggers(modules, level=logging.WARNING):
     repos it is used as the secondary debug stream.
     """
     for module in modules:
-        logging.getLogger(module).setLevel(level)
+        logging.getLogger(module).propagate = False
 
 
 def get_session_logfiles():
