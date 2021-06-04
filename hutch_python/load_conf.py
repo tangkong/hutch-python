@@ -20,7 +20,7 @@ from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdevices.interface import setup_preset_paths
 
-from . import calc_defaults, plan_defaults, sim
+from . import calc_defaults, plan_defaults, sim, log_setup
 from .cache import LoadCache
 from .cam_load import read_camviewer_cfg
 from .constants import CAMVIEWER_CFG, VALID_KEYS
@@ -234,6 +234,19 @@ def load_conf(conf, hutch_dir=None):
     # Configure ophyd
     with safe_load('configure ophyd'):
         setup_ophyd()
+
+    cache(
+        logs=HelpfulNamespace(
+            log_objects=log_setup.log_objects,
+            log_objects_off=log_setup.log_objects_off,
+            get_log_directory=log_setup.get_log_directory,
+            get_session_logfiles=log_setup.get_session_logfiles,
+            get_console_level_name=log_setup.get_console_level_name,
+            set_console_level=log_setup.set_console_level,
+            debug_mode=log_setup.debug_mode,
+            debug_context=log_setup.debug_context,
+        )
+    )
 
     # Make RunEngine
     with safe_load('run engine'):

@@ -107,6 +107,11 @@ def _read_logging_config() -> dict:
         return yaml.safe_load(f.read())
 
 
+def get_log_directory() -> Optional[Path]:
+    """Get the currently configured logging path."""
+    return LOG_DIR
+
+
 def configure_log_directory(dir_logs: Optional[Union[str, Path]]):
     """
     Configure the logging path.
@@ -117,7 +122,7 @@ def configure_log_directory(dir_logs: Optional[Union[str, Path]]):
         Path to the log directory. If omitted, we won't use a log file.
     """
     global LOG_DIR
-    LOG_DIR = Path(dir_logs) if dir_logs else None
+    LOG_DIR = Path(dir_logs).expanduser().resolve() if dir_logs else None
 
 
 def setup_logging():
@@ -237,7 +242,7 @@ class ObjectFilter(logging.Filter):
         self._objects = frozenset(objects)
 
     @property
-    def levelno(self) -> str:
+    def levelno(self) -> int:
         """The logging level number."""
         return self._levelno
 
@@ -300,7 +305,7 @@ def find_root_object_filters():
                 yield handler, filter
 
 
-def log_objects_disable():
+def log_objects_off():
     """
     Return to default logging behavior and do not treat objects specially.
     """
@@ -436,17 +441,29 @@ def get_console_level():
     return handler.level
 
 
+def get_console_level_name():
+    """
+    Helper function to get the console's log level name.
+
+    Returns
+    -------
+    level: str
+        The current console log level as a user-friendly string.
+    """
+    return logging.getLevelName(get_console_level())
+
+
 def set_console_level(level=logging.INFO):
     """
     Helper function to set the console's log level.
 
     Parameters
     ----------
-    level: ``int``
+    level: int or str
         Likely one of ``logging.INFO``, ``logging.DEBUG``, etc.
     """
     handler = get_console_handler()
-    handler.level = level
+    handler.level = validate_log_level(level)
 
 
 def debug_mode(debug=None):

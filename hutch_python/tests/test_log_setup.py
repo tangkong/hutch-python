@@ -5,8 +5,10 @@ from pathlib import Path
 import pytest
 from conftest import restore_logging
 
-from hutch_python.log_setup import (debug_context, debug_mode, debug_wrapper,
-                                    get_console_handler, get_debug_handler,
+from hutch_python.log_setup import (configure_log_directory, debug_context,
+                                    debug_mode, debug_wrapper,
+                                    get_console_handler, get_console_level,
+                                    get_console_level_name, get_debug_handler,
                                     get_session_logfiles, set_console_level,
                                     setup_logging)
 
@@ -21,7 +23,8 @@ def test_setup_logging():
         setup_logging()
 
     with restore_logging():
-        setup_logging(dir_logs=dir_logs)
+        configure_log_directory(dir_logs)
+        setup_logging()
 
     assert dir_logs.exists()
 
@@ -42,7 +45,8 @@ def test_get_session_logfiles():
     logger.debug('test_get_session_logfiles')
     with restore_logging():
         # Create a parent log file
-        setup_logging(dir_logs=Path(__file__).parent / 'logs')
+        configure_log_directory(Path(__file__).parent / 'logs')
+        setup_logging()
         debug_handler = get_debug_handler()
         debug_handler.doRollover()
         debug_handler.doRollover()
@@ -88,6 +92,8 @@ def test_set_console_level(log_queue):
 
     # Change console level so we get debug statements
     set_console_level(logging.DEBUG)
+    assert get_console_level() == logging.DEBUG
+    assert get_console_level_name() == "DEBUG"
     assert_is_debug(log_queue)
 
 
