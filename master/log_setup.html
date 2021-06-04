@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>log_setup.py &mdash; hutch-python 1.10.1 documentation</title>
+  <title>log_setup.py &mdash; hutch-python 1.11.0 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                1.10.1
+                1.11.0
               </div>
             
           
@@ -234,6 +234,25 @@
 <span id="log-setup-py"></span><h1>log_setup.py<a class="headerlink" href="#module-hutch_python.log_setup" title="Permalink to this headline">¶</a></h1>
 <p>This module is used to set up and manipulate the <code class="docutils literal notranslate"><span class="pre">logging</span></code> configuration for
 utilities like debug mode.</p>
+<p>Goals:</p>
+<p>Log to {{LOG_DIR}}/year_month/user_timestamp.log:
+* All IPython input
+* Any DEBUG message (well, _level 5+_)</p>
+<blockquote>
+<div><p>-&gt; Exceptions include hushed loggers below
+-&gt; Exception: Only whitelisted ophyd object logs, down to DEBUG level (or 5)
+-&gt; Filter out bluesky super-verbose messages?</p>
+</div></blockquote>
+<p>Log to both the above file and console:
+* Any INFO, WARNING, ERROR, CRITICAL messages</p>
+<p>console exceptions:
+* ophydobject INFO should be treated as DEBUG</p>
+<dl class="simple">
+<dt>Hush entirely - neither the file nor the console should see:</dt><dd><p>-&gt; ophyd.event_dispatcher
+-&gt; parso
+-&gt; pyPDB.dbd.yacc</p>
+</dd>
+</dl>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
