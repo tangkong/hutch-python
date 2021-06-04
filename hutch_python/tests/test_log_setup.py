@@ -96,6 +96,10 @@ def test_set_console_level(log_queue):
     assert get_console_level_name() == "DEBUG"
     assert_is_debug(log_queue)
 
+    set_console_level("INFO")
+    assert get_console_level() == logging.INFO
+    assert get_console_level_name() == "INFO"
+
 
 def test_debug_mode(log_queue):
     logger.debug('test_debug_mode')
