@@ -2,12 +2,17 @@ import logging
 from logging.handlers import QueueHandler
 from pathlib import Path
 
+import ophyd
 import pytest
 from conftest import restore_logging
 
-from hutch_python.log_setup import (debug_context, debug_mode, debug_wrapper,
-                                    get_console_handler, get_debug_handler,
-                                    get_session_logfiles, set_console_level,
+from hutch_python import log_setup
+from hutch_python.log_setup import (configure_log_directory, debug_context,
+                                    debug_mode, debug_wrapper,
+                                    get_console_handler, get_console_level,
+                                    get_console_level_name, get_debug_handler,
+                                    get_session_logfiles, log_objects,
+                                    log_objects_off, set_console_level,
                                     setup_logging)
 
 logger = logging.getLogger(__name__)
@@ -21,7 +26,8 @@ def test_setup_logging():
         setup_logging()
 
     with restore_logging():
-        setup_logging(dir_logs=dir_logs)
+        configure_log_directory(dir_logs)
+        setup_logging()
 
     assert dir_logs.exists()
 
@@ -42,7 +48,8 @@ def test_get_session_logfiles():
     logger.debug('test_get_session_logfiles')
     with restore_logging():
         # Create a parent log file
-        setup_logging(dir_logs=Path(__file__).parent / 'logs')
+        configure_log_directory(Path(__file__).parent / 'logs')
+        setup_logging()
         debug_handler = get_debug_handler()
         debug_handler.doRollover()
         debug_handler.doRollover()
@@ -59,11 +66,14 @@ def setup_queue_console():
             break
     queue_handler.name = 'console'
     queue_handler.level = 20
+    return queue_handler
 
 
 def clear(queue):
+    items = []
     while not queue.empty():
-        queue.get(block=False)
+        items.append(queue.get(block=False))
+    return items
 
 
 def assert_is_info(queue):
@@ -88,7 +98,13 @@ def test_set_console_level(log_queue):
 
     # Change console level so we get debug statements
     set_console_level(logging.DEBUG)
+    assert get_console_level() == logging.DEBUG
+    assert get_console_level_name() == "DEBUG"
     assert_is_debug(log_queue)
+
+    set_console_level("INFO")
+    assert get_console_level() == logging.INFO
+    assert get_console_level_name() == "INFO"
 
 
 def test_debug_mode(log_queue):
@@ -128,3 +144,52 @@ def test_debug_wrapper(log_queue):
     debug_wrapper(assert_is_debug, log_queue)
 
     assert_is_info(log_queue)
+
+
+def test_log_objects(monkeypatch, log_queue):
+    filter = log_setup.ObjectFilter()
+
+    def find_filters():
+        yield handler, filter
+
+    handler = setup_queue_console()
+    handler.addFilter(filter)
+
+    monkeypatch.setattr(log_setup, "find_root_object_filters",
+                        find_filters)
+
+    assert_is_info(log_queue)
+    obj = ophyd.ophydobj.OphydObject(name="obj")
+    ignored_obj = ophyd.ophydobj.OphydObject(name="ignored_obj")
+
+    # Log messages prior to configuring it
+    obj.log.debug("hidden-message-1")
+    ignored_obj.log.debug("hidden-message-2")
+
+    # Set the level so we see DEBUG messages in general
+    set_console_level("DEBUG")
+    # These still should be hidden - we ignore ophyd debug stream in general
+    obj.log.info("hidden-message-3")
+    ignored_obj.log.info("hidden-message-4")
+    obj.log.info("hidden-message-5")
+    ignored_obj.log.info("hidden-message-6")
+
+    log_objects(obj, level="DEBUG")
+    obj.log.info("shown-message-1")
+    obj.log.debug("shown-message-2")
+
+    ignored_obj.log.debug("hidden-message-7")
+    ignored_obj.log.info("hidden-message-8")
+
+    log_objects_off()
+    obj.log.debug("hidden-message-9")
+    obj.log.debug("hidden-message-10")
+    messages = [
+        msg.getMessage() for msg in clear(log_queue)
+    ]
+    assert set(messages) == {
+        "Recording log messages from obj (level >=DEBUG)",
+        "shown-message-1",
+        "shown-message-2",
+        "No longer recording log messages from obj",
+    }

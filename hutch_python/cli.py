@@ -16,7 +16,7 @@ from traitlets.config import Config
 
 from .constants import CONDA_BASE, DIR_MODULE
 from .load_conf import load
-from .log_setup import debug_mode, setup_logging
+from .log_setup import configure_log_directory, debug_mode, setup_logging
 
 logger = logging.getLogger(__name__)
 opts_cache = {}
@@ -110,7 +110,9 @@ def main():
         log_dir = None
     else:
         log_dir = os.path.join(os.path.dirname(args.cfg), 'logs')
-    setup_logging(dir_logs=log_dir)
+
+    configure_log_directory(log_dir)
+    setup_logging()
 
     # Debug mode next
     if args.debug:

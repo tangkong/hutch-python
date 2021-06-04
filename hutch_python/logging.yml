@@ -1,13 +1,15 @@
 version: 1
 disable_existing_loggers: false
 
-# Define two formatters, one for the console and one for the the log files.
 formatters:
+  # For the console:
   custom:
-    (): 'coloredlogs.ColoredFormatter'
-    fmt: '%(levelname)-8s %(message)s'
+    (): 'hutch_python.log_setup.ColoredFormatter'
+    fmt: '%(levelname)-8s %(funcName)s %(ophyd_object_name)s %(message)s'
+  # For log files:
   file:
-    format: '%(asctime)s - PID %(process)d %(filename)18s: %(lineno)-3s %(funcName)-18s %(levelname)-8s %(message)s'
+    (): 'hutch_python.log_setup.DefaultFormatter'
+    format: '%(asctime)s - PID %(process)d %(filename)18s: %(lineno)-3s %(funcName)-18s %(levelname)-8s %(ophyd_object_name)s %(message)s'
     datefmt: '%Y-%m-%d %H:%M:%S'
 
 handlers:
@@ -16,6 +18,7 @@ handlers:
     level: INFO
     formatter: custom
     stream: ext://sys.stdout
+    filters: [ophyd_object_filter]
 
   debug:
     class: logging.handlers.RotatingFileHandler
@@ -25,8 +28,14 @@ handlers:
     backupCount: 10
     mode: a
     delay: 0
+    filters: [ophyd_object_filter]
+
+filters:
+  ophyd_object_filter:
+    (): hutch_python.log_setup.ObjectFilter
+    allow_other_messages: True
+    level: DEBUG
 
 root:
   level: 5
   handlers: [console, debug]
-  propogate: no

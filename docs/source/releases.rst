@@ -1,6 +1,25 @@
 Release History
 ###############
 
+v1.11.0 (2021-06-04)
+===================
+
+Features
+--------
+- Added ability to opt-in to specific Ophyd Object instance DEBUG logs.  Call
+  ``logs.log_objects(obj1, obj2)`` to configure it for ``obj1`` and ``obj2``,
+  for example, and clear it by way of ``logs.log_objects_off()``.
+- Added a new ``logs`` object in the IPython namespace, offering easy access
+  to common log-related tools.
+
+
+Fixes and Maintenance
+---------------------
+- Refactored logging setup to be more modular and slightly better documented.
+  The ophyd logger is no longer "hushed", but is now filtered through the
+  new ``ObjectFilter`` mechanism.
+
+
 v1.10.1 (2021-06-03)
 ===================
 
