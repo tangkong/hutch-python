@@ -336,10 +336,12 @@ def log_objects(
     """
     notification_level = 0
 
+    old_objects = set()
     for handler, filter in find_root_object_filters():
         if isinstance(handler, logging.StreamHandler) and not console:
             continue
 
+        old_objects = old_objects.union(filter.objects)
         filter.objects = objects
         filter.level = level
         notification_level = max((notification_level, handler.level))
@@ -349,6 +351,12 @@ def log_objects(
             notification_level,
             "Recording log messages from %s (level >=%s)",
             obj.name, level
+        )
+
+    for obj in old_objects.difference(objects):
+        obj.log.warning(
+            "No longer recording log messages from %s",
+            obj.name
         )
 
 
