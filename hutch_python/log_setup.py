@@ -152,7 +152,8 @@ def setup_logging():
     central_logger.propagate = False
 
     logging.config.dictConfig(config)
-    noisy_loggers = ['ophyd.event_dispatcher', 'parso', 'pyPDB.dbd.yacc', 'bluesky']
+    noisy_loggers = ['ophyd.event_dispatcher', 'parso',
+                     'pyPDB.dbd.yacc', 'bluesky']
     hush_noisy_loggers(noisy_loggers)
 
 
