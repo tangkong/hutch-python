@@ -9,6 +9,7 @@ from socket import gethostname
 
 from . import mpl_config  # noqa: F401
 
+import matplotlib
 import yaml
 from archapp.interactive import EpicsArchive
 from bluesky import RunEngine
@@ -253,6 +254,12 @@ def load_conf(conf, hutch_dir=None):
         RE = RunEngine({})
         initialize_qt_teleporter()
         bec = BestEffortCallback()
+        if matplotlib.get_backend() != 'Qt5Agg':
+            logger.warning(
+                'Disabling bluesky scan plots. Matplotlib config must '
+                'be set up for qt5 for bluesky scans to work!'
+                )
+            bec.disable_plots()
         RE.subscribe(bec)
         # Enable scientific notation for big/small numbers in LiveTable
         LiveTable._FMT_MAP['number'] = 'g'
