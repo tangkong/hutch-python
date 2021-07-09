@@ -1,8 +1,17 @@
 Release History
 ###############
 
+v1.11.1 (2021-07-09)
+====================
+
+Fixes and Maintenance
+---------------------
+- Fix issues related to matplotlib setup in headless mode. This means that it
+  will no longer crash the session when used without x-forwarding.
+
+
 v1.11.0 (2021-06-04)
-===================
+====================
 
 Features
 --------
@@ -21,7 +30,7 @@ Fixes and Maintenance
 
 
 v1.10.1 (2021-06-03)
-===================
+====================
 
 Bugfixes
 --------
@@ -35,7 +44,7 @@ Bugfixes
 
 
 v1.10.0 (2021-04-15)
-===================
+====================
 
 Features
 --------
