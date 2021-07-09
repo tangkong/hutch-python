@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 
 import IPython
+import matplotlib
 from cookiecutter.main import cookiecutter
 from IPython import start_ipython
 from pcdsdaq.sim import set_sim_mode as set_daq_sim
@@ -83,12 +84,12 @@ def configure_ipython_session():
         'hutch_python.ipython_log',
         'hutch_python.bug'
     ]
-    # Matplotlib setup if we have a screen
-    if os.getenv('DISPLAY'):
-        ipy_config.InteractiveShellApp.matplotlib = 'qt5'
-    else:
-        logger.warning('No DISPLAY environment variable detected. '
-                       'Methods that create graphics will not '
+    # Matplotlib setup for ipython (automatically do %matplotlib)
+    backend = matplotlib.get_backend().replace('Agg', '').lower()
+    ipy_config.InteractiveShellApp.matplotlib = backend
+    if backend == 'agg':
+        logger.warning('No matplotlib rendering available. '
+                       'Methods that create plots will not '
                        'function properly.')
 
     configure_tab_completion(ipy_config)
