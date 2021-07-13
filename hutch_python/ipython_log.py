@@ -70,8 +70,6 @@ class IPythonLogger:
         ipython.events.register('pre_run_cell', self.log_user_input)
         ipython.events.register('post_run_cell', self.log_output)
 
-        # self._ipy_show_traceback = ipython.showtraceback
-        # ipython.showtraceback = self._exception_hook
         self._orig_sys_excepthook = sys.excepthook
         sys.excepthook = self._sys_exception_hook
 
@@ -143,15 +141,19 @@ class IPythonLogger:
         try:
             line_num = len(self.ipython_in) - 1
             line_traceback = ''.join(traceback.format_exception(*exc_info))
-            thread = f" in thread {thread}" if thread else ""
+            thread = f" ({thread})" if thread else ""
             logger.input(
-                f"""\
-Exception in IPython session{thread}. Last input line {line_num}:
-{_indented(line_input)}
+                """\
+Exception in IPython session%s. Last input line %s:
+%s
 
 Exception details:
-{_indented(line_traceback)}
-""".rstrip()
+%s
+""".rstrip(),
+                thread,
+                line_num,
+                _indented(line_input),
+                _indented(line_traceback),
             )
 
             log_exception_to_central_server(
