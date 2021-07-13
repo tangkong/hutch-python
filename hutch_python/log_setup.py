@@ -2,14 +2,16 @@
 This module is used to set up and manipulate the ``logging`` configuration for
 utilities like debug mode.
 
-Goals:
+Functionality overview
+======================
 
-Log to {{LOG_DIR}}/year_month/user_timestamp.log:
+By way of :class:`hutch_python.ipython_log.IPythonLogger`, log the following
+to ``{{LOG_DIR}}/year_month/user_timestamp.log``:
+
 * All IPython input
 * Any DEBUG message (well, _level 5+_)
-  -> Exceptions include hushed loggers below
-  -> Exception: Only whitelisted ophyd object logs, down to DEBUG level (or 5)
-  -> Filter out bluesky super-verbose messages?
+  - Exception: hushed loggers, listed below
+  - Exception: Only whitelisted ophyd object logs, down to DEBUG level (or 5)
 
 Log to both the above file and console:
 * Any INFO, WARNING, ERROR, CRITICAL messages
@@ -18,9 +20,9 @@ console exceptions:
 * ophydobject INFO should be treated as DEBUG
 
 Hush entirely - neither the file nor the console should see:
-  -> ophyd.event_dispatcher
-  -> parso
-  -> pyPDB.dbd.yacc
+  - ophyd.event_dispatcher
+  - parso
+  - pyPDB.dbd.yacc
 """
 import logging
 import logging.config
@@ -541,8 +543,12 @@ def debug_wrapper(f, *args, **kwargs):
         f(*args, **kwargs)
 
 
-def log_exception_to_central_server(exc_info, *, context='exception',
-                                    level=logging.ERROR):
+def log_exception_to_central_server(
+    exc_info, *,
+    context='exception',
+    message=None,
+    level=logging.ERROR,
+):
     """
     Log an exception to the central server (i.e., logstash/grafana).
 
@@ -554,6 +560,9 @@ def log_exception_to_central_server(exc_info, *, context='exception',
     context : str, optional
         Additional context for the log message.
 
+    message : str, optional
+        Override the default log message.
+
     level : int, optional
         The log level to use.  Defaults to ERROR.
     """
@@ -561,7 +570,5 @@ def log_exception_to_central_server(exc_info, *, context='exception',
     if issubclass(exc_type, NO_LOG_EXCEPTIONS):
         return
 
-    central_logger.log(
-        level, f'[{context}] {exc_value}',
-        exc_info=(exc_type, exc_value, exc_traceback)
-    )
+    message = message or f'[{context}] {exc_value}'
+    central_logger.log(level, message, exc_info=exc_info)
