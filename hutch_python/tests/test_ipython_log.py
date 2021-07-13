@@ -88,30 +88,43 @@ def log_queue():
         yield my_queue
 
 
-@pytest.mark.timeout(5)
-def test_ipython_logger(log_queue, fake_ipython):
+@pytest.fixture(scope='function')
+def ipylog(log_queue, fake_ipython):
     ipython_logger.debug('test_ipython_logger')
     ipylog = IPythonLogger(fake_ipython)
     while not log_queue.empty():
         log_queue.get(block=False)
+    yield ipylog
 
+
+@pytest.mark.timeout(5)
+def test_basic(ipylog, log_queue):
     logger.info("Sanity check: ensuring the queue handler works")
     ipython_logger.debug('hello')
     assert 'hello' in log_queue.get().getMessage()
     # We should do nothing if log gets called too early
     assert log_queue.empty()
 
+
+@pytest.mark.timeout(5)
+def test_one_in_no_output(ipylog, log_queue, fake_ipython):
     logger.info("One logged In, no output")
     fake_ipython.add_line('print(5)')
     assert 'In  [1]: print(5)' in log_queue.get(block=False).getMessage()
     assert log_queue.empty()
 
+
+@pytest.mark.timeout(5)
+def test_one_in_one_out(ipylog, log_queue, fake_ipython):
     logger.info("One logged In, one Out")
     fake_ipython.add_line('1 + 1', 2)
-    assert 'In  [2]: 1 + 1' in log_queue.get(block=False).getMessage()
-    assert 'Out [2]: 2' in log_queue.get(block=False).getMessage()
+    assert 'In  [1]: 1 + 1' in log_queue.get(block=False).getMessage()
+    assert 'Out [1]: 2' in log_queue.get(block=False).getMessage()
     assert log_queue.empty()
 
+
+@pytest.mark.timeout(5)
+def test_zero_division(ipylog, log_queue, fake_ipython):
     logger.info("Set up a ZeroDivisionError for logging")
     try:
         1/0
@@ -125,10 +138,12 @@ def test_ipython_logger(log_queue, fake_ipython):
     sys.last_traceback = exc_traceback
 
     fake_ipython.add_line('1/0', is_error=True)
-
-    assert 'In  [3]: 1/0' in log_queue.get(block=False).getMessage()
+    assert 'In  [1]: 1/0' in log_queue.get(block=False).getMessage()
     assert "Exception details" in log_queue.get(block=False).getMessage()
 
+
+@pytest.mark.timeout(5)
+def test_forced_failure(ipylog, log_queue, fake_ipython):
     logger.info("OK, now forcing a failure by tweaking internals")
     ipylog.ipython_in = None
     fake_ipython.add_line('something')
