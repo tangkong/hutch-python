@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>log_setup.py &mdash; hutch-python 1.11.0+7.g297a577 documentation</title>
+  <title>log_setup.py &mdash; hutch-python 1.11.1+6.g53cc4ee documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                1.11.0+7.g297a577
+                1.11.1+6.g53cc4ee
               </div>
             
           
@@ -92,12 +92,12 @@
               
             
             
-              <p class="caption"><span class="caption-text">Getting Started</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="start.html">Starting a Session</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">What to Expect When You are Expecting a New Hutch Python</a></li>
 </ul>
-<p class="caption"><span class="caption-text">User Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">User Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="startup.html">Startup Sequence</a></li>
 <li class="toctree-l1"><a class="reference internal" href="database.html">Database Objects</a></li>
@@ -110,7 +110,7 @@
 <li class="toctree-l1"><a class="reference internal" href="user_utils.html">Useful Utilities</a></li>
 <li class="toctree-l1"><a class="reference internal" href="other_modules.html">Related Modules</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Developer Documentation</span></p>
+<p class="caption" role="heading"><span class="caption-text">Developer Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="environment.html">Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hutch_setup.html">Hutch Setup</a></li>
@@ -118,7 +118,7 @@
 <li class="toctree-l1"><a class="reference internal" href="debug.html">Debug</a></li>
 <li class="toctree-l1"><a class="reference internal" href="releases.html">Release History</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Internal API Reference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Internal API Reference</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="bug.html">bug.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cache.html">cache.py</a></li>
@@ -127,6 +127,7 @@
 <li class="toctree-l1"><a class="reference internal" href="load_conf.html">load_conf.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="load_parts.html">load submodules</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">log_setup.py</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#functionality-overview">Functionality overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/hutch_python.log_setup.setup_logging.html">hutch_python.log_setup.setup_logging</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/hutch_python.log_setup.get_session_logfiles.html">hutch_python.log_setup.get_session_logfiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/hutch_python.log_setup.get_console_handler.html">hutch_python.log_setup.get_console_handler</a></li>
@@ -234,25 +235,29 @@
 <span id="log-setup-py"></span><h1>log_setup.py<a class="headerlink" href="#module-hutch_python.log_setup" title="Permalink to this headline">¶</a></h1>
 <p>This module is used to set up and manipulate the <code class="docutils literal notranslate"><span class="pre">logging</span></code> configuration for
 utilities like debug mode.</p>
-<p>Goals:</p>
-<p>Log to {{LOG_DIR}}/year_month/user_timestamp.log:
-* All IPython input
-* Any DEBUG message (well, _level 5+_)</p>
-<blockquote>
-<div><p>-&gt; Exceptions include hushed loggers below
--&gt; Exception: Only whitelisted ophyd object logs, down to DEBUG level (or 5)
--&gt; Filter out bluesky super-verbose messages?</p>
-</div></blockquote>
+<div class="section" id="functionality-overview">
+<h2>Functionality overview<a class="headerlink" href="#functionality-overview" title="Permalink to this headline">¶</a></h2>
+<p>By way of <a class="reference internal" href="ipython_log.html#hutch_python.ipython_log.IPythonLogger" title="hutch_python.ipython_log.IPythonLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">hutch_python.ipython_log.IPythonLogger</span></code></a>, log the following
+to <code class="docutils literal notranslate"><span class="pre">{{LOG_DIR}}/year_month/user_timestamp.log</span></code>:</p>
+<ul class="simple">
+<li><p>All IPython input</p></li>
+<li><p>Any DEBUG message (well, _level 5+_)
+- Exception: hushed loggers, listed below
+- Exception: Only whitelisted ophyd object logs, down to DEBUG level (or 5)</p></li>
+</ul>
 <p>Log to both the above file and console:
 * Any INFO, WARNING, ERROR, CRITICAL messages</p>
 <p>console exceptions:
 * ophydobject INFO should be treated as DEBUG</p>
 <dl class="simple">
-<dt>Hush entirely - neither the file nor the console should see:</dt><dd><p>-&gt; ophyd.event_dispatcher
--&gt; parso
--&gt; pyPDB.dbd.yacc</p>
+<dt>Hush entirely - neither the file nor the console should see:</dt><dd><ul class="simple">
+<li><p>ophyd.event_dispatcher</p></li>
+<li><p>parso</p></li>
+<li><p>pyPDB.dbd.yacc</p></li>
+</ul>
 </dd>
 </dl>
+</div>
 <table class="longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
