@@ -6,6 +6,8 @@ than the ``DEBUG`` level to avoid a terminal echo in debug mode.
 import functools
 import logging
 import sys
+import textwrap
+import threading
 import traceback
 
 from .constants import INPUT_LEVEL
@@ -13,6 +15,24 @@ from .log_setup import log_exception_to_central_server
 
 logger = logging.getLogger(__name__)
 logger.input = functools.partial(logger.log, INPUT_LEVEL)
+logger.setLevel(INPUT_LEVEL)
+
+_ip_logger = None
+
+
+def _log_errors(func):
+    """Decorator: wrap ``func`` to log exceptions."""
+
+    @functools.wraps(func)
+    def wrapped(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception:
+            logger.input('Logging error', exc_info=True)
+    return wrapped
+
+
+_indented = functools.partial(textwrap.indent, prefix=' ' * 4)
 
 
 class IPythonLogger:
@@ -22,47 +42,157 @@ class IPythonLogger:
 
     Parameters
     ----------
-    ipython: ``ipython`` ``Shell``
+    ipython : ``IPython.terminal.interactiveshell.TerminalInteractiveShell``
         The active ``ipython`` ``Shell``, perhaps the one returned by
         ``IPython.get_ipython()``.
+
+    Attributes
+    ----------
+    ipython_in : list of str
+        The IPython user input list.
+
+    prev_err_value : Exception or None
+        The last exception value that was logged.  Used for exception
+        deduplication.
+
+    line_in_progress : bool
+        True if a line is currently in the process of being evaluated.
     """
     def __init__(self, ipython):
-        self.prev_err = None
-        self.In = ipython.user_ns['In']
-        self.Out = ipython.user_ns['Out']
+        self.ipython = ipython
+        self.ipython_in = ipython.user_ns["In"]
+        self.prev_err_value = None
+        self.line_in_progress = False
 
-    def log(self):
-        """
-        Logs the most recent inputs, outputs and exceptions.
+        logging.addLevelName('INPUT', INPUT_LEVEL)
 
-        - Always logs the most recent input
-        - If this input has a corresponding output, log the output
-        - If there has been an error in the interactive session since the last
-          call to `log`, log the error
-        """
+        ipython.events.register('pre_run_cell', self.log_user_input)
+        ipython.events.register('post_run_cell', self.log_output)
+
+        self._orig_sys_excepthook = sys.excepthook
+        sys.excepthook = self._sys_exception_hook
+
+        if hasattr(threading, "excepthook"):
+            self._orig_thread_excepthook = threading.excepthook
+            threading.excepthook = self._thread_excepthook
+
+    def _should_log(self, exc_value):
+        """Should the given exception be logged?"""
+        return (
+            isinstance(exc_value, Exception) and
+            exc_value != self.prev_err_value
+        )
+
+    @_log_errors
+    def _sys_exception_hook(self, exc_type, exc_value, exc_tb):
+        """Unhandled exception hook - outside of input-related ones."""
         try:
-            line_num = len(self.In) - 1
-            if line_num == 0:
-                return
-            last_in = self.In[-1]
-            logger.input('In  [{}]: {}'.format(line_num, last_in))
-            try:
-                last_out = self.Out[line_num]
-                # Convert to string, limit to max tweet length
-                last_out = str(last_out)[:280]
-                logger.input('Out [{}]: {}'.format(line_num, last_out))
-            except KeyError:
-                pass
-            if hasattr(sys, 'last_value') and sys.last_value != self.prev_err:
-                exc_info = (sys.last_type, sys.last_value, sys.last_traceback)
-                logger.input(
-                    'Exception in IPython session, traceback:\n%s',
-                    ''.join(traceback.format_exception(*exc_info))
+            if self._should_log(exc_value):
+                self._log_exception(
+                    (exc_type, exc_value, exc_tb),
+                    background=True
                 )
-                log_exception_to_central_server(exc_info)
-                self.prev_err = sys.last_value
-        except Exception:
-            logger.input('Logging error', exc_info=True)
+        finally:
+            return self._orig_sys_excepthook(exc_type, exc_value, exc_tb)
+
+    @_log_errors
+    def _thread_excepthook(self, args):
+        """Unhandled exception in thread hook."""
+        try:
+            if self._should_log(args.exc_value):
+                self._log_exception(
+                    (args.exc_type, args.exc_value, args.exc_traceback),
+                    background=True, thread=args.thread
+                )
+        finally:
+            return self._orig_thread_excepthook(args)
+
+    @_log_errors
+    def log_user_input(self, info):
+        """Logs the most recent input by way of the 'pre_run_cell' hook."""
+        self.line_in_progress = True
+        line_num = len(self.ipython_in)
+        logger.input('In  [%d]: %s', line_num, info.raw_cell)
+
+    @_log_errors
+    def _log_exception(
+        self, exc_info, line_input="[n/a]", background=False, thread=None
+    ):
+        """
+        Logs the given exception.
+
+        Parameters
+        ----------
+        exc_info : (type, value, traceback)
+            The exception information.
+
+        line_input: str, optional
+            The user input associated with the given line.
+
+        background : bool, optional
+            Set if the exception happened in the background as part of an
+            exception hook external to IPython.
+
+        thread : threading.Thread, optional
+            The associated thread when not the main thread, if available.
+        """
+        exc_type, exc_value, exc_traceback = exc_info
+        try:
+            line_num = len(self.ipython_in) - 1
+            line_traceback = ''.join(traceback.format_exception(*exc_info))
+            thread = f" ({thread})" if thread else ""
+            logger.input(
+                """\
+Exception in IPython session%s. Last input line %s:
+%s
+
+Exception details:
+%s
+""".rstrip(),
+                thread,
+                line_num,
+                _indented(line_input),
+                _indented(line_traceback),
+            )
+
+            log_exception_to_central_server(
+                exc_info,
+                message=f"""\
+Line: {line_num}{thread}
+Input: {line_input}
+Exception: {exc_type.__name__}: {exc_value}
+""".rstrip(),
+            )
+        finally:
+            self.prev_err_value = exc_value
+
+    @_log_errors
+    def log_exception(self, line_input="[n/a]"):
+        """Logs the most recent unhandled exception."""
+        # These three ``sys.last_*`` variables are not always defined; they are
+        # set when an exception is not handled and the interpreter prints an
+        # error message and a stack traceback.
+
+        last_value = getattr(sys, "last_value", None)
+        if not last_value or not isinstance(last_value, Exception):
+            # No exception to log, or ignore non-exception types
+            return
+
+        exc_info = (sys.last_type, last_value, sys.last_traceback)
+        self._log_exception(exc_info, line_input=line_input)
+
+    @_log_errors
+    def log_output(self, result):
+        """Logs the most recent output by way of the 'post_run_cell' hook."""
+        self.line_in_progress = False
+        if result.result:
+            # Convert to string, limit to max tweet length
+            line_num = len(self.ipython_in) - 1
+            last_out = str(result.result)[:280]
+            logger.input('Out [%d]: %s', line_num, last_out)
+
+        if result.error_in_exec is not None:
+            self.log_exception(result.info.raw_cell)
 
 
 def load_ipython_extension(ipython):
@@ -78,5 +208,5 @@ def load_ipython_extension(ipython):
         The active ``ipython`` ``Shell``, perhaps the one returned by
         ``IPython.get_ipython()``.
     """
-    logging.addLevelName('INPUT', INPUT_LEVEL)
-    ipython.events.register('post_execute', IPythonLogger(ipython).log)
+    global _ip_logger
+    _ip_logger = IPythonLogger(ipython)
