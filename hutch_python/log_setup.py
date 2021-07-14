@@ -36,7 +36,8 @@ import coloredlogs
 import pcdsutils.log
 import yaml
 
-from .constants import FILE_YAML, NO_LOG_EXCEPTIONS
+from . import constants
+from .utils import get_fully_qualified_domain_name
 
 logger = logging.getLogger(__name__)
 central_logger = pcdsutils.log.logger
@@ -106,7 +107,7 @@ def get_log_filename(extension: str = '.log') -> Path:
 
 def _read_logging_config() -> dict:
     """Read the logging configuration file into a dictionary."""
-    with open(FILE_YAML, 'rt') as f:
+    with open(constants.FILE_YAML, 'rt') as f:
         return yaml.safe_load(f.read())
 
 
@@ -147,7 +148,9 @@ def setup_logging():
         config['handlers']['debug']['filename'] = str(get_log_filename())
 
     # Configure centralized PCDS logging:
-    pcdsutils.log.configure_pcds_logging()
+    fqdn = get_fully_qualified_domain_name()
+    if any(fqdn.endswith(domain) for domain in constants.LOG_DOMAINS):
+        pcdsutils.log.configure_pcds_logging()
 
     # This ensures that centralized logging messages do not make it to the
     # user or other log files.
@@ -567,7 +570,13 @@ def log_exception_to_central_server(
         The log level to use.  Defaults to ERROR.
     """
     exc_type, exc_value, exc_traceback = exc_info
-    if issubclass(exc_type, NO_LOG_EXCEPTIONS):
+    if issubclass(exc_type, constants.NO_LOG_EXCEPTIONS):
+        return
+
+    if not central_logger.handlers:
+        # Do not allow log messages unless the central logger has been
+        # configured with a log handler.  Otherwise, the log message will
+        # hit the default handler and output to the terminal.
         return
 
     message = message or f'[{context}] {exc_value}'

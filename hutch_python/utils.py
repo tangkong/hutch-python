@@ -3,9 +3,11 @@ Module that contains general-use utilities. Some of these are useful outside of
 ``hutch-python``, while others are used in multiple places throughout the
 module.
 """
+import functools
 import inspect
 import logging
 import os
+import socket
 import sys
 import time
 from contextlib import contextmanager
@@ -414,3 +416,17 @@ def hutch_banner(hutch_name='Hutch '):
     if hutch_name in HUTCH_COLORS:
         banner = '\x1b[{}m'.format(HUTCH_COLORS[hutch_name]) + banner
     print(banner)
+
+
+@functools.lru_cache(maxsize=1)
+def get_fully_qualified_domain_name():
+    """Get the fully qualified domain name of this host."""
+    try:
+        return socket.getfqdn()
+    except Exception:
+        logger.warning(
+            "Unable to get machine name.  Things like centralized "
+            "logging may not work."
+        )
+        logger.debug("getfqdn failed", exc_info=True)
+        return ""
