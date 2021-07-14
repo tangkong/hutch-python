@@ -15,7 +15,6 @@ from .log_setup import log_exception_to_central_server
 
 logger = logging.getLogger(__name__)
 logger.input = functools.partial(logger.log, INPUT_LEVEL)
-logger.propagate = False
 logger.setLevel(INPUT_LEVEL)
 
 _ip_logger = None
