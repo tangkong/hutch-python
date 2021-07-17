@@ -5,3 +5,7 @@ include hutch_python/logging.yml
 include hutch_python/cookiecutter/*
 include hutch_python/cookiecutter/*/*
 include hutch_python/cookiecutter/*/*/*
+
+include requirements.txt
+include dev-requirements.txt
+include LICENSE
