@@ -27,6 +27,7 @@ Hush entirely - neither the file nor the console should see:
 import logging
 import logging.config
 import os
+import sys
 import time
 from contextlib import contextmanager
 from pathlib import Path
@@ -551,6 +552,7 @@ def log_exception_to_central_server(
     context='exception',
     message=None,
     level=logging.ERROR,
+    stacklevel=1,
 ):
     """
     Log an exception to the central server (i.e., logstash/grafana).
@@ -568,6 +570,12 @@ def log_exception_to_central_server(
 
     level : int, optional
         The log level to use.  Defaults to ERROR.
+
+    stacklevel : int, optional
+        The stack level of the message being reported.  Defaults to 1,
+        meaning that the message will be reported as having come from
+        the caller of ``log_exception_to_central_server``.  Applies
+        only to Python 3.8+, and ignored below.
     """
     exc_type, exc_value, exc_traceback = exc_info
     if issubclass(exc_type, constants.NO_LOG_EXCEPTIONS):
@@ -580,4 +588,8 @@ def log_exception_to_central_server(
         return
 
     message = message or f'[{context}] {exc_value}'
-    central_logger.log(level, message, exc_info=exc_info)
+    kwargs = dict()
+    if sys.version_info >= (3, 8):
+        kwargs = dict(stacklevel=stacklevel + 1)
+
+    central_logger.log(level, message, exc_info=exc_info, **kwargs)

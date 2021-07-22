@@ -157,6 +157,7 @@ Exception details:
 
             log_exception_to_central_server(
                 exc_info,
+                stacklevel=2,
                 message=f"""\
 Line: {line_num}{thread}
 Input: {line_input}
