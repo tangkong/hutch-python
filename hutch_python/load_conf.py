@@ -16,7 +16,6 @@ from bluesky import RunEngine
 from bluesky.callbacks.best_effort import BestEffortCallback
 from bluesky.callbacks.core import LiveTable
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
-from elog import HutchELog
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdevices.interface import setup_preset_paths
@@ -36,6 +35,11 @@ from .qs_load import get_qs_objs
 from .user_load import get_user_objs
 from .utils import (get_current_experiment, hutch_banner, safe_load,
                     HelpfulNamespace)
+
+try:
+    from elog import HutchELog
+except ImportError:
+    HutchELog = None
 
 logger = logging.getLogger(__name__)
 
@@ -304,6 +308,10 @@ def load_conf(conf, hutch_dir=None):
     # Elog
     if hutch is not None:
         with safe_load('elog'):
+            if HutchELog is None:
+                txt = 'Skip elog, module not available.'
+                logger.warning(txt)
+                raise RuntimeError(txt)
             # Use the fact if we we used the default_platform or not to decide
             # whether we are in a specialty station or not
             if default_platform:
@@ -326,7 +334,7 @@ def load_conf(conf, hutch_dir=None):
             happi_objs = get_happi_objs(db, hutch)
             cache(**happi_objs)
             bp = get_lightpath(db, hutch)
-            if bp.devices:
+            if bp is not None and bp.devices:
                 beampath_name = "{}_beampath".format(hutch.lower())
                 cache(**{beampath_name: bp})
                 cache.doc(**{beampath_name: 'Lightpath beam path object.'})
