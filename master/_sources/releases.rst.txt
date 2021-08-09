@@ -1,6 +1,22 @@
 Release History
 ###############
 
+v1.11.2 (2021-08-09)
+====================
+
+Fixes and Maintenance
+---------------------
+- Fix order of message logging in the IPython input logger. Previously, the
+  In log message wouldn't happen until after the command had already finished.
+  Now, the In message is logged, then any normal log messages are logged, and
+  then finally the Out message is logged, all neatly in order.
+- Adjust exception handling output for log files and for centralized logger.
+- Log exceptions in threads
+- Only log to the centralized PCDS logger when on a PCDS host
+- Support stacklevel for centralized logging on Python 3.8+
+- Make elog and lightpath optional dependencies for pip
+
+
 v1.11.1 (2021-07-09)
 ====================
 
