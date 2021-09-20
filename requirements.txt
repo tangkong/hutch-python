@@ -21,6 +21,7 @@ simplejson
 
 # Some are unavailable on pypi:
 # elog
+# psdaq-control-minimal
 
 # Some are broken on pypi:
 # lightpath

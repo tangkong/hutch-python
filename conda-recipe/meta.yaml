@@ -30,6 +30,7 @@ requirements:
     - pcdsdevices >=3.1.0
     - pcdsdaq >=2.3.0
     - pcdsutils >=0.4.0
+    - psdaq-control-minimal >=3.3.19
     - psdm_qs_cli >=0.3.1
     - lightpath >=0.3.0
     - elog
