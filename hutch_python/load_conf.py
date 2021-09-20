@@ -20,6 +20,8 @@ from elog import HutchELog
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdevices.interface import setup_preset_paths
+from psdaq.control.DaqControl import DaqControl
+from psdaq.control.BlueskyScan import BlueskyScan
 
 from . import calc_defaults, plan_defaults, sim, log_setup
 from .cache import LoadCache
@@ -203,8 +205,32 @@ def load_conf(conf, hutch_dir=None):
                          'file.'))
 
     try:
+        # Configure whether we use the LCLS-I or LCLS-II daq
+        daq_type = conf['daq_type']
+        if daq_type in ('lcls1', 'lcls2', 'nodaq'):
+            logger.info(f'Selected valid daq type {daq_type}')
+        else:
+            logger.error('Selected invalid daq type! Will skip daq!')
+    except KeyError:
+        daq_type = 'lcls1'
+        logger.info('Selected default daq type lcls1')
+
+    try:
+        # Configure the daq host.
+        # Required if lcls2 daq, unused if lcls1 daq.
+        daq_host = conf['daq_host']
+    except KeyError:
+        if daq_type == 'lcls2':
+            logger.error(
+                'Missing required key "daq_host" in config! '
+                'DAQ setup will fail!'
+            )
+
+    try:
         # This is an internal variable here for note-keeping. The ELog uses
         # this to determine if we are in the secondary or primary DAQ mode
+        # In LCLS-II mode, this also sets the literal DAQ platform
+        # (LCLS-I can pick it automatically)
         default_platform = True
         platform_info = conf['daq_platform']
         hostname = gethostname()
@@ -220,6 +246,14 @@ def load_conf(conf, hutch_dir=None):
     except KeyError:
         daq_platform = 0
         logger.info('Selected default hutch-python daq platform: 0')
+
+    try:
+        # Optional if lcls2, ignored if lcls1
+        daq_timeout = conf['daq_timeout']
+    except KeyError:
+        daq_timeout = 1000
+        if daq_type == 'lcls2':
+            logger.info('Using default daq_timeout=1000ms')
 
     # Make cache namespace
     cache = LoadCache((hutch or 'hutch') + '.db', hutch_dir=hutch_dir)
@@ -289,8 +323,31 @@ def load_conf(conf, hutch_dir=None):
 
     # Daq
     with safe_load('daq'):
-        cache(daq=Daq(RE=RE, hutch_name=hutch))
-        cache.doc(daq='LCLS1 DAQ interface object.')
+        if daq_type == 'lcls1':
+            cache(daq=Daq(RE=RE, hutch_name=hutch))
+            cache.doc(daq='LCLS1 DAQ interface object.')
+        elif daq_type == 'lcls2':
+            daq_control = DaqControl(
+                host=daq_host,
+                platform=daq_platform,
+                timeout=daq_timeout,
+            )
+            instr = daq_control.getInstrument()
+            if instr is None:
+                logger.error('Failed to connect to LCLS-II DAQ')
+            start_state = daq_control.getState()
+            if start_state == 'error':
+                logger.error('DAQ is in an error state.')
+            daq_bluesky = BlueskyScan(
+                daq_control,
+                daqState=start_state,
+            )
+            cache(daq=daq_bluesky)
+            cache.doc(daq='LCLS2 DAQ interface object.')
+        elif daq_type == 'nodaq':
+            logger.info('Skip daq because daq_type is nodaq.')
+        else:
+            raise RuntimeError('Not loading daq, invalid daq_type.')
 
     # Scan PVs
     if hutch is not None:
