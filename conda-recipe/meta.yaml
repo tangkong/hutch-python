@@ -18,28 +18,28 @@ requirements:
 
   run:
     - python >=3.6
-    - ipython
-    - pyqt >=5
-    - pyyaml
-    - coloredlogs
-    - pyfiglet
+    - archapp
     - bluesky >=1.6.0
+    - coloredlogs
+    - cookiecutter >=1.6.0
+    - elog
     - happi >=1.8.0
+    - ipython
+    - jinja2
+    - lightpath >=0.3.0
+    - matplotlib
     - nabs >=0.1.0
     - pcdscalc >=v0.2.0
-    - pcdsdevices >=3.1.0
     - pcdsdaq >=2.3.0
+    - pcdsdevices >=3.1.0
     - pcdsutils >=0.4.0
     - psdaq-control-minimal >=3.3.19
     - psdm_qs_cli >=0.3.1
-    - lightpath >=0.3.0
-    - elog
-    - cookiecutter >=1.6.0
-    - matplotlib
-    - simplejson
+    - pyfiglet
+    - pyqt >=5
+    - pyyaml
     - requests
-    - jinja2
-    - archapp
+    - simplejson
 
 test:
   imports:
