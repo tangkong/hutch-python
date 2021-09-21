@@ -24,6 +24,7 @@ requirements:
     - cookiecutter >=1.6.0
     - elog
     - happi >=1.8.0
+    - inflection
     - ipython
     - jinja2
     - lightpath >=0.3.0
