@@ -20,8 +20,6 @@ from elog import HutchELog
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdevices.interface import setup_preset_paths
-from psdaq.control.DaqControl import DaqControl
-from psdaq.control.BlueskyScan import BlueskyScan
 
 from . import calc_defaults, plan_defaults, sim, log_setup
 from .cache import LoadCache
@@ -319,6 +317,9 @@ def load_conf(conf, hutch_dir=None):
             cache(daq=Daq(RE=RE, hutch_name=hutch))
             cache.doc(daq='LCLS1 DAQ interface object.')
         elif daq_type == 'lcls2':
+            # Optional dependency
+            from psdaq.control.DaqControl import DaqControl # NOQA
+            from psdaq.control.BlueskyScan import BlueskyScan # NOQA
             daq_control = DaqControl(
                 host=daq_host,
                 platform=daq_platform,
