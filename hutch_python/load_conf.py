@@ -247,14 +247,6 @@ def load_conf(conf, hutch_dir=None):
         daq_platform = 0
         logger.info('Selected default hutch-python daq platform: 0')
 
-    try:
-        # Optional if lcls2, ignored if lcls1
-        daq_timeout = conf['daq_timeout']
-    except KeyError:
-        daq_timeout = 1000
-        if daq_type == 'lcls2':
-            logger.info('Using default daq_timeout=1000ms')
-
     # Make cache namespace
     cache = LoadCache((hutch or 'hutch') + '.db', hutch_dir=hutch_dir)
 
@@ -330,7 +322,7 @@ def load_conf(conf, hutch_dir=None):
             daq_control = DaqControl(
                 host=daq_host,
                 platform=daq_platform,
-                timeout=daq_timeout,
+                timeout=1000,
             )
             instr = daq_control.getInstrument()
             if instr is None:
