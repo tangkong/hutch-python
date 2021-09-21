@@ -91,9 +91,10 @@ daq_type
 
 The ``daq_type`` key is optional. If omitted, the default value is 'lcls1'
 for backwards compatibility with existing hutch python setups.
-This key expects a string with one of three valid values:
-'lcls1', 'lcls2', or 'nodaq', to pick between creating an LCLS1-style daq,
-an LCLS2-style daq, or no daq respectively.
+This key expects a string with one of four valid values:
+'lcls1', 'lcls1-sim', 'lcls2', or 'nodaq', to pick between creating an
+LCLS1-style daq, a simulated LCLS1-styel daq, an LCLS2-style daq,
+or no daq respectively.
 
 daq_host
 --------
