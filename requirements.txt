@@ -1,4 +1,4 @@
-archapp>=1.0.0
+archapp>=0.3.0
 bluesky>=1.8.0
 coloredlogs>=15.0.0
 cookiecutter>=1.7.0
