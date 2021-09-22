@@ -4,7 +4,7 @@ coloredlogs>=15.0.0
 cookiecutter>=1.7.0
 happi>=1.9.0
 ipython>=7.0.0
-jinja2
+jinja2>=2.11.0
 matplotlib>=3.4.0
 nabs>=0.1.0
 pcdscalc>=0.3.0
