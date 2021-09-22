@@ -11,7 +11,6 @@ pcdscalc>=0.3.0
 pcdsdaq>=2.3.0
 pcdsdevices>=4.7.0
 pcdsutils>=0.5.0
-psdm_qs_cli>=0.3.1
 pyfiglet>=0.8.0
 pyqt5>=5.12.0
 pyyaml>=5.4.0
@@ -24,3 +23,4 @@ simplejson>=3.17.0
 
 # Some are broken on pypi:
 # lightpath
+# psdm_qs_cli
