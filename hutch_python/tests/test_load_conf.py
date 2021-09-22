@@ -113,6 +113,7 @@ def test_simdaq_config():
     objs = load_conf({'daq_type': 'lcls1-sim'})
     daq = objs['daq']
     assert isinstance(daq, Daq)
+    daq.connect()
     assert isinstance(daq._control, SimControl)
 
 
