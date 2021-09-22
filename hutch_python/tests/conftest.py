@@ -9,6 +9,7 @@ from pathlib import Path
 from queue import Queue
 
 import pytest
+import zmq
 from epics import PV
 from ophyd.areadetector.plugins import PluginBase
 from ophyd.device import Component as Cpt
@@ -172,3 +173,40 @@ else:
             self.station = station
             self.user = user
             self.pw = pw
+
+
+class DummyZMQContext:
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def socket(self, *args, **kwargs):
+        return DummyZMQSocket()
+
+
+class DummyZMQSocket:
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def connect(self, *args, **kwargs):
+        pass
+
+    def setsockopt(self, *args, **kwargs):
+        pass
+
+    def close(self, *args, **kwargs):
+        pass
+
+    def bind(self, *args, **kwargs):
+        pass
+
+    def send_json(self, *args, **kwargs):
+        pass
+
+    def recv_json(self, *args, **kwargs):
+        return {}
+
+
+@pytest.fixture(scope='function')
+def dummy_zmq_lcls2(monkeypatch):
+    # monkeypatch such that the lcls2 daq doesn't actually connect to things
+    monkeypatch.setattr(zmq, 'Context', DummyZMQContext)

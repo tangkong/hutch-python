@@ -5,13 +5,20 @@ from socket import gethostname
 from types import SimpleNamespace
 
 import pytest
+from pcdsdaq.daq import Daq
 from pcdsdaq.sim import set_sim_mode
+from pcdsdaq.sim.pydaq import Control as SimControl
 from pcdsdevices.interface import Presets
 
 import hutch_python.qs_load
 from hutch_python.load_conf import load, load_conf
 
 from .conftest import TST_CAM_CFG, ELog, QSBackend
+
+try:
+    from psdaq.control.BlueskyScan import BlueskyScan
+except ImportError:
+    BlueskyScan = None
 
 logger = logging.getLogger(__name__)
 
@@ -77,6 +84,43 @@ def test_elog(monkeypatch, temporary_config):
                                        hostname: 4},
                       'hutch': 'TST'})
     assert objs['elog'].station == '1'
+
+
+@pytest.mark.skipif(BlueskyScan is None, reason='psdaq.control not installed')
+def test_lcls2_daq_config(dummy_zmq_lcls2):
+    logger.debug('test_lcls2_daq')
+
+    host = 'fake-hostname-drp'
+    platform = 1
+    config = {
+        'daq_type': 'lcls2',
+        'daq_host': host,
+        'daq_platform': {'default': platform},
+    }
+    objs = load_conf(config)
+    daq = objs['daq']
+    assert isinstance(daq, BlueskyScan)
+    assert daq.control.host == host
+    assert daq.control.platform == platform
+
+
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="Fails on Windows (pcdsdaq)",
+)
+def test_simdaq_config():
+    logger.debug('test_simdaq_config')
+    objs = load_conf({'daq_type': 'lcls1-sim'})
+    daq = objs['daq']
+    assert isinstance(daq, Daq)
+    assert isinstance(daq._control, SimControl)
+
+
+def test_nodaq_config():
+    logger.debug('test_nodaq_config')
+    objs = load_conf({'daq_type': 'nodaq'})
+    with pytest.raises(KeyError):
+        objs['daq']
 
 
 def test_camviewer_load(monkeypatch):
