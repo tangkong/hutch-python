@@ -99,7 +99,7 @@ or no daq respectively.
 daq_host
 --------
 
-The daq collection host from the as a string. This is a required key
+The daq collection host as a string. This is a required key
 when using the lcls2 daq_type, and is ignored with any other daq_type.
 It will be used in the creation of the lcls2 daq object.
 
