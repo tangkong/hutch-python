@@ -1,4 +1,5 @@
 import logging
+import sys
 from pathlib import Path
 from subprocess import STDOUT, CalledProcessError, check_output
 
@@ -8,6 +9,7 @@ logger = logging.getLogger(__name__)
 tstpython = Path(__file__).parent / 'tstpython'
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
 def test_tstpython_scripts():
     logger.debug('test_tstpython_scripts')
 

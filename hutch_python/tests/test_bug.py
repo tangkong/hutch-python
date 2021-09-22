@@ -1,13 +1,16 @@
-import os
 import logging
+import os
 import pathlib
+import sys
 import tempfile
+
+import pytest
 import simplejson
 from requests import Response
 
 import hutch_python.bug
-from hutch_python.bug import (get_current_environment, report_bug,
-                              get_text_from_editor)
+from hutch_python.bug import (get_current_environment, get_text_from_editor,
+                              report_bug)
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +88,7 @@ def test_bug_report(monkeypatch, temporary_config):
     assert bug['title'].startswith('Please')
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
 def test_get_text_from_editor(monkeypatch):
     logger.debug("test_get_text_from_editor")
 

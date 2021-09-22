@@ -1,19 +1,25 @@
 import logging
 import os.path
+import sys
 from socket import gethostname
 from types import SimpleNamespace
 
+import pytest
 from pcdsdaq.sim import set_sim_mode
 from pcdsdevices.interface import Presets
 
 import hutch_python.qs_load
 from hutch_python.load_conf import load, load_conf
 
-from .conftest import QSBackend, ELog, TST_CAM_CFG
+from .conftest import TST_CAM_CFG, ELog, QSBackend
 
 logger = logging.getLogger(__name__)
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32",
+    reason="Fails on Windows (pcdsdaq)",
+)
 def test_file_load():
     logger.debug('test_file_load')
     set_sim_mode(True)
@@ -51,6 +57,7 @@ def test_conf_empty():
     assert len(objs) > 1
 
 
+@pytest.mark.skipif(ELog is None, reason='elog module not installed')
 def test_elog(monkeypatch, temporary_config):
     logger.debug('test_elog')
     monkeypatch.setattr(hutch_python.load_conf, 'HutchELog', ELog)

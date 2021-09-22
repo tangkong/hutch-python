@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+import sys
 from pathlib import Path
 
 import IPython.core.completer
@@ -24,6 +25,7 @@ def no_ipython_launch(monkeypatch):
     monkeypatch.setattr(hutch_python.cli, 'start_ipython', no_op)
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
 def test_main_normal(no_ipython_launch):
     logger.debug('test_main_normal')
 
@@ -32,6 +34,7 @@ def test_main_normal(no_ipython_launch):
             main()
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
 def test_main_no_args(no_ipython_launch):
     logger.debug('test_main_no_args')
 
@@ -40,6 +43,7 @@ def test_main_no_args(no_ipython_launch):
             main()
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
 def test_debug_arg(no_ipython_launch):
     logger.debug('test_debug_arg')
 
@@ -48,6 +52,7 @@ def test_debug_arg(no_ipython_launch):
             main()
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
 def test_sim_arg(no_ipython_launch):
     logger.debug('test_sim_arg')
 
@@ -74,6 +79,7 @@ def test_create_arg():
     shutil.rmtree(test_dir)
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
 def test_run_script():
     logger.debug('test_run_script')
 

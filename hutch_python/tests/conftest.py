@@ -9,7 +9,6 @@ from pathlib import Path
 from queue import Queue
 
 import pytest
-from elog import HutchELog
 from epics import PV
 from ophyd.areadetector.plugins import PluginBase
 from ophyd.device import Component as Cpt
@@ -18,6 +17,11 @@ from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
 import hutch_python.qs_load
 import hutch_python.utils
+
+try:
+    from elog import HutchELog
+except ImportError:
+    HutchELog = None
 
 # We need to have the tests directory importable to match what we'd have in a
 # real hutch-python install
@@ -158,10 +162,13 @@ def fake_curexp_script():
     hutch_python.utils.CUR_EXP_SCRIPT = old_script
 
 
-class ELog(HutchELog):
-    """Pseudo ELog"""
-    def __init__(self, instrument, station=None, user=None, pw=None):
-        self.instrument = instrument
-        self.station = station
-        self.user = user
-        self.pw = pw
+if HutchELog is None:
+    ELog = None
+else:
+    class ELog(HutchELog):
+        """Pseudo ELog"""
+        def __init__(self, instrument, station=None, user=None, pw=None):
+            self.instrument = instrument
+            self.station = station
+            self.user = user
+            self.pw = pw

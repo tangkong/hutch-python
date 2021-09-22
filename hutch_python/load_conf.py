@@ -16,7 +16,6 @@ from bluesky import RunEngine
 from bluesky.callbacks.best_effort import BestEffortCallback
 from bluesky.callbacks.core import LiveTable
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
-from elog import HutchELog
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdaq.sim import set_sim_mode as set_daq_sim
@@ -38,6 +37,11 @@ from .qs_load import get_qs_objs
 from .user_load import get_user_objs
 from .utils import (get_current_experiment, hutch_banner, safe_load,
                     HelpfulNamespace)
+
+try:
+    from elog import HutchELog
+except ImportError:
+    HutchELog = None
 
 logger = logging.getLogger(__name__)
 
@@ -364,17 +368,22 @@ def load_conf(conf, hutch_dir=None, args=None):
 
     # Elog
     if hutch is not None:
-        with safe_load('elog'):
-            # Use the fact if we we used the default_platform or not to decide
-            # whether we are in a specialty station or not
-            if default_platform:
-                logger.debug("Using primary experiment ELog")
-                kwargs = dict()
-            else:
-                logger.info("Configuring ELog to post to secondary experiment")
-                kwargs = {'station': '1'}
-            cache(elog=HutchELog.from_conf(hutch.upper(), **kwargs))
-            cache.doc(elog='Elog posting interface object.')
+        if HutchELog is None:
+            logger.warning('Elog module not included, skipping elog setup.')
+        else:
+            with safe_load('elog'):
+                # Use the fact if we we used the default_platform or not
+                # to decide whether we are in a specialty station or not
+                if default_platform:
+                    logger.debug("Using primary experiment ELog")
+                    kwargs = dict()
+                else:
+                    logger.info(
+                        "Configuring ELog to post to secondary experiment"
+                    )
+                    kwargs = {'station': '1'}
+                cache(elog=HutchELog.from_conf(hutch.upper(), **kwargs))
+                cache.doc(elog='Elog posting interface object.')
 
     # Shared global devices for LCLS
     with safe_load('lcls PVs'):
