@@ -25,7 +25,8 @@ env:
 
     # Extra dependencies needed to run the test with Pip (similar to
     # CONDA_EXTRAS) but for pip
-    - PIP_EXTRAS=""
+    # xarray is required by archapp but isn't listed as a dep for archapp=0.3.0
+    - PIP_EXTRAS="xarray>=0.19.0"
 
 import:
   - pcdshub/pcds-ci-helpers:travis/shared_configs/setup-env-ui.yml
