@@ -4,14 +4,11 @@ import happi
 from happi.loader import load_devices
 
 try:
-    # Optional import to skip for pip tests
     import lightpath
     from lightpath.config import beamlines
 except ImportError:
-    # Hold as None, check later to skip relevant bits
     lightpath = None
-    # Hold as empty dict, will handle properly
-    beamlines = {}
+    beamlines = None
 
 logger = logging.getLogger(__name__)
 
@@ -40,8 +37,11 @@ def get_happi_objs(db, hutch):
     # Load the happi Client
     client = happi.Client(path=db)
     containers = list()
-    # Find upstream items based on lightpath configuration
-    beamline_conf = beamlines.get(hutch.upper())
+    if beamlines is None:
+        beamline_conf = []
+    else:
+        # Find upstream items based on lightpath configuration
+        beamline_conf = beamlines.get(hutch.upper())
     # Something strange is happening if there are no upstream items
     if not beamline_conf:
         logger.warning("Unable to find lightpath for %s",
@@ -84,10 +84,9 @@ def get_lightpath(db, hutch):
         Object that provides a convenient way to visualize all the devices
         that may block the beam on the way to the interaction point.
     """
-    if lightpath is None:
-        raise RuntimeError(
-            'Lightpath module unavailable or not initialized properly.'
-        )
+    if None in (lightpath, beamlines):
+        logger.warning('Lightpath module is not available.')
+        return None
     # Load the happi Client
     client = happi.Client(path=db)
     # Allow the lightpath module to create a path

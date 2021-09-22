@@ -368,22 +368,21 @@ def load_conf(conf, hutch_dir=None, args=None):
 
     # Elog
     if hutch is not None:
-        if HutchELog is None:
-            logger.warning('Elog module not included, skipping elog setup.')
-        else:
-            with safe_load('elog'):
-                # Use the fact if we we used the default_platform or not
-                # to decide whether we are in a specialty station or not
-                if default_platform:
-                    logger.debug("Using primary experiment ELog")
-                    kwargs = dict()
-                else:
-                    logger.info(
-                        "Configuring ELog to post to secondary experiment"
-                    )
-                    kwargs = {'station': '1'}
-                cache(elog=HutchELog.from_conf(hutch.upper(), **kwargs))
-                cache.doc(elog='Elog posting interface object.')
+        with safe_load('elog'):
+            if HutchELog is None:
+                txt = 'Skip elog, module not available.'
+                logger.warning(txt)
+                raise RuntimeError(txt)
+            # Use the fact if we we used the default_platform or not to decide
+            # whether we are in a specialty station or not
+            if default_platform:
+                logger.debug("Using primary experiment ELog")
+                kwargs = dict()
+            else:
+                logger.info("Configuring ELog to post to secondary experiment")
+                kwargs = {'station': '1'}
+            cache(elog=HutchELog.from_conf(hutch.upper(), **kwargs))
+            cache.doc(elog='Elog posting interface object.')
 
     # Shared global devices for LCLS
     with safe_load('lcls PVs'):
@@ -396,7 +395,7 @@ def load_conf(conf, hutch_dir=None, args=None):
             happi_objs = get_happi_objs(db, hutch)
             cache(**happi_objs)
             bp = get_lightpath(db, hutch)
-            if bp.devices:
+            if bp is not None and bp.devices:
                 beampath_name = "{}_beampath".format(hutch.lower())
                 cache(**{beampath_name: bp})
                 cache.doc(**{beampath_name: 'Lightpath beam path object.'})
