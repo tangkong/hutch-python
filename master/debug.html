@@ -1,78 +1,38 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>Debug &mdash; hutch-python 1.11.2 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+  <title>Debug &mdash; hutch-python 1.11.2+30.g9995fbb documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Release History" href="releases.html" />
     <link rel="prev" title="Yaml Files" href="yaml_files.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> hutch-python
-          
-
-          
           </a>
-
-          
-            
-            
               <div class="version">
-                1.11.2
+                1.11.2+30.g9995fbb
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -80,18 +40,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="start.html">Starting a Session</a></li>
@@ -137,71 +86,30 @@
 <li class="toctree-l1"><a class="reference internal" href="utils.html">utils.py</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">hutch-python</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Debug</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/debug.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -226,10 +134,10 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="debug">
+<section id="debug">
 <h1>Debug<a class="headerlink" href="#debug" title="Permalink to this headline">¶</a></h1>
 <p>There are numerous debug features built in to <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code>.</p>
-<div class="section" id="live-session-logging">
+<section id="live-session-logging">
 <h2>Live Session Logging<a class="headerlink" href="#live-session-logging" title="Permalink to this headline">¶</a></h2>
 <p>The first place to go when something has already gone wrong is to the log
 files. These are stored in a <code class="docutils literal notranslate"><span class="pre">logs</span></code> directory in the same location as the
@@ -245,8 +153,8 @@ that were created by calling that statement.</p>
 set up by the <code class="xref py py-mod docutils literal notranslate"><span class="pre">log_setup</span></code> module. If not in debug mode, only log levels
 <code class="docutils literal notranslate"><span class="pre">INFO</span></code> and above will make it to the terminal. The files are configured to
 rotate and roll over into a second file once they get too large.</p>
-</div>
-<div class="section" id="pcds-wide-logging">
+</section>
+<section id="pcds-wide-logging">
 <h2>PCDS-wide Logging<a class="headerlink" href="#pcds-wide-logging" title="Permalink to this headline">¶</a></h2>
 <p>A special Python logger for PCDS-wide logging is pre-configured within
 <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code>.  This special logger is named <code class="docutils literal notranslate"><span class="pre">'pcds-logging'</span></code>, and hooks
@@ -277,8 +185,8 @@ trace along with module and line information automatically:</p>
 <p>It is not necessary to include information about the host that is running
 Python, module versions, or thread/process names as these are automatically
 included.</p>
-</div>
-<div class="section" id="debug-mode">
+</section>
+<section id="debug-mode">
 <h2>Debug Mode<a class="headerlink" href="#debug-mode" title="Permalink to this headline">¶</a></h2>
 <p>You can start in debug mode by passing the <code class="docutils literal notranslate"><span class="pre">--debug</span></code> option to
 <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code>. Debug mode changes the logging configuration to print
@@ -321,61 +229,44 @@ arbitrary value.</p>
 <span class="n">_debug_wrapper</span><span class="p">(</span><span class="n">buggy_function</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="automated-test-logging">
+</section>
+<section id="automated-test-logging">
 <h2>Automated Test Logging<a class="headerlink" href="#automated-test-logging" title="Permalink to this headline">¶</a></h2>
 <p>If you’re running the automated test suite, each test run is stored in a
 module-level <code class="docutils literal notranslate"><span class="pre">logs</span></code> folder. This can be useful for diagnosing why the tests
 are failing.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="releases.html" class="btn btn-neutral float-right" title="Release History" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="yaml_files.html" class="btn btn-neutral float-left" title="Yaml Files" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="releases.html" class="btn btn-neutral float-right" title="Release History" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright .
-
-    </p>
+    <p>&#169; Copyright .</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
