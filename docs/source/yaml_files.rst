@@ -112,7 +112,7 @@ two daqs, and is used to set up the lcls2 daq_type. If omitted entirely,
 platform 0 and the primary elog will be used.
 This dictionary has a required key, "default" that points to an integer
 that is the normal platform to use, associated with the primary
-experiment. Additional keys are interpretted as hostnames to use
+experiment. Additional keys are interpreted as hostnames to use
 alternate platforms for. Alternate platforms will post to the
 secondary elog.
 
