@@ -323,7 +323,7 @@ def load_conf(conf, hutch_dir=None, args=None):
     # Daq
     with safe_load('daq'):
         if daq_type.startswith('lcls1'):
-            if daq_type == 'lcls1-sim':
+            if daq_type == 'lcls1-sim' or (args and args.sim):
                 set_daq_sim(True)
             cache(daq=Daq(RE=RE, hutch_name=hutch))
             cache.doc(daq='LCLS1 DAQ interface object.')
