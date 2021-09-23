@@ -23,6 +23,39 @@ try:
     from elog import HutchELog
 except ImportError:
     HutchELog = None
+try:
+    import lightpath
+    from lightpath import beamlines
+except ImportError:
+    lightpath = None
+    beamlines = None
+try:
+    from psdaq.control.BlueskyScan import BlueskyScan
+except ImportError:
+    BlueskyScan = None
+
+
+# Some re-usable skip decorators
+skip_if_win32_generic = pytest.mark.skipif(
+    sys.platform == 'win32',
+    reason='Does not run on Windows',
+    )
+skip_if_win32_pcdsdaq = pytest.mark.skipif(
+    sys.platform == 'win32',
+    reason='Fails on Windows (pcdsdaq)',
+)
+requires_lightpath = pytest.mark.skipif(
+    lightpath is None,
+    reason='lightpath module not installed',
+)
+requires_elog = pytest.mark.skipif(
+    HutchELog is None,
+    reason='elog module not installed',
+)
+requires_psdaq = pytest.mark.skipif(
+    BlueskyScan is None,
+    reason='psdaq.control not installed',
+)
 
 # We need to have the tests directory importable to match what we'd have in a
 # real hutch-python install

@@ -1,6 +1,5 @@
 import logging
 import os.path
-import sys
 from socket import gethostname
 from types import SimpleNamespace
 
@@ -13,20 +12,13 @@ from pcdsdevices.interface import Presets
 import hutch_python.qs_load
 from hutch_python.load_conf import load, load_conf
 
-from .conftest import TST_CAM_CFG, ELog, QSBackend
-
-try:
-    from psdaq.control.BlueskyScan import BlueskyScan
-except ImportError:
-    BlueskyScan = None
+from .conftest import (TST_CAM_CFG, BlueskyScan, ELog, QSBackend,
+                       requires_elog, requires_psdaq, skip_if_win32_pcdsdaq)
 
 logger = logging.getLogger(__name__)
 
 
-@pytest.mark.skipif(
-    sys.platform == "win32",
-    reason="Fails on Windows (pcdsdaq)",
-)
+@skip_if_win32_pcdsdaq
 def test_file_load():
     logger.debug('test_file_load')
     set_sim_mode(True)
@@ -64,7 +56,7 @@ def test_conf_empty():
     assert len(objs) > 1
 
 
-@pytest.mark.skipif(ELog is None, reason='elog module not installed')
+@requires_elog
 def test_elog(monkeypatch, temporary_config):
     logger.debug('test_elog')
     monkeypatch.setattr(hutch_python.load_conf, 'HutchELog', ELog)
@@ -86,7 +78,7 @@ def test_elog(monkeypatch, temporary_config):
     assert objs['elog'].station == '1'
 
 
-@pytest.mark.skipif(BlueskyScan is None, reason='psdaq.control not installed')
+@requires_psdaq
 def test_lcls2_daq_config(dummy_zmq_lcls2):
     logger.debug('test_lcls2_daq')
 
@@ -104,10 +96,7 @@ def test_lcls2_daq_config(dummy_zmq_lcls2):
     assert daq.control.platform == platform
 
 
-@pytest.mark.skipif(
-    sys.platform == "win32",
-    reason="Fails on Windows (pcdsdaq)",
-)
+@skip_if_win32_pcdsdaq
 def test_simdaq_config():
     logger.debug('test_simdaq_config')
     objs = load_conf({'daq_type': 'lcls1-sim'})

@@ -1,7 +1,6 @@
 import logging
 import os
 import shutil
-import sys
 from pathlib import Path
 
 import IPython.core.completer
@@ -11,6 +10,8 @@ from conftest import cli_args, restore_logging
 import hutch_python.cli
 from hutch_python.cli import main
 from hutch_python.load_conf import load
+
+from .conftest import skip_if_win32_generic
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ def no_ipython_launch(monkeypatch):
     monkeypatch.setattr(hutch_python.cli, 'start_ipython', no_op)
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
+@skip_if_win32_generic
 def test_main_normal(no_ipython_launch):
     logger.debug('test_main_normal')
 
@@ -34,7 +35,7 @@ def test_main_normal(no_ipython_launch):
             main()
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
+@skip_if_win32_generic
 def test_main_no_args(no_ipython_launch):
     logger.debug('test_main_no_args')
 
@@ -43,7 +44,7 @@ def test_main_no_args(no_ipython_launch):
             main()
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
+@skip_if_win32_generic
 def test_debug_arg(no_ipython_launch):
     logger.debug('test_debug_arg')
 
@@ -52,7 +53,7 @@ def test_debug_arg(no_ipython_launch):
             main()
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
+@skip_if_win32_generic
 def test_sim_arg(no_ipython_launch):
     logger.debug('test_sim_arg')
 
@@ -79,7 +80,7 @@ def test_create_arg():
     shutil.rmtree(test_dir)
 
 
-@pytest.mark.skipif(sys.platform == "win32", reason="Does not run on Windows")
+@skip_if_win32_generic
 def test_run_script():
     logger.debug('test_run_script')
 

@@ -2,20 +2,16 @@ import logging
 import os.path
 import tempfile
 
-import pytest
 import simplejson
 
 from hutch_python.happi import get_happi_objs, get_lightpath
 
-try:
-    from lightpath.config import beamlines
-except ImportError:
-    beamlines = None
+from .conftest import beamlines, requires_lightpath
 
 logger = logging.getLogger(__name__)
 
 
-@pytest.mark.skipif(beamlines is None, reason='Lightpath not installed.')
+@requires_lightpath
 def test_happi_objs():
     logger.debug("test_happi_objs")
     db = os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -36,7 +32,7 @@ def test_happi_objs():
         assert get_happi_objs(tmp.name, 'tst') == {}
 
 
-@pytest.mark.skipif(beamlines is None, reason='Lightpath not installed.')
+@requires_lightpath
 def test_get_lightpath():
     logger.debug("test_get_lightpath")
     db = os.path.join(os.path.abspath(os.path.dirname(__file__)),
