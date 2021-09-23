@@ -214,13 +214,14 @@ def load_conf(conf, hutch_dir=None, args=None):
     try:
         # Configure whether we use the LCLS-I or LCLS-II daq
         daq_type = conf['daq_type']
+    except KeyError:
+        daq_type = 'lcls1'
+        logger.info('Selected default daq type lcls1')
+    else:
         if daq_type in ('lcls1', 'lcls1-sim', 'lcls2', 'nodaq'):
             logger.info(f'Selected valid daq type {daq_type}')
         else:
             logger.error('Selected invalid daq type! Will skip daq!')
-    except KeyError:
-        daq_type = 'lcls1'
-        logger.info('Selected default daq type lcls1')
 
     try:
         # Configure the daq host.
