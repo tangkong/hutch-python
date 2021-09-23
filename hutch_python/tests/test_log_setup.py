@@ -15,9 +15,12 @@ from hutch_python.log_setup import (configure_log_directory, debug_context,
                                     log_objects_off, set_console_level,
                                     setup_logging)
 
+from .conftest import skip_if_win32_generic
+
 logger = logging.getLogger(__name__)
 
 
+@skip_if_win32_generic
 def test_setup_logging():
     logger.debug('test_setup_logging')
     dir_logs = Path(__file__).parent / 'logs'
@@ -44,6 +47,7 @@ def test_console_handler(log_queue):
         assert isinstance(handler, QueueHandler)
 
 
+@skip_if_win32_generic
 def test_get_session_logfiles():
     logger.debug('test_get_session_logfiles')
     with restore_logging():

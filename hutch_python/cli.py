@@ -12,7 +12,6 @@ import IPython
 import matplotlib
 from cookiecutter.main import cookiecutter
 from IPython import start_ipython
-from pcdsdaq.sim import set_sim_mode as set_daq_sim
 from traitlets.config import Config
 
 from .constants import CONDA_BASE, DIR_MODULE
@@ -32,7 +31,7 @@ parser.add_argument('--exp', required=False, default=None,
 parser.add_argument('--debug', action='store_true', default=False,
                     help='Start in debug mode')
 parser.add_argument('--sim', action='store_true', default=False,
-                    help='Run with simulated DAQ')
+                    help='Run with simulated DAQ (lcls1 only)')
 parser.add_argument('--create', action='store', default=False,
                     help='Create a new hutch deployment')
 parser.add_argument('script', nargs='?',
@@ -140,10 +139,6 @@ def main():
         cookiecutter(str(DIR_MODULE / 'cookiecutter'), no_input=True,
                      extra_context=dict(base=base, env=env, hutch=hutch))
         return
-
-    # Now other flags
-    if args.sim:
-        set_daq_sim(True)
 
     # Save whether we are an interactive session or a script session
     opts_cache['script'] = args.script

@@ -4,10 +4,13 @@ from subprocess import STDOUT, CalledProcessError, check_output
 
 import pytest
 
+from .conftest import skip_if_win32_generic
+
 logger = logging.getLogger(__name__)
 tstpython = Path(__file__).parent / 'tstpython'
 
 
+@skip_if_win32_generic
 def test_tstpython_scripts():
     logger.debug('test_tstpython_scripts')
 

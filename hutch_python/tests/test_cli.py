@@ -11,6 +11,8 @@ import hutch_python.cli
 from hutch_python.cli import main
 from hutch_python.load_conf import load
 
+from .conftest import skip_if_win32_generic
+
 logger = logging.getLogger(__name__)
 
 CFG_PATH = Path(os.path.dirname(__file__)) / 'conf.yaml'
@@ -24,6 +26,7 @@ def no_ipython_launch(monkeypatch):
     monkeypatch.setattr(hutch_python.cli, 'start_ipython', no_op)
 
 
+@skip_if_win32_generic
 def test_main_normal(no_ipython_launch):
     logger.debug('test_main_normal')
 
@@ -32,6 +35,7 @@ def test_main_normal(no_ipython_launch):
             main()
 
 
+@skip_if_win32_generic
 def test_main_no_args(no_ipython_launch):
     logger.debug('test_main_no_args')
 
@@ -40,6 +44,7 @@ def test_main_no_args(no_ipython_launch):
             main()
 
 
+@skip_if_win32_generic
 def test_debug_arg(no_ipython_launch):
     logger.debug('test_debug_arg')
 
@@ -48,6 +53,7 @@ def test_debug_arg(no_ipython_launch):
             main()
 
 
+@skip_if_win32_generic
 def test_sim_arg(no_ipython_launch):
     logger.debug('test_sim_arg')
 
@@ -74,6 +80,7 @@ def test_create_arg():
     shutil.rmtree(test_dir)
 
 
+@skip_if_win32_generic
 def test_run_script():
     logger.debug('test_run_script')
 

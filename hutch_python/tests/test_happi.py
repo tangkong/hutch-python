@@ -1,15 +1,17 @@
-import os.path
 import logging
-import simplejson
+import os.path
 import tempfile
 
-from lightpath.config import beamlines
+import simplejson
 
 from hutch_python.happi import get_happi_objs, get_lightpath
+
+from .conftest import beamlines, requires_lightpath
 
 logger = logging.getLogger(__name__)
 
 
+@requires_lightpath
 def test_happi_objs():
     logger.debug("test_happi_objs")
     db = os.path.join(os.path.abspath(os.path.dirname(__file__)),
@@ -30,6 +32,7 @@ def test_happi_objs():
         assert get_happi_objs(tmp.name, 'tst') == {}
 
 
+@requires_lightpath
 def test_get_lightpath():
     logger.debug("test_get_lightpath")
     db = os.path.join(os.path.abspath(os.path.dirname(__file__)),

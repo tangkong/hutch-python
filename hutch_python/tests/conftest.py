@@ -9,7 +9,7 @@ from pathlib import Path
 from queue import Queue
 
 import pytest
-from elog import HutchELog
+import zmq
 from epics import PV
 from ophyd.areadetector.plugins import PluginBase
 from ophyd.device import Component as Cpt
@@ -18,6 +18,44 @@ from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
 import hutch_python.qs_load
 import hutch_python.utils
+
+try:
+    from elog import HutchELog
+except ImportError:
+    HutchELog = None
+try:
+    import lightpath
+    from lightpath import beamlines
+except ImportError:
+    lightpath = None
+    beamlines = None
+try:
+    from psdaq.control.BlueskyScan import BlueskyScan
+except ImportError:
+    BlueskyScan = None
+
+
+# Some re-usable skip decorators
+skip_if_win32_generic = pytest.mark.skipif(
+    sys.platform == 'win32',
+    reason='Does not run on Windows',
+    )
+skip_if_win32_pcdsdaq = pytest.mark.skipif(
+    sys.platform == 'win32',
+    reason='Fails on Windows (pcdsdaq)',
+)
+requires_lightpath = pytest.mark.skipif(
+    lightpath is None,
+    reason='lightpath module not installed',
+)
+requires_elog = pytest.mark.skipif(
+    HutchELog is None,
+    reason='elog module not installed',
+)
+requires_psdaq = pytest.mark.skipif(
+    BlueskyScan is None,
+    reason='psdaq.control not installed',
+)
 
 # We need to have the tests directory importable to match what we'd have in a
 # real hutch-python install
@@ -158,10 +196,50 @@ def fake_curexp_script():
     hutch_python.utils.CUR_EXP_SCRIPT = old_script
 
 
-class ELog(HutchELog):
-    """Pseudo ELog"""
-    def __init__(self, instrument, station=None, user=None, pw=None):
-        self.instrument = instrument
-        self.station = station
-        self.user = user
-        self.pw = pw
+if HutchELog is None:
+    ELog = None
+else:
+    class ELog(HutchELog):
+        """Pseudo ELog"""
+        def __init__(self, instrument, station=None, user=None, pw=None):
+            self.instrument = instrument
+            self.station = station
+            self.user = user
+            self.pw = pw
+
+
+class DummyZMQContext:
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def socket(self, *args, **kwargs):
+        return DummyZMQSocket()
+
+
+class DummyZMQSocket:
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def connect(self, *args, **kwargs):
+        pass
+
+    def setsockopt(self, *args, **kwargs):
+        pass
+
+    def close(self, *args, **kwargs):
+        pass
+
+    def bind(self, *args, **kwargs):
+        pass
+
+    def send_json(self, *args, **kwargs):
+        pass
+
+    def recv_json(self, *args, **kwargs):
+        return {}
+
+
+@pytest.fixture(scope='function')
+def dummy_zmq_lcls2(monkeypatch):
+    # monkeypatch such that the lcls2 daq doesn't actually connect to things
+    monkeypatch.setattr(zmq, 'Context', DummyZMQContext)

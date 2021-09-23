@@ -3,17 +3,22 @@ import os.path
 from socket import gethostname
 from types import SimpleNamespace
 
+import pytest
+from pcdsdaq.daq import Daq
 from pcdsdaq.sim import set_sim_mode
+from pcdsdaq.sim.pydaq import Control as SimControl
 from pcdsdevices.interface import Presets
 
 import hutch_python.qs_load
 from hutch_python.load_conf import load, load_conf
 
-from .conftest import QSBackend, ELog, TST_CAM_CFG
+from .conftest import (TST_CAM_CFG, BlueskyScan, ELog, QSBackend,
+                       requires_elog, requires_psdaq, skip_if_win32_pcdsdaq)
 
 logger = logging.getLogger(__name__)
 
 
+@skip_if_win32_pcdsdaq
 def test_file_load():
     logger.debug('test_file_load')
     set_sim_mode(True)
@@ -51,6 +56,7 @@ def test_conf_empty():
     assert len(objs) > 1
 
 
+@requires_elog
 def test_elog(monkeypatch, temporary_config):
     logger.debug('test_elog')
     monkeypatch.setattr(hutch_python.load_conf, 'HutchELog', ELog)
@@ -70,6 +76,41 @@ def test_elog(monkeypatch, temporary_config):
                                        hostname: 4},
                       'hutch': 'TST'})
     assert objs['elog'].station == '1'
+
+
+@requires_psdaq
+def test_lcls2_daq_config(dummy_zmq_lcls2):
+    logger.debug('test_lcls2_daq')
+
+    host = 'fake-hostname-drp'
+    platform = 1
+    config = {
+        'daq_type': 'lcls2',
+        'daq_host': host,
+        'daq_platform': {'default': platform},
+    }
+    objs = load_conf(config)
+    daq = objs['daq']
+    assert isinstance(daq, BlueskyScan)
+    assert daq.control.host == host
+    assert daq.control.platform == platform
+
+
+@skip_if_win32_pcdsdaq
+def test_simdaq_config():
+    logger.debug('test_simdaq_config')
+    objs = load_conf({'daq_type': 'lcls1-sim'})
+    daq = objs['daq']
+    assert isinstance(daq, Daq)
+    daq.connect()
+    assert isinstance(daq._control, SimControl)
+
+
+def test_nodaq_config():
+    logger.debug('test_nodaq_config')
+    objs = load_conf({'daq_type': 'nodaq'})
+    with pytest.raises(KeyError):
+        objs['daq']
 
 
 def test_camviewer_load(monkeypatch):

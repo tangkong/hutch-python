@@ -2,8 +2,9 @@ Yaml Files
 ==========
 
 ``hutch-python`` uses a ``conf.yml`` file for basic configuration. This is a
-standard yaml file with five valid keys:
-``hutch``, ``db``, ``load``, and ``experiment``.
+standard yaml file with seven valid keys:
+``hutch``, ``db``, ``load``, ``experiment``, ``daq_type``, ``daq_host``,
+and ``daq_platform``.
 
 
 hutch
@@ -85,6 +86,35 @@ to load an experiment other than the active experiment; handy for debugging.
 This key is used to force the questionnaire and experiment file to be from a
 particular experiment.
 
+daq_type
+--------
+
+The ``daq_type`` key is optional. If omitted, the default value is 'lcls1'
+for backwards compatibility with existing hutch python setups.
+This key expects a string with one of four valid values:
+'lcls1', 'lcls1-sim', 'lcls2', or 'nodaq', to pick between creating an
+LCLS1-style daq, a simulated LCLS1-style daq, an LCLS2-style daq,
+or no daq respectively.
+
+daq_host
+--------
+
+The daq collection host as a string. This is a required key
+when using the lcls2 daq_type, and is ignored with any other daq_type.
+It will be used in the creation of the lcls2 daq object.
+
+daq_platform
+------------
+
+A dictionary description of which daq platform to use. This is used to
+determine whether to use the primary or secondary elog in hutches with
+two daqs, and is used to set up the lcls2 daq_type. If omitted entirely,
+platform 0 and the primary elog will be used.
+This dictionary has a required key, "default" that points to an integer
+that is the normal platform to use, associated with the primary
+experiment. Additional keys are interpreted as hostnames to use
+alternate platforms for. Alternate platforms will post to the
+secondary elog.
 
 Full File Example
 -----------------

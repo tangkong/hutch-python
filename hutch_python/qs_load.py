@@ -3,10 +3,15 @@ import os.path
 from configparser import ConfigParser, NoOptionError
 
 import happi
-from happi.backends.qs_db import QSBackend
 from happi.loader import load_devices
 
 from .utils import safe_load
+
+try:
+    from happi.backends.qs_db import QSBackend
+except ImportError:
+    # Optional because not available on windows
+    QSBackend = None
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +76,8 @@ def get_qs_client(expname):
     qs_client: `happi.Client`
         Mapping from questionnaire ``python name`` to loaded object.
     """
+    if QSBackend is None:
+        raise RuntimeError('psdm_qs_cli library unavailable')
     # Determine which method of authentication we are going to use.
     # Search for a configuration file, either in the current directory
     # or hidden in the users home directory. If not found, attempt to
