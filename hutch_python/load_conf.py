@@ -130,7 +130,7 @@ def load_conf(conf, hutch_dir=None, args=None):
 
     Parameters
     ----------
-    conf : ``dict``
+    conf : dict
         ``dict`` interpretation of the original yaml file
 
     hutch_dir : ``Path`` or ``str``, optional
