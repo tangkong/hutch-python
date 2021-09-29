@@ -1,6 +1,22 @@
 Release History
 ###############
 
+v1.12.0 (2021-09-28)
+====================
+
+Features
+--------
+- Add functionality for specifying parameters for and automatically
+  instantiating the LCLS2 DAQ object (BlueskyScan) via an optional
+  psdaq.control dependency and configuration keys.
+
+Fixes and Maintenance
+---------------------
+- Restore the CI pypi build to running.
+- Properly setup lightpath, psdm_qs_cli, and elog as optional dependencies.
+- Clean up the documentation about the configuration file.
+
+
 v1.11.2 (2021-08-09)
 ====================
 
