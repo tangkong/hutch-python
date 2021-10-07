@@ -160,6 +160,9 @@ class HelpfulNamespace(SimpleNamespace):
                 # as &lt;tr&gt; instead of <tr>. Oh well.
                 # docs = obj._as_table_(nest_html=True).get_html_string()
                 multiline_rows = True
+                # Re-render the object's table, just in case external code has
+                # overwritten it:
+                docs = obj._as_table_(nest_html=nest_html)
                 # Full docstring from the sub-namespace will be included.
             elif docs:
                 # For everything else, include just the first line
@@ -186,9 +189,9 @@ This {type(self).__name__} has the following attributes available:
         """This is an IPython hook for returning an ASCII representation."""
         table = self._as_table_()
         if table.rowcount == 0:
-            pretty.text(f"""\
-This {type(self).__name__} has no available attributes.
-""")
+            pretty.text(
+                f"This {type(self).__name__} has no available attributes."
+            )
         else:
             try:
                 table.max_table_width = os.get_terminal_size()[0]
