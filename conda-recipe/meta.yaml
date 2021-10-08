@@ -18,7 +18,7 @@ requirements:
 
   run:
     - python >=3.6
-    - archapp >=1.0.0
+    - archapp >=1.0.2
     - bluesky >=1.8.0
     - coloredlogs >=15.0.0
     - cookiecutter >=1.7.0
