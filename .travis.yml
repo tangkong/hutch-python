@@ -25,8 +25,7 @@ env:
 
     # Extra dependencies needed to run the test with Pip (similar to
     # CONDA_EXTRAS) but for pip
-    # xarray is required by archapp but isn't listed as a dep for archapp=0.3.0
-    - PIP_EXTRAS="xarray>=0.19.0"
+    - PIP_EXTRAS=""
 
 jobs:
   allow_failures:
