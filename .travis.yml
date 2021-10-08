@@ -28,11 +28,6 @@ env:
     # CONDA_EXTRAS) but for pip
     - PIP_EXTRAS="."
 
-jobs:
-  allow_failures:
-    # PIP build fails due to some conda-specific assumptions, need to fix
-    - name: "Python - PIP"
-
 import:
   - pcdshub/pcds-ci-helpers:travis/shared_configs/setup-env-ui.yml
   - pcdshub/pcds-ci-helpers:travis/shared_configs/standard-python-conda-latest.yml
