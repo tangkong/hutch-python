@@ -12,7 +12,7 @@ from pcdsdevices.interface import Presets
 import hutch_python.qs_load
 from hutch_python.load_conf import load, load_conf
 
-from .conftest import (TST_CAM_CFG, BlueskyScan, ELog, QSBackend,
+from .conftest import (TST_CAM_CFG, BlueskyScan, ELog, QSBackend, lightpath,
                        requires_elog, requires_psdaq, skip_if_win32_pcdsdaq)
 
 logger = logging.getLogger(__name__)
@@ -23,8 +23,9 @@ def test_file_load():
     logger.debug('test_file_load')
     set_sim_mode(True)
     objs = load(os.path.join(os.path.dirname(__file__), 'conf.yaml'))
-    should_have = ('x', 'unique_device', 'calc_thing', 'daq', 'tst_beampath',
-                   'scan_pvs')
+    should_have = ('x', 'unique_device', 'calc_thing', 'daq', 'scan_pvs')
+    if lightpath is not None:
+        should_have += ('tst_beampath',)
     err = '{} was overriden by a namespace'
     for elem in should_have:
         assert not isinstance(objs[elem], SimpleNamespace), err.format(elem)

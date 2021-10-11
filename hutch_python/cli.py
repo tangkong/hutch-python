@@ -6,6 +6,7 @@ startup.
 import argparse
 import logging
 import os
+import sys
 from pathlib import Path
 
 import IPython
@@ -132,8 +133,14 @@ def main():
             env = path_obj.name
         else:
             # Fallback: pick current env
-            base = str(Path(os.environ['CONDA_EXE']).parent.parent)
-            env = os.environ['CONDA_DEFAULT_ENV']
+            try:
+                base = str(Path(os.environ['CONDA_EXE']).parent.parent)
+                env = os.environ['CONDA_DEFAULT_ENV']
+            except KeyError:
+                # Take a stab at some non-conda defaults; ideally these would
+                # be configurable with argparse.
+                base = Path(sys.executable).parent
+                env = hutch
         logger.info(('Creating hutch-python dir for hutch %s using'
                      ' base=%s env=%s'), hutch, base, env)
         cookiecutter(str(DIR_MODULE / 'cookiecutter'), no_input=True,

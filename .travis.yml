@@ -19,20 +19,15 @@ env:
     - CONDA_RECIPE_FOLDER="conda-recipe"
     # Extra dependencies needed to run the tests which are not included
     # at the recipe and dev-requirements.txt. E.g. PyQt
+    # pandoc/pypandoc - used to translate README.md for sphinx
     - CONDA_EXTRAS="pip pandoc pypandoc"
     # Requirements file with contents for tests dependencies
     - CONDA_REQUIREMENTS="dev-requirements.txt"
 
     # Extra dependencies needed to run the test with Pip (similar to
     # CONDA_EXTRAS) but for pip
-    # xarray is required by archapp but isn't listed as a dep for archapp=0.3.0
-    - PIP_EXTRAS="xarray>=0.19.0"
-
-jobs:
-  allow_failures:
-    # PIP build fails due to some conda-specific assumptions, need to fix
-    - name: "Python - PIP"
+    - PIP_EXTRAS="."
 
 import:
   - pcdshub/pcds-ci-helpers:travis/shared_configs/setup-env-ui.yml
-  - pcdshub/pcds-ci-helpers:travis/shared_configs/standard-python-conda.yml
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/standard-python-conda-latest.yml
