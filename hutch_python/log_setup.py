@@ -238,10 +238,23 @@ class ObjectFilter(logging.Filter):
         If a single ophyd object logs over ``noisy_threshold_60s`` log messages
         in 60 seconds, consider it a noisy logger and silence it.
 
+    noisy_logger_whitelist : list of str, optional
+        Logger names that are not subject to the thresholds above.
+
+    blacklist : list of str, optional
+        Logger names that should always be filtered out.
+
     Attributes
     ----------
+    blacklist : set of str
+        Logger names that should always be filtered out.
+
     noisy_logger_whitelist : list of str
         List of noisy loggers that are exempt from the noise thresholds.
+
+    noisy_loggers: set of str
+        Loggers marked as noisy and to be filtered out, unless in the
+        whitelist.
     """
     _objects: frozenset[ophyd.ophydobj.OphydObject]
     _timer: threading.Thread
@@ -257,6 +270,7 @@ class ObjectFilter(logging.Filter):
     noisy_threshold_60s: int
     noisy_logger_whitelist: list[str]
     noisy_loggers: set[str]
+    blacklist: set[str]
 
     def __init__(
         self,
@@ -266,6 +280,8 @@ class ObjectFilter(logging.Filter):
         noisy_threshold_1s: int = 20,
         noisy_threshold_10s: int = 50,
         noisy_threshold_60s: int = 100,
+        noisy_logger_whitelist: Optional[list[str]] = None,
+        blacklist: Optional[list[str]] = None,
         allow_other_messages: bool = True
     ):
         self._objects = frozenset(objects)
@@ -278,7 +294,8 @@ class ObjectFilter(logging.Filter):
         self.noisy_threshold_1s = int(noisy_threshold_1s)
         self.noisy_threshold_10s = int(noisy_threshold_10s)
         self.noisy_threshold_60s = int(noisy_threshold_10s)
-        self.noisy_logger_whitelist = []
+        self.noisy_logger_whitelist = list(noisy_logger_whitelist or [])
+        self.blacklist = set(blacklist or [])
         self.noisy_loggers = set()
 
         self._running = True
@@ -419,7 +436,7 @@ class ObjectFilter(logging.Filter):
         should_show = (
             record.levelno >= self._whitelist_all_levelno or
             name in self.object_names
-        )
+        ) and name not in self.blacklist
 
         if should_show:
             self.name_to_log_count_1s[name] += 1
