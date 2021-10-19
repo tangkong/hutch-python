@@ -24,16 +24,19 @@ Hush entirely - neither the file nor the console should see:
   - parso
   - pyPDB.dbd.yacc
 """
+import collections
 import logging
 import logging.config
 import os
 import sys
+import threading
 import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Optional, Union
+from typing import Generator, Iterable, Optional, Union
 
 import coloredlogs
+import ophyd
 import pcdsutils.log
 import yaml
 
@@ -43,6 +46,7 @@ from .utils import get_fully_qualified_domain_name
 logger = logging.getLogger(__name__)
 central_logger = pcdsutils.log.logger
 LOG_DIR = None
+OBJECT_NAME_STANDIN = "-"
 
 
 class LoggingNotConfiguredError(Exception):
@@ -56,7 +60,7 @@ class DefaultFormatter(logging.Formatter):
     """
 
     def format(self, record):
-        record.__dict__.setdefault("ophyd_object_name", "-")
+        record.__dict__.setdefault("ophyd_object_name", OBJECT_NAME_STANDIN)
         return super().format(record)
 
 
@@ -64,7 +68,7 @@ class ColoredFormatter(coloredlogs.ColoredFormatter):
     """The ``coloredlogs`` version of ``DefaultFormatter``, above."""
 
     def format(self, record):
-        record.__dict__.setdefault("ophyd_object_name", "-")
+        record.__dict__.setdefault("ophyd_object_name", OBJECT_NAME_STANDIN)
         return super().format(record)
 
 
@@ -130,7 +134,7 @@ def configure_log_directory(dir_logs: Optional[Union[str, Path]]):
     LOG_DIR = Path(dir_logs).expanduser().resolve() if dir_logs else None
 
 
-def setup_logging():
+def setup_logging() -> None:
     """
     Sets up the ``logging`` configuration.
 
@@ -194,10 +198,14 @@ def validate_log_level(level: Union[str, int]) -> int:
 
 
 class ObjectFilter(logging.Filter):
-    '''
+    """
     A logging filter that limits log messages to a specific object or objects.
 
     To be paired with a logging handler added to the ophyd object logger.
+
+    Additionally has the capability of filtering out noisy loggers based on
+    three thresholds: log message rates at 1 second, 10 seconds, and 60
+    seconds.
 
     Parameters
     ----------
@@ -217,36 +225,151 @@ class ObjectFilter(logging.Filter):
     allow_other_messages : bool, optional
         Allow messages through the filter that are not specific to ophyd
         objects.  Ophyd object-related messages _must_ pass the filter.
-    '''
-    def __init__(self, *objects, level='WARNING',
-                 whitelist_all_level='WARNING', allow_other_messages=True):
+
+    noisy_threshold_1s : int, optional
+        If a single ophyd object logs over ``noisy_threshold_1s`` log messages
+        in one second, consider it a noisy logger and silence it.
+
+    noisy_threshold_10s : int, optional
+        If a single ophyd object logs over ``noisy_threshold_10s`` log messages
+        in ten seconds, consider it a noisy logger and silence it.
+
+    noisy_threshold_60s : int, optional
+        If a single ophyd object logs over ``noisy_threshold_60s`` log messages
+        in 60 seconds, consider it a noisy logger and silence it.
+
+    Attributes
+    ----------
+    noisy_logger_whitelist : list of str
+        List of noisy loggers that are exempt from the noise thresholds.
+    """
+    _objects: frozenset[ophyd.ophydobj.OphydObject]
+    _timer: threading.Thread
+    _running: bool
+    level: str
+    allow_other_messages: bool
+    whitelist_all_level: str
+    name_to_log_count_1s: dict[str, int]
+    name_to_log_count_10s: dict[str, int]
+    name_to_log_count_60s: dict[str, int]
+    noisy_threshold_1s: int
+    noisy_threshold_10s: int
+    noisy_threshold_60s: int
+    noisy_logger_whitelist: list[str]
+    noisy_loggers: set[str]
+
+    def __init__(
+        self,
+        *objects: ophyd.ophydobj.OphydObject,
+        level: str = "WARNING",
+        whitelist_all_level: str = "WARNING",
+        noisy_threshold_1s: int = 20,
+        noisy_threshold_10s: int = 50,
+        noisy_threshold_60s: int = 100,
+        allow_other_messages: bool = True
+    ):
         self._objects = frozenset(objects)
         self.allow_other_messages = bool(allow_other_messages)
         self.whitelist_all_level = whitelist_all_level
         self.level = level
+        self.name_to_log_count_1s = collections.defaultdict(int)
+        self.name_to_log_count_10s = collections.defaultdict(int)
+        self.name_to_log_count_60s = collections.defaultdict(int)
+        self.noisy_threshold_1s = int(noisy_threshold_1s)
+        self.noisy_threshold_10s = int(noisy_threshold_10s)
+        self.noisy_threshold_60s = int(noisy_threshold_10s)
+        self.noisy_logger_whitelist = []
+        self.noisy_loggers = set()
 
-    def __repr__(self):
+        self._running = True
+        self._timer_index = 0
+
+        self._timer = threading.Thread(target=self._count_update_thread)
+        self._timer.daemon = True
+        self._timer.start()
+
+    def _count_update_thread(self) -> None:
+        """Thread for checking the per-logger statistics."""
+        while self._running:
+            self._count_update()
+            time.sleep(1.0)
+
+    def _count_update(self) -> None:
+        """Log count update - every second."""
+        noisy_loggers = set(
+            name
+            for name, count in tuple(self.name_to_log_count_1s.items())
+            if count > self.noisy_threshold_1s
+        ) | set(
+            name
+            for name, count in tuple(self.name_to_log_count_10s.items())
+            if count > self.noisy_threshold_10s
+        ) | set(
+            name
+            for name, count in tuple(self.name_to_log_count_60s.items())
+            if count > self.noisy_threshold_60s
+        )
+
+        for noisy_logger in sorted(noisy_loggers):
+            if noisy_logger in self.noisy_logger_whitelist:
+                continue
+            if noisy_logger in self.noisy_loggers:
+                continue
+
+            logger.info(
+                "Hushing noisy logger %r. If you see this often, please "
+                "consider reporting it to your POC or #pcds-help.  If this "
+                "functionality is undesirable, adjust the thresholds or set "
+                "`noisy_logger_whitelist`.",
+                noisy_logger
+            )
+            self.noisy_loggers.add(noisy_logger)
+
+        self._timer_index = (self._timer_index + 1) % 60
+        if self._timer_index == 0:
+            self.name_to_log_count_60s.clear()
+        if (self._timer_index % 10) == 0:
+            self.name_to_log_count_10s.clear()
+        self.name_to_log_count_1s.clear()
+
+    def stop(self) -> None:
+        """Stop updating logging rates in the background."""
+        self._running = False
+
+    def __del__(self) -> None:
+        try:
+            self.stop()
+        except Exception:
+            # Teardown of interpreter may cause attributeerrors and more.
+            ...
+
+    def __repr__(self) -> str:
         objects = ", ".join(obj.name for obj in self.objects)
         return (
             f"{self.__class__.__name__}("
             f"level={self.level}, "
             f"allow_other_messages={self.allow_other_messages}, "
-            f"objects=[{objects}]"
+            f"objects=[{objects}], "
+            f"noisy_threshold_1s={self.noisy_threshold_1s}, "
+            f"noisy_threshold_10s={self.noisy_threshold_10s}, "
+            f"noisy_threshold_60s={self.noisy_threshold_60s}, "
+            f"noisy_logger_whitelist={self.noisy_logger_whitelist}, "
+            f"noisy_loggers={self.noisy_loggers}"
             f")"
         )
 
-    def disable(self):
+    def disable(self) -> None:
         """Disable the filter."""
         self.objects = []
         self.allow_other_messages = True
 
     @property
-    def objects(self):
+    def objects(self) -> list[ophyd.ophydobj.OphydObject]:
         """The objects to log."""
         return list(sorted(self._objects, key=lambda obj: obj.name))
 
     @objects.setter
-    def objects(self, objects):
+    def objects(self, objects: Iterable[ophyd.ophydobj.OphydObject]) -> None:
         self._objects = frozenset(objects)
 
     @property
@@ -260,7 +383,7 @@ class ObjectFilter(logging.Filter):
         return logging.getLevelName(self._levelno)
 
     @level.setter
-    def level(self, value):
+    def level(self, value: Union[int, str]) -> None:
         self._levelno = validate_log_level(value)
 
     @property
@@ -269,16 +392,17 @@ class ObjectFilter(logging.Filter):
         return logging.getLevelName(self._whitelist_all_levelno)
 
     @whitelist_all_level.setter
-    def whitelist_all_level(self, value):
+    def whitelist_all_level(self, value: Union[int, str]):
         self._whitelist_all_levelno = validate_log_level(value)
 
     @property
-    def object_names(self):
+    def object_names(self) -> set[str]:
         """The names of all contained objects."""
         return set(obj.name for obj in self.objects)
 
-    def filter(self, record):
-        if not hasattr(record, 'ophyd_object_name'):
+    def filter(self, record: logging.LogRecord) -> bool:
+        name: Optional[str] = getattr(record, "ophyd_object_name", None)
+        if name is None or name == OBJECT_NAME_STANDIN:
             return self.allow_other_messages
 
         if record.levelno == logging.INFO:
@@ -287,16 +411,27 @@ class ObjectFilter(logging.Filter):
             record.levelno = logging.DEBUG
             record.levelname = "DEBUG"
 
-        if record.levelno >= self._whitelist_all_levelno:
-            return True
+        is_noisy = (
+            name in self.noisy_loggers and
+            name not in self.noisy_logger_whitelist
+        )
 
-        # if record.levelno < self.levelno:
-        #     return self.allow_other_messages
+        should_show = (
+            record.levelno >= self._whitelist_all_levelno or
+            name in self.object_names
+        )
 
-        return record.ophyd_object_name in self.object_names
+        if should_show:
+            self.name_to_log_count_1s[name] += 1
+            self.name_to_log_count_10s[name] += 1
+            self.name_to_log_count_60s[name] += 1
+
+        return should_show and not is_noisy
 
 
-def find_root_object_filters():
+def find_root_object_filters() -> Generator[
+    tuple[logging.Handler, ObjectFilter], None, None
+]:
     """
     Find all ``ObjectFilter``s configured on the root logger.
 
@@ -313,7 +448,7 @@ def find_root_object_filters():
                 yield handler, filter
 
 
-def log_objects_off():
+def log_objects_off() -> None:
     """
     Return to default logging behavior and do not treat objects specially.
     """
