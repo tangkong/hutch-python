@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Debug &mdash; hutch-python 1.12.0+11.g6d9b47a documentation</title>
+  <title>Debug &mdash; hutch-python 1.12.0+13.gf9afaf1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +30,7 @@
             <a href="index.html" class="icon icon-home"> hutch-python
           </a>
               <div class="version">
-                1.12.0+11.g6d9b47a
+                1.12.0+13.gf9afaf1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -134,10 +133,10 @@
     text-align: unset;
 }
 </style>
-<section id="debug">
+<div class="section" id="debug">
 <h1>Debug<a class="headerlink" href="#debug" title="Permalink to this headline">¶</a></h1>
 <p>There are numerous debug features built in to <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code>.</p>
-<section id="live-session-logging">
+<div class="section" id="live-session-logging">
 <h2>Live Session Logging<a class="headerlink" href="#live-session-logging" title="Permalink to this headline">¶</a></h2>
 <p>The first place to go when something has already gone wrong is to the log
 files. These are stored in a <code class="docutils literal notranslate"><span class="pre">logs</span></code> directory in the same location as the
@@ -153,8 +152,8 @@ that were created by calling that statement.</p>
 set up by the <code class="xref py py-mod docutils literal notranslate"><span class="pre">log_setup</span></code> module. If not in debug mode, only log levels
 <code class="docutils literal notranslate"><span class="pre">INFO</span></code> and above will make it to the terminal. The files are configured to
 rotate and roll over into a second file once they get too large.</p>
-</section>
-<section id="pcds-wide-logging">
+</div>
+<div class="section" id="pcds-wide-logging">
 <h2>PCDS-wide Logging<a class="headerlink" href="#pcds-wide-logging" title="Permalink to this headline">¶</a></h2>
 <p>A special Python logger for PCDS-wide logging is pre-configured within
 <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code>.  This special logger is named <code class="docutils literal notranslate"><span class="pre">'pcds-logging'</span></code>, and hooks
@@ -185,8 +184,8 @@ trace along with module and line information automatically:</p>
 <p>It is not necessary to include information about the host that is running
 Python, module versions, or thread/process names as these are automatically
 included.</p>
-</section>
-<section id="debug-mode">
+</div>
+<div class="section" id="debug-mode">
 <h2>Debug Mode<a class="headerlink" href="#debug-mode" title="Permalink to this headline">¶</a></h2>
 <p>You can start in debug mode by passing the <code class="docutils literal notranslate"><span class="pre">--debug</span></code> option to
 <code class="docutils literal notranslate"><span class="pre">hutch-python</span></code>. Debug mode changes the logging configuration to print
@@ -229,14 +228,14 @@ arbitrary value.</p>
 <span class="n">_debug_wrapper</span><span class="p">(</span><span class="n">buggy_function</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="automated-test-logging">
+</div>
+<div class="section" id="automated-test-logging">
 <h2>Automated Test Logging<a class="headerlink" href="#automated-test-logging" title="Permalink to this headline">¶</a></h2>
 <p>If you’re running the automated test suite, each test run is stored in a
 module-level <code class="docutils literal notranslate"><span class="pre">logs</span></code> folder. This can be useful for diagnosing why the tests
 are failing.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
