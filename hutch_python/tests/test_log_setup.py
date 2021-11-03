@@ -236,7 +236,7 @@ def test_log_noisy(caplog, object_filter: log_setup.ObjectFilter):
 
 def test_log_noisy_whitelist(caplog, object_filter: log_setup.ObjectFilter):
     object_filter.noisy_threshold_1s = 5
-    object_filter.whitelist = ["hutch_python.tests.test_log_setup"]
+    object_filter.whitelist = [logger.name]
 
     # Exceed the threshold of log messages
     for i in range(10):
