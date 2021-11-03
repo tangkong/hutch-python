@@ -29,6 +29,7 @@ import logging
 import logging.config
 import os
 import sys
+import textwrap
 import threading
 import time
 from contextlib import contextmanager
@@ -238,18 +239,18 @@ class ObjectFilter(logging.Filter):
         If a single ophyd object logs over ``noisy_threshold_60s`` log messages
         in 60 seconds, consider it a noisy logger and silence it.
 
-    noisy_logger_whitelist : list of str, optional
+    logger_whitelist : list of str, optional
         Logger names that are not subject to the thresholds above.
 
-    blacklist : list of str, optional
+    logger_blacklist : list of str, optional
         Logger names that should always be filtered out.
 
     Attributes
     ----------
-    blacklist : set of str
+    logger_blacklist : list of str
         Logger names that should always be filtered out.
 
-    noisy_logger_whitelist : list of str
+    logger_whitelist : list of str
         List of noisy loggers that are exempt from the noise thresholds.
 
     noisy_loggers: set of str
@@ -268,9 +269,9 @@ class ObjectFilter(logging.Filter):
     noisy_threshold_1s: int
     noisy_threshold_10s: int
     noisy_threshold_60s: int
-    noisy_logger_whitelist: list[str]
+    logger_whitelist: list[str]
     noisy_loggers: set[str]
-    blacklist: set[str]
+    logger_blacklist: set[str]
 
     def __init__(
         self,
@@ -280,8 +281,8 @@ class ObjectFilter(logging.Filter):
         noisy_threshold_1s: int = 20,
         noisy_threshold_10s: int = 50,
         noisy_threshold_60s: int = 100,
-        noisy_logger_whitelist: Optional[list[str]] = None,
-        blacklist: Optional[list[str]] = None,
+        logger_whitelist: Optional[list[str]] = None,
+        logger_blacklist: Optional[list[str]] = None,
         allow_other_messages: bool = True
     ):
         self._objects = frozenset(objects)
@@ -294,8 +295,8 @@ class ObjectFilter(logging.Filter):
         self.noisy_threshold_1s = int(noisy_threshold_1s)
         self.noisy_threshold_10s = int(noisy_threshold_10s)
         self.noisy_threshold_60s = int(noisy_threshold_10s)
-        self.noisy_logger_whitelist = list(noisy_logger_whitelist or [])
-        self.blacklist = set(blacklist or [])
+        self.logger_whitelist = list(logger_whitelist or [])
+        self.logger_blacklist = list(logger_blacklist or [])
         self.noisy_loggers = set()
 
         self._running = True
@@ -328,7 +329,7 @@ class ObjectFilter(logging.Filter):
         )
 
         for noisy_logger in sorted(noisy_loggers):
-            if noisy_logger in self.noisy_logger_whitelist:
+            if noisy_logger in self.logger_whitelist:
                 continue
             if noisy_logger in self.noisy_loggers:
                 continue
@@ -337,7 +338,7 @@ class ObjectFilter(logging.Filter):
                 "Hushing noisy logger %r. If you see this often, please "
                 "consider reporting it to your POC or #pcds-help.  If this "
                 "functionality is undesirable, adjust the thresholds or set "
-                "`noisy_logger_whitelist`.",
+                "`logger_whitelist`.",
                 noisy_logger
             )
             self.noisy_loggers.add(noisy_logger)
@@ -370,9 +371,65 @@ class ObjectFilter(logging.Filter):
             f"noisy_threshold_1s={self.noisy_threshold_1s}, "
             f"noisy_threshold_10s={self.noisy_threshold_10s}, "
             f"noisy_threshold_60s={self.noisy_threshold_60s}, "
-            f"noisy_logger_whitelist={self.noisy_logger_whitelist}, "
+            f"logger_whitelist={self.logger_whitelist}, "
             f"noisy_loggers={self.noisy_loggers}"
             f")"
+        )
+
+    def _repr_pretty_(self, pp, cycle: bool) -> str:
+        """
+        IPython pretty-printing to show current status information.
+
+        Parameters
+        ----------
+        pp : PrettyPrinter
+            An instance of PrettyPrinter is always passed into the method.
+            This is what you use to determine what gets printed.
+            pp.text('text') adds non-breaking text to the output.
+            pp.breakable() either adds a whitespace or breaks here.
+            pp.pretty(obj) pretty prints another object.
+            with pp.group(4, 'text', 'text') groups items into an intended set
+            on multiple lines.
+
+        cycle : bool
+            This is True when the pretty printer detects a cycle, e.g. to help
+            you avoid infinite loops. For example, your _repr_pretty_ method
+            may call pp.pretty to print a sub-object, and that object might
+            also call pp.pretty to print this object. Then cycle would be True
+            and you know not to make any further recursive calls.
+        """
+        pp.text(self.description)
+
+    @property
+    def description(self) -> str:
+        """A description of the current configuration."""
+        objects = [obj.name for obj in self.objects]
+        return textwrap.dedent(
+            f"""\
+            Objects
+            -------
+            * Allow log messages at level: {self.level}
+            * Show messages from objects: {objects}
+
+            Loggers
+            -------
+            * Block these loggers entirely: {self.logger_blacklist}
+            * Allow these noisy loggers: {self.logger_whitelist}
+            * Hush loggers with {self.noisy_threshold_1s} messages in 1s
+            * Hush loggers with {self.noisy_threshold_10s} messages in 10s
+            * Hush loggers with {self.noisy_threshold_60s} messages in 60s
+            * These loggers have been identified as noisy:
+            {list(self.noisy_loggers)}
+
+            Usage
+            -----
+            * To allow a noisy logger through:
+                >>> filter.logger_whitelist.append('logger_name')
+            * To always filter out a logger:
+                >>> filter.logger_blacklist.append('logger_name')
+            * To whitelist specific ophyd objects:
+                >>> filter.objects = [obj1, obj2]
+            """.rstrip()
         )
 
     def disable(self) -> None:
@@ -436,7 +493,7 @@ class ObjectFilter(logging.Filter):
         should_show = (
             record.levelno >= self._whitelist_all_levelno or
             name in self.object_names
-        ) and name not in self.blacklist
+        ) and name not in self.logger_blacklist
 
         if should_show:
             self.name_to_log_count_1s[name] += 1
