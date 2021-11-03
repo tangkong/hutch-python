@@ -280,8 +280,8 @@ def load_conf(conf, hutch_dir=None, args=None):
             set_console_level=log_setup.set_console_level,
             debug_mode=log_setup.debug_mode,
             debug_context=log_setup.debug_context,
-            filter=log_setup.get_console_handler().filters[0],
-            file_filter=log_setup.get_debug_handler().filters[0],
+            filter=log_setup.get_object_filter("console"),
+            file_filter=log_setup.get_object_filter("debug"),
         )
     )
 

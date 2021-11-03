@@ -522,6 +522,30 @@ def find_root_object_filters() -> Generator[
                 yield handler, filter
 
 
+def get_object_filter(name: str) -> Optional[ObjectFilter]:
+    """
+    Get a specific object filter instance, if available.
+
+    Parameters
+    ----------
+    name : str
+        The root logger handler name - {"console", "debug"}.
+        See ``logging.yml`` for more information.
+    """
+    try:
+        handler = get_handler(name)
+    except RuntimeError:
+        ...
+    else:
+        filters = [
+            flt for flt in handler.filters
+            if isinstance(flt, ObjectFilter)
+        ]
+        if filters:
+            return filters[0]
+    return None
+
+
 def log_objects_off() -> None:
     """
     Return to default logging behavior and do not treat objects specially.
