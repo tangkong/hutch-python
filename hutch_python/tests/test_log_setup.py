@@ -229,7 +229,7 @@ def test_log_noisy(caplog, object_filter: log_setup.ObjectFilter):
     caplog.clear()
     object_filter._count_update()
     assert "Hushing noisy logger" in caplog.text
-    assert "hutch_python.tests.test_log_setup" in caplog.text
+    assert logger.name in caplog.text
 
     assert logger.name in object_filter.noisy_loggers
 
