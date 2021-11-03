@@ -1,4 +1,5 @@
 import logging
+import queue
 from logging.handlers import QueueHandler
 from pathlib import Path
 
@@ -197,3 +198,55 @@ def test_log_objects(monkeypatch, log_queue):
         "shown-message-2",
         "No longer recording log messages from obj",
     }
+
+
+@pytest.fixture(scope="function")
+def object_filter(
+    monkeypatch, log_queue: queue.Queue
+) -> log_setup.ObjectFilter:
+    def no_op(*args, **kwargs):
+        ...
+
+    monkeypatch.setattr(log_setup.ObjectFilter, "_count_update_thread", no_op)
+    object_filter = log_setup.ObjectFilter()
+    handler = setup_queue_console()
+    handler.addFilter(object_filter)
+    assert_is_info(log_queue)
+    object_filter._count_update()
+    return object_filter
+
+
+def test_log_noisy(caplog, object_filter: log_setup.ObjectFilter):
+    object_filter.noisy_threshold_1s = 5
+
+    assert logger.name not in object_filter.noisy_loggers
+
+    for i in range(10):
+        logger.warning("Warning")
+
+    assert object_filter.name_to_log_count_1s[logger.name] == 10
+
+    caplog.clear()
+    object_filter._count_update()
+    assert "Hushing noisy logger" in caplog.text
+    assert "hutch_python.tests.test_log_setup" in caplog.text
+
+    assert logger.name in object_filter.noisy_loggers
+
+
+def test_log_noisy_whitelist(caplog, object_filter: log_setup.ObjectFilter):
+    object_filter.noisy_threshold_1s = 5
+    object_filter.whitelist = ["hutch_python.tests.test_log_setup"]
+
+    # Exceed the threshold of log messages
+    for i in range(10):
+        logger.warning("Warning")
+
+    assert object_filter.name_to_log_count_1s[logger.name] == 10
+
+    object_filter._count_update()
+
+    # But the logger isn't considered noisy - as it's whitelisted
+    assert logger.name not in object_filter.noisy_loggers
+    logger.warning("This should be whitelisted")
+    assert "This should be whitelisted" in caplog.text

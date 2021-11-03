@@ -239,19 +239,20 @@ class ObjectFilter(logging.Filter):
         If a single ophyd object logs over ``noisy_threshold_60s`` log messages
         in 60 seconds, consider it a noisy logger and silence it.
 
-    logger_whitelist : list of str, optional
-        Logger names that are not subject to the thresholds above.
+    whitelist : list of str, optional
+        Logger or object names that are not subject to the thresholds above.
 
-    logger_blacklist : list of str, optional
-        Logger names that should always be filtered out.
+    blacklist : list of str, optional
+        Logger or object names that should always be filtered out.
 
     Attributes
     ----------
-    logger_blacklist : list of str
+    blacklist : list of str
         Logger names that should always be filtered out.
 
-    logger_whitelist : list of str
-        List of noisy loggers that are exempt from the noise thresholds.
+    whitelist : list of str
+        List of noisy loggers or object names that are exempt from the noise
+        thresholds.
 
     noisy_loggers: set of str
         Loggers marked as noisy and to be filtered out, unless in the
@@ -269,9 +270,9 @@ class ObjectFilter(logging.Filter):
     noisy_threshold_1s: int
     noisy_threshold_10s: int
     noisy_threshold_60s: int
-    logger_whitelist: list[str]
+    whitelist: list[str]
     noisy_loggers: set[str]
-    logger_blacklist: set[str]
+    blacklist: list[str]
 
     def __init__(
         self,
@@ -281,8 +282,8 @@ class ObjectFilter(logging.Filter):
         noisy_threshold_1s: int = 20,
         noisy_threshold_10s: int = 50,
         noisy_threshold_60s: int = 100,
-        logger_whitelist: Optional[list[str]] = None,
-        logger_blacklist: Optional[list[str]] = None,
+        whitelist: Optional[list[str]] = None,
+        blacklist: Optional[list[str]] = None,
         allow_other_messages: bool = True
     ):
         self._objects = frozenset(objects)
@@ -295,8 +296,8 @@ class ObjectFilter(logging.Filter):
         self.noisy_threshold_1s = int(noisy_threshold_1s)
         self.noisy_threshold_10s = int(noisy_threshold_10s)
         self.noisy_threshold_60s = int(noisy_threshold_10s)
-        self.logger_whitelist = list(logger_whitelist or [])
-        self.logger_blacklist = list(logger_blacklist or [])
+        self.whitelist = list(whitelist or [])
+        self.blacklist = list(blacklist or [])
         self.noisy_loggers = set()
 
         self._running = True
@@ -329,7 +330,7 @@ class ObjectFilter(logging.Filter):
         )
 
         for noisy_logger in sorted(noisy_loggers):
-            if noisy_logger in self.logger_whitelist:
+            if noisy_logger in self.whitelist:
                 continue
             if noisy_logger in self.noisy_loggers:
                 continue
@@ -338,7 +339,7 @@ class ObjectFilter(logging.Filter):
                 "Hushing noisy logger %r. If you see this often, please "
                 "consider reporting it to your POC or #pcds-help.  If this "
                 "functionality is undesirable, adjust the thresholds or set "
-                "`logger_whitelist`.",
+                "`whitelist`.",
                 noisy_logger
             )
             self.noisy_loggers.add(noisy_logger)
@@ -371,7 +372,7 @@ class ObjectFilter(logging.Filter):
             f"noisy_threshold_1s={self.noisy_threshold_1s}, "
             f"noisy_threshold_10s={self.noisy_threshold_10s}, "
             f"noisy_threshold_60s={self.noisy_threshold_60s}, "
-            f"logger_whitelist={self.logger_whitelist}, "
+            f"whitelist={self.whitelist}, "
             f"noisy_loggers={self.noisy_loggers}"
             f")"
         )
@@ -413,8 +414,8 @@ class ObjectFilter(logging.Filter):
 
             Loggers
             -------
-            * Block these loggers entirely: {self.logger_blacklist}
-            * Allow these noisy loggers: {self.logger_whitelist}
+            * Block these loggers/objects entirely: {self.blacklist}
+            * Allow these noisy loggers/objects: {self.whitelist}
             * Hush loggers with {self.noisy_threshold_1s} messages in 1s
             * Hush loggers with {self.noisy_threshold_10s} messages in 10s
             * Hush loggers with {self.noisy_threshold_60s} messages in 60s
@@ -423,12 +424,14 @@ class ObjectFilter(logging.Filter):
 
             Usage
             -----
-            * To allow a noisy logger through:
-                >>> filter.logger_whitelist.append('logger_name')
-            * To always filter out a logger:
-                >>> filter.logger_blacklist.append('logger_name')
-            * To whitelist specific ophyd objects:
-                >>> filter.objects = [obj1, obj2]
+            * To allow a noisy logger or ophyd device through:
+                >>> logs.filter.whitelist.append('logger_name')
+            * To always filter out a logger or ophyd device:
+                >>> logs.filter.blacklist.append('logger_name')
+            * To focus on specific ophyd objects:
+                >>> logs.log_objects(obj1, obj2)
+            * To stop
+                >>> logs.log_objects_off()
             """.rstrip()
         )
 
@@ -477,23 +480,28 @@ class ObjectFilter(logging.Filter):
     def filter(self, record: logging.LogRecord) -> bool:
         name: Optional[str] = getattr(record, "ophyd_object_name", None)
         if name is None or name == OBJECT_NAME_STANDIN:
-            return self.allow_other_messages
+            should_show = (
+                self.allow_other_messages and
+                name not in self.blacklist
+            )
+            name = record.name
+        else:
+            if record.levelno == logging.INFO:
+                # This is rather dastardly, but we consider ophydobj INFO to be
+                # closer to DEBUG.  Make it so.
+                record.levelno = logging.DEBUG
+                record.levelname = "DEBUG"
 
-        if record.levelno == logging.INFO:
-            # This is rather dastardly, but we consider ophydobj INFO to be
-            # closer to DEBUG.  Make it so.
-            record.levelno = logging.DEBUG
-            record.levelname = "DEBUG"
+            should_show = (
+                record.levelno >= self._whitelist_all_levelno or
+                name in self.object_names
+            ) and name not in self.blacklist
 
         is_noisy = (
             name in self.noisy_loggers and
-            name not in self.noisy_logger_whitelist
+            name not in self.whitelist and
+            name not in self.object_names
         )
-
-        should_show = (
-            record.levelno >= self._whitelist_all_levelno or
-            name in self.object_names
-        ) and name not in self.logger_blacklist
 
         if should_show:
             self.name_to_log_count_1s[name] += 1

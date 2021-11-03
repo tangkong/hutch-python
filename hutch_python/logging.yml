@@ -33,8 +33,22 @@ handlers:
 filters:
   ophyd_object_filter:
     (): hutch_python.log_setup.ObjectFilter
-    allow_other_messages: True
     level: DEBUG
+    # Allow these loggers through, even if noisy:
+    whitelist: ["pcdsdevices.interface", "hutch_python.utils"]
+    # Do not show these loggers (or ophyd device names):
+    blacklist: []
+    # Mark loggers / ophyd objects as "noisy" if they reach message levels
+    # above the given thresholds for the listed duration:
+    noisy_threshold_1s: 20
+    noisy_threshold_10s: 50
+    noisy_threshold_60s: 100
+    # Messages above this level will be whitelisted. Noisy thresholds still
+    # apply.
+    whitelist_all_level: "WARNING"
+    # Non-noisy, non-ophyd loggers will be allowed through if this is enabled.
+    # This should remain "True" for standard hutch-python usage.
+    allow_other_messages: True
 
 root:
   level: 5
