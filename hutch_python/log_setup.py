@@ -271,7 +271,7 @@ class ObjectFilter(logging.Filter):
     noisy_threshold_10s: int
     noisy_threshold_60s: int
     whitelist: list[str]
-    noisy_loggers: set[str]
+    noisy_loggers: dict[str, int]
     blacklist: list[str]
 
     def __init__(
@@ -298,7 +298,7 @@ class ObjectFilter(logging.Filter):
         self.noisy_threshold_60s = int(noisy_threshold_10s)
         self.whitelist = list(whitelist or [])
         self.blacklist = list(blacklist or [])
-        self.noisy_loggers = set()
+        self.noisy_loggers = {}
 
         self._running = True
         self._timer_index = 0
@@ -339,10 +339,10 @@ class ObjectFilter(logging.Filter):
                 "Hushing noisy logger %r. If you see this often, please "
                 "consider reporting it to your POC or #pcds-help.  If this "
                 "functionality is undesirable, adjust the thresholds or set "
-                "`whitelist`.",
+                "`logs.filter.whitelist`.",
                 noisy_logger
             )
-            self.noisy_loggers.add(noisy_logger)
+            self.noisy_loggers.setdefault(noisy_logger, 0)
 
         self._timer_index = (self._timer_index + 1) % 60
         if self._timer_index == 0:
@@ -405,6 +405,10 @@ class ObjectFilter(logging.Filter):
     def description(self) -> str:
         """A description of the current configuration."""
         objects = [obj.name for obj in self.objects]
+        noisy_loggers = ("\n" + 14 * " ").join(
+            f"{logger!r}: {count} messages"
+            for logger, count in self.noisy_loggers.items()
+        )
         return textwrap.dedent(
             f"""\
             Objects
@@ -420,7 +424,7 @@ class ObjectFilter(logging.Filter):
             * Hush loggers with {self.noisy_threshold_10s} messages in 10s
             * Hush loggers with {self.noisy_threshold_60s} messages in 60s
             * These loggers have been identified as noisy:
-            {list(self.noisy_loggers)}
+              {noisy_loggers}
 
             Usage
             -----
@@ -507,6 +511,10 @@ class ObjectFilter(logging.Filter):
             self.name_to_log_count_1s[name] += 1
             self.name_to_log_count_10s[name] += 1
             self.name_to_log_count_60s[name] += 1
+
+        if is_noisy:
+            # Avoid using += here in case `noisy_loggers` gets cleared.
+            self.noisy_loggers[name] = self.noisy_loggers.get(name, 0) + 1
 
         return should_show and not is_noisy
 
