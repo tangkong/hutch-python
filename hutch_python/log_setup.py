@@ -34,12 +34,14 @@ import threading
 import time
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Generator, Iterable, Optional, Union
+from typing import Generator, Iterable, Optional, TypeVar, Union
 
 import coloredlogs
 import ophyd
 import pcdsutils.log
 import yaml
+from pcdsutils.log import (LogWarningLevelFilter,
+                           OphydCallbackExceptionDemoter, validate_log_level)
 
 from . import constants
 from .utils import get_fully_qualified_domain_name
@@ -162,40 +164,73 @@ def setup_logging() -> None:
     # user or other log files.
     central_logger.propagate = False
 
+    # Configure the warning redirect
+    pcdsutils.log.install_log_warning_handler()
+
     logging.config.dictConfig(config)
     noisy_loggers = ['ophyd.event_dispatcher', 'parso',
                      'pyPDB.dbd.yacc', 'bluesky']
     hush_noisy_loggers(noisy_loggers)
 
 
-def validate_log_level(level: Union[str, int]) -> int:
-    '''
-    Return a logging level integer for level comparison.
+FilterType = TypeVar['FilterType', logging.Filter]
+
+
+def find_root_filters(
+    cls: type[FilterType],
+) -> Generator[tuple[logging.Handler, FilterType], None, None]:
+    """
+    Find all filters of a given class configured on the root logger.
+
+    This is useful as we configure the filters in ``logging.yaml``.
 
     Parameters
     ----------
-    level : str or int
-        The logging level string or integer value.
+    cls: type
+        The logging.Filter subclass to search for.
 
-    Returns
-    -------
-    log_level : int
-        The integral log level.
-
-    Raises
+    Yields
     ------
-    ValueError
-        If the logging level is invalid.
-    '''
-    if isinstance(level, int):
-        return level
-    if isinstance(level, str):
-        levelno = logging.getLevelName(level)
+    handler : logging.Handler
+    filter : logging.Filter
+        This will always be an instance of the input cls type.
+    """
+    for handler in logging.root.handlers:
+        for filter in handler.filters:
+            if isinstance(filter, cls):
+                yield handler, filter
 
-    if not isinstance(levelno, int):
-        raise ValueError("Invalid logging level (use e.g., DEBUG or 6)")
 
-    return levelno
+def find_root_warning_filters() -> Generator[
+    tuple[logging.Handler, LogWarningLevelFilter], None, None
+]:
+    """
+    Find all ``LogWarningLevelFilter``s configured on the root logger.
+
+    This is useful as we configure the filters in ``logging.yaml``.
+
+    Yields
+    ------
+    handler : logging.Handler
+    filter : pcdsutils.log.LogWarningLevelFilter
+    """
+    yield from find_root_filters(LogWarningLevelFilter)
+
+
+def find_root_callback_filters() -> Generator[
+    tuple[logging.Handler, OphydCallbackExceptionDemoter], None, None
+]:
+    """
+    Find all ``OphydCallbackExceptionDemoter``s configured on the root logger.
+
+    This is useful as we configure the filters in ``logging.yaml``.
+
+    Yields
+    ------
+    handler : logging.Handler
+    filter : pcdsutils.log.OphydCallbackExceptionDemoter
+    """
+    yield from find_root_filters(OphydCallbackExceptionDemoter)
 
 
 class ObjectFilter(logging.Filter):
@@ -532,10 +567,7 @@ def find_root_object_filters() -> Generator[
     handler : logging.Handler
     filter : ObjectFilter
     """
-    for handler in logging.root.handlers:
-        for filter in handler.filters:
-            if isinstance(filter, ObjectFilter):
-                yield handler, filter
+    yield from find_root_filters(ObjectFilter)
 
 
 def get_object_filter(name: str) -> Optional[ObjectFilter]:

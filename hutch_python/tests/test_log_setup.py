@@ -6,15 +6,16 @@ from pathlib import Path
 import ophyd
 import pytest
 from conftest import restore_logging
+from pcdsutils.log import LogWarningLevelFilter, OphydCallbackExceptionDemoter
 
 from hutch_python import log_setup
-from hutch_python.log_setup import (configure_log_directory, debug_context,
-                                    debug_mode, debug_wrapper,
-                                    get_console_handler, get_console_level,
-                                    get_console_level_name, get_debug_handler,
-                                    get_session_logfiles, log_objects,
-                                    log_objects_off, set_console_level,
-                                    setup_logging)
+from hutch_python.log_setup import (ObjectFilter, configure_log_directory,
+                                    debug_context, debug_mode, debug_wrapper,
+                                    find_root_filters, get_console_handler,
+                                    get_console_level, get_console_level_name,
+                                    get_debug_handler, get_session_logfiles,
+                                    log_objects, log_objects_off,
+                                    set_console_level, setup_logging)
 
 from .conftest import skip_if_win32_generic
 
@@ -250,3 +251,14 @@ def test_log_noisy_whitelist(caplog, object_filter: log_setup.ObjectFilter):
     assert logger.name not in object_filter.noisy_loggers
     logger.warning("This should be whitelisted")
     assert "This should be whitelisted" in caplog.text
+
+
+@pytest.mark.parametrize(
+    'filter_cls',
+    (ObjectFilter, LogWarningLevelFilter, OphydCallbackExceptionDemoter),
+)
+def test_filter_installed(filter_cls):
+    with restore_logging():
+        setup_logging()
+        filts = list(find_root_filters(filter_cls))
+    assert filts, f"Did not find any {filter_cls.__name__} filters"
