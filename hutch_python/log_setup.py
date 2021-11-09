@@ -173,7 +173,7 @@ def setup_logging() -> None:
     hush_noisy_loggers(noisy_loggers)
 
 
-FilterType = TypeVar['FilterType', logging.Filter]
+FilterType = TypeVar('FilterType')
 
 
 def find_root_filters(
@@ -192,7 +192,7 @@ def find_root_filters(
     Yields
     ------
     handler : logging.Handler
-    filter : logging.Filter
+    filter : cls
         This will always be an instance of the input cls type.
     """
     for handler in logging.root.handlers:
