@@ -27,7 +27,7 @@ Device Console Logging Configuration
 ------------------------------------
 Hutch Python has some built-in spam prevention, but sometimes you'll find
 yourself wanting to get rid of specific object's console logs, typically
-because they are distracting an irrelevant to what you're trying to
+because they are distracting and irrelevant to what you're trying to
 accomplish. Other times you'll want to focus on specific objects, or
 perhaps turn off the console logging entirely. All of these are possible
 using the ``logs`` namespace.
