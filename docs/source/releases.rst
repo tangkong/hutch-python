@@ -1,6 +1,30 @@
 Release History
 ###############
 
+v1.13.0 (2021-11-10)
+====================
+
+Features
+--------
+- Noisy loggers will automatically be filtered based on message rate metrics
+  as to not disturb the user.
+- Warnings will be redirected to the logging stream, making them show up
+  in the log files.
+- Warnings will only be shown once each per session per warning source,
+  rather than after every IPython line, via demoting them to DEBUG level
+  in the console, as to not disturb the user.
+- Callback exception log messages will be demoted to DEBUG level in the
+  console as to not disturb the user.
+
+Fixes and Maintenance
+---------------------
+- Add documentation about the log namespace.
+- Fix an issue where certain helpful namespaces inside of helpful namespaces
+  in specific situations would not render properly.
+- Fix various issues with the CI and move it to Python 3.9 only.
+- Remove no longer needed inflection dependency
+
+
 v1.12.0 (2021-09-28)
 ====================
 
