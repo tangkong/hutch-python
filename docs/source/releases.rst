@@ -306,7 +306,7 @@ v0.7.0 (2018-08-06)
 
 Features
 --------
-- Add a `ScanVars` class for the legacy scan pvs tie-in.
+- Add a ``ScanVars`` class for the legacy scan pvs tie-in.
 - Automatically load all cameras defined in the camviewer config file.
 - Add the ``--exp`` arg for forcing the active experiment for the duration
   of a session.

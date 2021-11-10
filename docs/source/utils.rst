@@ -10,6 +10,7 @@ utils.py
    safe_load
    get_current_experiment
    IterableNamespace
+   HelpfulNamespace
    count_ns_leaves
    extract_objs
    find_object
