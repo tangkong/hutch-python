@@ -15,9 +15,15 @@ to ``{{LOG_DIR}}/year_month/user_timestamp.log``:
 
 Log to both the above file and console:
 * Any INFO, WARNING, ERROR, CRITICAL messages
+* By way of ``pcdsutils.log.install_log_warning_handler``, log all calls to
+  ``warnings.warn`` at WARNING level
 
 console exceptions:
 * ophydobject INFO should be treated as DEBUG
+* loggers which exceed the configurable log rate thresholds should be
+  filtered out with an accompanying initial notification
+* repeat warning logs and all callback exception logs should be treated as
+  DEBUG instead of as WARNING and ERROR respectively
 
 Hush entirely - neither the file nor the console should see:
   - ophyd.event_dispatcher

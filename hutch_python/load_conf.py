@@ -99,19 +99,27 @@ def load_conf(conf, hutch_dir=None, args=None):
     - Use ``hutch`` key to create ``hutch.db`` importable namespace to
       stash the objects. This will be literally ``hutch.db`` if hutch is
       not provided, or the hutch name e.g. ``mfx.db``.
+    - Evaluate the settings to determine which kind of daq object to create
+      later.
     - Load debug tools
     - Load options
     - Set ophyd signal default timeouts
+    - Create a ``logs`` namespace that allows the user to configure the
+      logging settings.
     - Create a ``RunEngine``, ``RE``
-    - Import ``plan_defaults`` and include as ``p``, ``plans``
+    - Import ``plan_defaults`` and include ``bp``, ``bps``, and ``bpp``
     - Create a ``daq`` object with ``RE`` registered.
     - Create a ``scan_pvs`` object, and ``enable`` it.
     - Use ``hutch`` and ``daq_platform`` keys to create the ``elog`` object
       and configure it to match the correct experiment.
+    - Load the shared global devices for LCLS
     - Use ``db`` key to load devices from the ``happi`` beamline database
       and create a ``hutch_beampath`` object from ``lightpath``
+    - Create an ``archive`` object for interfacing with the
+      Archiver Appliance
     - Use ``hutch`` key to load detector objects from the ``camviewer``
       configuration file.
+    - Load some simulated hardware and place it in the ``sim`` namespace.
     - Use ``experiment`` key to select the current experiment
 
         - If ``experiment`` was missing, autoselect experiment using
@@ -120,6 +128,9 @@ def load_conf(conf, hutch_dir=None, args=None):
     - Use current experiment to load experiment objects from questionnaire
     - Use ``load`` key to bring up the user's ``beamline`` modules
     - Use current experiment to load experiment file
+    - Create some default groups
+    - Configure and load the position presets
+    - Write the db.txt file to note what was loaded
 
     If a conf key is missing, we'll note it in a ``logger.info`` message.
     If an extra conf entry is found, we'll note it in a ``logger.warning``
