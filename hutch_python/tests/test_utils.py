@@ -5,6 +5,8 @@ import pytest
 
 from hutch_python import utils
 
+from .conftest import skip_if_win32_generic
+
 logger = logging.getLogger(__name__)
 _TEST = 4
 
@@ -21,6 +23,7 @@ def test_safe_load():
     assert apples == 4
 
 
+@skip_if_win32_generic
 def test_get_current_experiment(fake_curexp_script):
     logger.debug('test_get_current_experiment')
     assert utils.get_current_experiment('tst') == 'tstlr1215'

@@ -33,7 +33,7 @@ requirements:
     - pcdscalc >=0.3.0
     - pcdsdaq >=2.3.0
     - pcdsdevices >=4.7.0
-    - pcdsutils >=0.5.0
+    - pcdsutils >=0.6.0
     - psdaq-control-minimal >=3.3.19
     - psdm_qs_cli >=0.3.1
     - pyfiglet >=0.8.0

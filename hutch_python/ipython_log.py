@@ -201,7 +201,7 @@ def load_ipython_extension(ipython):
     Initialize the `IPythonLogger`.
 
     This involves adding the ``INPUT`` log level and registering
-    `IPythonLogger.log` to run on the ``post-execute`` event.
+    ``IPythonLogger.log`` to run on the ``post-execute`` event.
 
     Parameters
     ----------

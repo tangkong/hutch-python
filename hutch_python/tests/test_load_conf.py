@@ -13,7 +13,8 @@ import hutch_python.qs_load
 from hutch_python.load_conf import load, load_conf
 
 from .conftest import (TST_CAM_CFG, BlueskyScan, ELog, QSBackend, lightpath,
-                       requires_elog, requires_psdaq, skip_if_win32_pcdsdaq)
+                       requires_elog, requires_psdaq, skip_if_win32_generic,
+                       skip_if_win32_pcdsdaq)
 
 logger = logging.getLogger(__name__)
 
@@ -129,6 +130,7 @@ def test_skip_failures():
                    bananas='dole'))
 
 
+@skip_if_win32_generic
 def test_auto_experiment(fake_curexp_script):
     logger.debug('test_auto_experiment')
     hutch_python.qs_load.QSBackend = QSBackend
