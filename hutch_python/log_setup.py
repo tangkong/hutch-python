@@ -14,11 +14,13 @@ to ``{{LOG_DIR}}/year_month/user_timestamp.log``:
   - Exception: Only whitelisted ophyd object logs, down to DEBUG level (or 5)
 
 Log to both the above file and console:
+
 * Any INFO, WARNING, ERROR, CRITICAL messages
 * By way of ``pcdsutils.log.install_log_warning_handler``, log all calls to
   ``warnings.warn`` at WARNING level
 
 console exceptions:
+
 * ophydobject INFO should be treated as DEBUG
 * loggers which exceed the configurable log rate thresholds should be
   filtered out with an accompanying initial notification
