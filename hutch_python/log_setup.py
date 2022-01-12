@@ -272,15 +272,18 @@ class ObjectFilter(logging.Filter):
 
     noisy_threshold_1s : int, optional
         If a single ophyd object logs over ``noisy_threshold_1s`` log messages
-        in one second, consider it a noisy logger and silence it.
+        in one second, consider it a noisy logger and silence it.  May be
+        disabled by setting to 0.
 
     noisy_threshold_10s : int, optional
         If a single ophyd object logs over ``noisy_threshold_10s`` log messages
-        in ten seconds, consider it a noisy logger and silence it.
+        in ten seconds, consider it a noisy logger and silence it.  May be
+        disabled by setting to 0.
 
     noisy_threshold_60s : int, optional
         If a single ophyd object logs over ``noisy_threshold_60s`` log messages
-        in 60 seconds, consider it a noisy logger and silence it.
+        in 60 seconds, consider it a noisy logger and silence it.  May be
+        disabled by setting to 0.
 
     whitelist : list of str, optional
         Logger or object names that are not subject to the thresholds above.
@@ -361,15 +364,15 @@ class ObjectFilter(logging.Filter):
         noisy_loggers = set(
             name
             for name, count in tuple(self.name_to_log_count_1s.items())
-            if count > self.noisy_threshold_1s
+            if count > self.noisy_threshold_1s > 0
         ) | set(
             name
             for name, count in tuple(self.name_to_log_count_10s.items())
-            if count > self.noisy_threshold_10s
+            if count > self.noisy_threshold_10s > 0
         ) | set(
             name
             for name, count in tuple(self.name_to_log_count_60s.items())
-            if count > self.noisy_threshold_60s
+            if count > self.noisy_threshold_60s > 0
         )
 
         for noisy_logger in sorted(noisy_loggers):

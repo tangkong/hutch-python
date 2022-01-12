@@ -28,7 +28,7 @@ handlers:
     backupCount: 10
     mode: a
     delay: 0
-    filters: [ophyd_object_filter]
+    filters: [ophyd_object_filter_for_file]
 
 filters:
   ophyd_object_filter:
@@ -43,6 +43,23 @@ filters:
     noisy_threshold_1s: 20
     noisy_threshold_10s: 50
     noisy_threshold_60s: 100
+    # Messages above this level will be whitelisted. Noisy thresholds still
+    # apply.
+    whitelist_all_level: "WARNING"
+    # Non-noisy, non-ophyd loggers will be allowed through if this is enabled.
+    # This should remain "True" for standard hutch-python usage.
+    allow_other_messages: True
+  ophyd_object_filter_for_file:
+    (): hutch_python.log_setup.ObjectFilter
+    level: DEBUG
+    # Allow these loggers through, even if noisy:
+    whitelist: ["pcdsdevices.interface", "hutch_python.utils"]
+    # Do not show these loggers (or ophyd device names):
+    blacklist: []
+    # Disable the noise threshold for file logging by setting thresholds to 0:
+    noisy_threshold_1s: 0
+    noisy_threshold_10s: 0
+    noisy_threshold_60s: 0
     # Messages above this level will be whitelisted. Noisy thresholds still
     # apply.
     whitelist_all_level: "WARNING"
