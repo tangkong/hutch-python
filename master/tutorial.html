@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>What to Expect When You are Expecting a New Hutch Python &mdash; hutch-python 1.13.0 documentation</title>
+  <title>What to Expect When You are Expecting a New Hutch Python &mdash; hutch-python 1.13.0+2.g189b142 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -15,7 +15,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -32,7 +32,7 @@
             <a href="index.html" class="icon icon-home"> hutch-python
           </a>
               <div class="version">
-                1.13.0
+                1.13.0+2.g189b142
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -333,7 +333,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -408,31 +408,26 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">%</span><span class="k">matplotlib</span> notebook
-
-</pre></div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> notebook
+<br/></pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">hutch_python.load_conf</span> <span class="kn">import</span> <span class="n">load</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">hutch_python.load_conf</span> <span class="kn">import</span> <span class="n">load</span>
 <span class="kn">from</span> <span class="nn">hutch_python.log_setup</span> <span class="kn">import</span> <span class="n">setup_logging</span><span class="p">,</span> <span class="n">debug_mode</span>
 <span class="kn">from</span> <span class="nn">pcdsdaq.sim</span> <span class="kn">import</span> <span class="n">set_sim_mode</span> <span class="k">as</span> <span class="n">set_daq_sim</span>
 <span class="kn">from</span> <span class="nn">bluesky.utils</span> <span class="kn">import</span> <span class="n">install_nb_kicker</span>
-
-</pre></div>
+<br/></pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">setup_logging</span><span class="p">(</span><span class="n">dir_logs</span><span class="o">=</span><span class="s1">&#39;logs&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">setup_logging</span><span class="p">(</span><span class="n">dir_logs</span><span class="o">=</span><span class="s1">&#39;logs&#39;</span><span class="p">)</span>
 <span class="n">install_nb_kicker</span><span class="p">()</span>
 <span class="n">set_daq_sim</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;conf.yml&#39;</span><span class="p">))</span>
@@ -517,8 +512,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="n">mfx_dg1_pim</span><span class="o">.</span><span class="n">inserted</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">mfx_dg1_pim</span><span class="o">.</span><span class="n">inserted</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -535,8 +529,7 @@ False
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="n">slits</span><span class="p">:</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">slit</span> <span class="ow">in</span> <span class="n">slits</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">slit</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">slit</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -556,8 +549,7 @@ mfx_dg2_upstream_slits (2.9999000000000002, 2.9997000000000003)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">mfx</span><span class="o">.</span><span class="n">dg1</span><span class="p">:</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">mfx</span><span class="o">.</span><span class="n">dg1</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -579,8 +571,7 @@ mfx_dg1_valve_2
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pcdsdevices.device_types</span> <span class="kn">import</span> <span class="n">GateValve</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pcdsdevices.device_types</span> <span class="kn">import</span> <span class="n">GateValve</span>
 <span class="kn">from</span> <span class="nn">hutch_python.namespace</span> <span class="kn">import</span> <span class="n">class_namespace</span>
 
 <span class="n">valves</span> <span class="o">=</span> <span class="n">class_namespace</span><span class="p">(</span><span class="n">GateValve</span><span class="p">)</span>
@@ -610,8 +601,7 @@ mfx_mxt_valve OUT
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mfx_beampath</span><span class="o">.</span><span class="n">show_devices</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mfx_beampath</span><span class="o">.</span><span class="n">show_devices</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -672,8 +662,7 @@ mfx_mxt_valve OUT
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">daq</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">daq</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
 <span class="n">daq</span><span class="o">.</span><span class="n">begin</span><span class="p">(</span><span class="n">events</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">daq</span><span class="o">.</span><span class="n">end_run</span><span class="p">()</span>
 </pre></div>
@@ -700,8 +689,7 @@ interfaces and applications in the future.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">mfx_dg1_pim</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">show_info</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mfx_dg1_pim</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">show_info</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -735,17 +723,16 @@ interfaces and applications in the future.</p>
 </pre></div></div>
 </div>
 <p>The LCLS Questionnaire will produce similar looking devices. The difference is that these are loaded directly from the information contained on the PCDS setup page. This means if you would like to change any of these devices simply update the appropriate table and reload your session. The proposal number is retrieved automatically but if you would like to force the configuration to use a different proposal’s setup simply specify it in the <code class="docutils literal notranslate"><span class="pre">conf.yaml</span></code></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">experiment</span><span class="p">:</span>
-     <span class="nt">proposal</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LS21</span>
-     <span class="nt">run</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">experiment</span><span class="p">:</span><span class="w"></span>
+<span class="w">     </span><span class="nt">proposal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LS21</span><span class="w"></span>
+<span class="w">     </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">shield_x</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">show_info</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shield_x</span><span class="o">.</span><span class="n">md</span><span class="o">.</span><span class="n">show_info</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -798,8 +785,7 @@ interfaces and applications in the future.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ophyd.sim</span> <span class="kn">import</span> <span class="n">motor</span><span class="p">,</span> <span class="n">det</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ophyd.sim</span> <span class="kn">import</span> <span class="n">motor</span><span class="p">,</span> <span class="n">det</span>
 </pre></div>
 </div>
 </div>
@@ -808,8 +794,7 @@ interfaces and applications in the future.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">RE</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">count</span><span class="p">([</span><span class="n">det</span><span class="p">],</span> <span class="n">num</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">RE</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">count</span><span class="p">([</span><span class="n">det</span><span class="p">],</span> <span class="n">num</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1635,8 +1620,7 @@ if (IPython.notebook.kernel != null) {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">plan</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">scan</span><span class="p">([</span><span class="n">det</span><span class="p">],</span> <span class="n">motor</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plan</span> <span class="o">=</span> <span class="n">bp</span><span class="o">.</span><span class="n">scan</span><span class="p">([</span><span class="n">det</span><span class="p">],</span> <span class="n">motor</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">RE</span><span class="p">(</span><span class="n">plan</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -2468,8 +2452,7 @@ if (IPython.notebook.kernel != null) {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">RE</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">adaptive_scan</span><span class="p">([</span><span class="n">det</span><span class="p">],</span> <span class="s1">&#39;det&#39;</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">RE</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">adaptive_scan</span><span class="p">([</span><span class="n">det</span><span class="p">],</span> <span class="s1">&#39;det&#39;</span><span class="p">,</span> <span class="n">motor</span><span class="p">,</span>
                     <span class="n">start</span><span class="o">=-</span><span class="mi">15</span><span class="p">,</span>
                     <span class="n">stop</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
                     <span class="n">min_step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
@@ -2576,8 +2559,7 @@ generator adaptive_scan [&#39;4cde65ae&#39;] (scan num: 3)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">RE</span><span class="p">(</span><span class="n">bpp</span><span class="o">.</span><span class="n">daq_wrapper</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">scan</span><span class="p">([</span><span class="n">det</span><span class="p">],</span> <span class="n">motor</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">RE</span><span class="p">(</span><span class="n">bpp</span><span class="o">.</span><span class="n">daq_wrapper</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">scan</span><span class="p">([</span><span class="n">det</span><span class="p">],</span> <span class="n">motor</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
@@ -2624,8 +2606,7 @@ generator scan [&#39;cd9c1873&#39;] (scan num: 4)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">daq</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">events</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">daq</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">events</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
 <span class="n">RE</span><span class="p">(</span><span class="n">bp</span><span class="o">.</span><span class="n">scan</span><span class="p">([</span><span class="n">daq</span><span class="p">,</span> <span class="n">det</span><span class="p">],</span> <span class="n">motor</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
 </pre></div>
 </div>
