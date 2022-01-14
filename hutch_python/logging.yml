@@ -40,9 +40,9 @@ filters:
     blacklist: []
     # Mark loggers / ophyd objects as "noisy" if they reach message levels
     # above the given thresholds for the listed duration:
-    noisy_threshold_1s: 20
-    noisy_threshold_10s: 50
-    noisy_threshold_60s: 100
+    noisy_threshold_1s: 0
+    noisy_threshold_10s: 0
+    noisy_threshold_60s: 0
     # Messages above this level will be whitelisted. Noisy thresholds still
     # apply.
     whitelist_all_level: "WARNING"
