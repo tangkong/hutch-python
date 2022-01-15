@@ -1,6 +1,14 @@
 Release History
 ###############
 
+v1.13.1 (2022-??-??)
+====================
+
+Fixes and Maintenance
+---------------------
+- Noisy logger detection is now configured but disabled by default.
+
+
 v1.13.0 (2021-11-10)
 ====================
 
