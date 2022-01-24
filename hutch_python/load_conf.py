@@ -352,7 +352,7 @@ def load_conf(conf, hutch_dir=None, args=None):
             daq_control = DaqControl(
                 host=daq_host,
                 platform=daq_platform,
-                timeout=1000,
+                timeout=10000,
             )
             instr = daq_control.getInstrument()
             if instr is None:
