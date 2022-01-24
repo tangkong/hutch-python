@@ -28,6 +28,14 @@ INPUT_LEVEL = 5
 
 SUCCESS_LEVEL = 35
 
-VALID_KEYS = ('hutch', 'db', 'load', 'experiment', 'daq_platform')
+VALID_KEYS = (
+    'hutch',
+    'db',
+    'load',
+    'experiment',
+    'daq_platform',
+    'daq_type',
+    'daq_host',
+)
 NO_LOG_EXCEPTIONS = (KeyboardInterrupt, SystemExit)
 LOG_DOMAINS = {".pcdsn", ".slac.stanford.edu"}
