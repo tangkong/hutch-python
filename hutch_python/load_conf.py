@@ -34,6 +34,7 @@ from .namespace import class_namespace
 from .ophyd_settings import setup_ophyd
 from .options import load_options
 from .qs_load import get_qs_objs
+from .run_wrapper import run_scan_namespace
 from .user_load import get_user_objs
 from .utils import (get_current_experiment, hutch_banner, safe_load,
                     HelpfulNamespace)
@@ -322,11 +323,13 @@ def load_conf(conf, hutch_dir=None, args=None):
             bp=plan_defaults.plans,
             bps=plan_defaults.plan_stubs,
             bpp=plan_defaults.preprocessors,
+            run=run_scan_namespace(RE, plan_defaults.plans)
             )
         cache.doc(
             bp='Namespace of full bluesky plans.',
             bps='Namespace of bluesky plan building blocks (stubs).',
             bpp='Namespace of bluesky plan preprocessors.',
+            run='Wrapped plans for quick running.'
             )
 
     # Inline calculations
