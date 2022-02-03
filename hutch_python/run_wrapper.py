@@ -35,10 +35,14 @@ def run_scan_namespace(
     """
     runners = HelpfulNamespace()
     for name, plan in plan_namespace._get_items():
-        @wraps(plan)
-        def wrapped_plan(*args, **kwargs):
-            if not RE.state.is_idle:
-                RE.abort()
-            return RE(*args, **kwargs)
-        setattr(runners, name, wrapped_plan)
+        setattr(runners, name, run_engine_wrapper(plan))
     return runners
+
+
+def run_engine_wrapper(RE: RunEngine, plan):
+    @wraps(plan)
+    def inner(*args, **kwargs):
+        if not RE.state.is_idle:
+            RE.abort()
+        return RE(plan(*args, **kwargs))
+    return inner
