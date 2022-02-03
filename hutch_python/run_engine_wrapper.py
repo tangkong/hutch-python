@@ -35,7 +35,7 @@ def run_scan_namespace(
     """
     runners = HelpfulNamespace()
     for name, plan in plan_namespace._get_items():
-        setattr(runners, name, run_engine_wrapper(plan))
+        setattr(runners, name, run_engine_wrapper(RE, plan))
     return runners
 
 
