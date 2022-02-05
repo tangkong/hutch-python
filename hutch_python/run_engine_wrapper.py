@@ -97,12 +97,43 @@ def register_namespace(
     plan_namespace: HelpfulNamespace,
     run_namespace: HelpfulNamespace,
 ) -> None:
+    """
+    Pick a RE/namespace set to use for register_plan.
+
+    This is used internally in hutch_python to prime future calls
+    to register_plan.
+
+    Parameters
+    ----------
+    RE : RunEngine
+        The RunEngine to use.
+    plan_namespace : HelpfulNamespace
+        The namespace of normal bluesky plans.
+    run_namespace : HelpfulNamespace
+        The namespace of run-engine-wrapped plans.
+    """
     registry['RE'] = RE
     registry['plan'] = plan_namespace
     registry['run'] = run_namespace
 
 
 def register_plan(plan: Callable, name: str) -> None:
+    """
+    Utility to add user-defined plans to the session namespaces.
+
+    For this work properly, plan must be a generator function, not
+    an open generator.
+
+    The plan itself will be added to the main plans namespace,
+    and a wrapped version will be added to the main run namespace.
+
+    Parameters
+    ----------
+    plan : generator function
+        A generator capable of being used in a bluesky scan.
+    name : str
+        The name to use as the attribute for our plan.
+    """
     setattr(registry['plan'], name, plan)
     setattr(
         registry['run'],
