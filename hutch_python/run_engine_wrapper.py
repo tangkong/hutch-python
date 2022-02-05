@@ -87,3 +87,25 @@ def run_engine_wrapper(RE: RunEngine, plan: Callable) -> Callable:
         except RunEngineInterrupted as exc:
             print(exc)
     return run_scan
+
+
+registry = {}
+
+
+def register_namespace(
+    RE: RunEngine,
+    plan_namespace: HelpfulNamespace,
+    run_namespace: HelpfulNamespace,
+) -> None:
+    registry['RE'] = RE
+    registry['plan'] = plan_namespace
+    registry['run'] = run_namespace
+
+
+def register_plan(plan: Callable, name: str) -> None:
+    setattr(registry['plan'], name, plan)
+    setattr(
+        registry['run'],
+        name,
+        run_engine_wrapper(registry['RE'], plan),
+    )

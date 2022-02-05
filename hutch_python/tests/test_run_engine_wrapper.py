@@ -7,8 +7,8 @@ from bluesky.plans import scan
 from bluesky.utils import RunEngineInterrupted
 from ophyd.sim import motor
 
-from hutch_python.run_engine_wrapper import (run_engine_wrapper,
-                                             run_scan_namespace)
+from hutch_python.run_engine_wrapper import (
+    register_namespace, register_plan, run_engine_wrapper, run_scan_namespace)
 from hutch_python.utils import HelpfulNamespace
 
 
@@ -50,7 +50,44 @@ def test_run_engine_wrapper_from_interrupt(
     do_standard_check(run_scan)
 
 
-def test_run_scan_namespace(RE: RunEngine):
-    normal_ns = HelpfulNamespace(scan=scan)
-    run_ns = run_scan_namespace(RE, normal_ns)
-    do_standard_check(run_ns.scan)
+@pytest.fixture(scope='function')
+def plan_namespace():
+    return HelpfulNamespace(scan=scan)
+
+
+@pytest.fixture(scope='function')
+def run_namespace(RE: RunEngine, plan_namespace: HelpfulNamespace):
+    return run_scan_namespace(
+        RE=RE,
+        plan_namespace=plan_namespace,
+    )
+
+
+def test_run_scan_namespace(run_namespace: HelpfulNamespace):
+    do_standard_check(run_namespace.scan)
+
+
+def test_registry(
+    RE: RunEngine,
+    plan_namespace: HelpfulNamespace,
+    run_namespace: HelpfulNamespace,
+):
+    register_namespace(
+        RE=RE,
+        plan_namespace=plan_namespace,
+        run_namespace=run_namespace,
+    )
+
+    def some_random_plan(*args, **kwargs):
+        yield from scan(*args, **kwargs)
+
+    with pytest.raises(AttributeError):
+        plan_namespace.some_random_plan
+
+    with pytest.raises(AttributeError):
+        run_namespace.some_random_plan
+
+    register_plan(plan=some_random_plan, name='some_random_plan')
+    plan_namespace.some_random_plan
+
+    do_standard_check(run_namespace.some_random_plan)
