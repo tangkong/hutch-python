@@ -8,7 +8,8 @@ from bluesky.utils import RunEngineInterrupted
 from ophyd.sim import motor
 
 from hutch_python.run_engine_wrapper import (
-    register_namespace, register_plan, run_engine_wrapper, run_scan_namespace)
+    ImproperRunWrapperUse, register_namespace, register_plan,
+    run_engine_wrapper, run_scan_namespace)
 from hutch_python.utils import HelpfulNamespace
 
 
@@ -48,6 +49,19 @@ def test_run_engine_wrapper_from_interrupt(
     assert not RE.state.is_idle
 
     do_standard_check(run_scan)
+
+
+def test_run_engine_wrapper_nested_bad(
+    RE: RunEngine,
+    run_scan: Callable,
+):
+    def bad_plan():
+        yield from null()
+        run_scan()
+        yield from null()
+
+    with pytest.raises(ImproperRunWrapperUse):
+        RE(bad_plan())
 
 
 @pytest.fixture(scope='function')

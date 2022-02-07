@@ -79,6 +79,12 @@ def run_engine_wrapper(RE: RunEngine, plan: Callable) -> Callable:
     """
     @wraps(plan)
     def run_scan(*args, **kwargs):
+        if RE.state.is_running:
+            raise ImproperRunWrapperUse(
+                'There is already a scan in progress! Cannot start a new one! '
+                'Either we are improperly nested inside another scan or there '
+                'are multiple threads trying to use the same RE instance.'
+            )
         if not RE.state.is_idle:
             logger.info('Previous scan still open, calling stop')
             RE.stop()
@@ -140,3 +146,7 @@ def register_plan(plan: Callable, name: str) -> None:
         name,
         run_engine_wrapper(registry['RE'], plan),
     )
+
+
+class ImproperRunWrapperUse(RuntimeError):
+    ...
