@@ -92,6 +92,9 @@ def configure_ipython_session():
                        'Methods that create plots will not '
                        'function properly.')
 
+    # Disable reformatting input with black
+    ipy_config.TerminalInteractiveShell.autoformatter = None
+    # Set up tab completion modifications
     configure_tab_completion(ipy_config)
     return ipy_config
 
