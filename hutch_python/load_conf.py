@@ -16,6 +16,8 @@ from bluesky import RunEngine
 from bluesky.callbacks.best_effort import BestEffortCallback
 from bluesky.callbacks.core import LiveTable
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
+import IPython
+from nabs.callbacks import ELogPoster
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdaq.sim import set_sim_mode as set_daq_sim
@@ -395,8 +397,19 @@ def load_conf(conf, hutch_dir=None, args=None):
             else:
                 logger.info("Configuring ELog to post to secondary experiment")
                 kwargs = {'station': '1'}
-            cache(elog=HutchELog.from_conf(hutch.upper(), **kwargs))
-            cache.doc(elog='Elog posting interface object.')
+            el = HutchELog.from_conf(hutch.upper(), **kwargs)
+
+            # ElogPoster runback, disabled by default
+            elogc = ELogPoster(el, IPython.get_ipython())
+
+            RE = cache.objs.RE
+            RE.subscribe(elogc)
+
+            cache(elog=el, elogc=elogc)
+            cache.doc(
+                elog='Elog posting interface object.',
+                elogc='Elog posting RunEngine callback.'
+            )
 
     # Shared global devices for LCLS
     with safe_load('lcls PVs'):
