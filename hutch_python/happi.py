@@ -1,3 +1,4 @@
+import inspect
 import logging
 
 import happi
@@ -62,7 +63,12 @@ def get_happi_objs(db, hutch):
             logger.warning("No items found in database for %s",
                            beamline.upper())
     # Instantiate the devices needed
-    dev_namespace = load_devices(*containers, pprint=False)
+    sig = inspect.signature(load_devices)
+    if "include_load_time" in sig.parameters:
+        kwargs = dict(include_load_time=True, load_time_threshold=0.5)
+    else:
+        kwargs = {}
+    dev_namespace = load_devices(*containers, pprint=False, **kwargs)
     return dev_namespace.__dict__
 
 
