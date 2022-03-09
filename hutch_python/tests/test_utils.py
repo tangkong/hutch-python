@@ -1,7 +1,15 @@
+import asyncio
 import logging
+import os
+import threading
+import time
+from signal import SIGINT
 
+import bluesky.plan_stubs as bps
 import IPython.lib.pretty as pretty
 import pytest
+from bluesky import RunEngine
+from bluesky.utils import RunEngineInterrupted
 
 from hutch_python import utils
 
@@ -119,3 +127,44 @@ def test_hutch_banner():
     logger.debug('test_hutch_banner')
     utils.hutch_banner()
     utils.hutch_banner('mfx')
+
+
+@pytest.fixture(scope='function')
+def RE_abort():
+    loop = asyncio.new_event_loop()
+    loop.set_debug(True)
+    RE = RunEngine({}, loop=loop,
+                   context_managers=[utils.AbortSigintHandler])
+
+    yield RE
+
+    if RE.state != 'idle':
+        RE.halt()
+
+
+def test_abort_RE(RE_abort):
+    def wait_plan():
+        # arbitrarily long wait time
+        yield from bps.sleep(10)
+
+    # get pid so we can send SIGINT to it specifically
+    pid = os.getpid()
+
+    def sigint_signal():
+        time.sleep(2)
+        os.kill(pid, SIGINT)
+
+    # send sigint in a different thread
+    thread = threading.Thread(target=sigint_signal)
+    thread.daemon = True
+    thread.start()
+
+    try:
+        RE_abort(wait_plan())
+    except RunEngineInterrupted:
+        # we expect to interrupt the RunEngine
+        # other exceptions should break the test
+        pass
+
+    assert RE_abort.state == 'idle'
+    assert RE_abort._exit_status == 'abort'
