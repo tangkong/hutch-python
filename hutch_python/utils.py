@@ -7,8 +7,10 @@ import functools
 import inspect
 import logging
 import os
+import signal
 import socket
 import sys
+import threading
 import time
 from contextlib import contextmanager
 from functools import partial
@@ -18,6 +20,7 @@ from types import SimpleNamespace
 
 import prettytable
 import pyfiglet
+from bluesky.utils import SignalHandler
 
 from .constants import (CLASS_SEARCH_PATH, CUR_EXP_SCRIPT, HUTCH_COLORS,
                         SUCCESS_LEVEL)
@@ -433,3 +436,22 @@ def get_fully_qualified_domain_name():
         )
         logger.debug("getfqdn failed", exc_info=True)
         return ""
+
+
+abort_msg = """
+Your RunEngine has been interrupted.  If you aborted the current run (Ctrl+C),
+the RunEngine is ready for use.  If you paused the run, you must resume,
+abort, stop, halt the RunEngine before continuing.
+"""
+
+
+class AbortSigintHandler(SignalHandler):
+    def __init__(self, RE):
+        super().__init__(signal.SIGINT, log=RE.log)
+        self.RE = RE
+
+    def handle_signals(self):
+        # Check for pause requests from keyboard.
+        if self.RE.state.is_running and (not self.RE._interrupted):
+            threading.Thread(target=self.RE.abort(reason='sigint')).start()
+            print("Aborting current run.")
