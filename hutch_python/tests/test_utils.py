@@ -143,28 +143,23 @@ def RE_abort():
 
 
 def test_abort_RE(RE_abort):
+    # get pid so we can send SIGINT to it specifically
+    pid = os.getpid()
+
     def wait_plan():
         # arbitrarily long wait time
         yield from bps.sleep(10)
 
-    # get pid so we can send SIGINT to it specifically
-    pid = os.getpid()
-
-    def sigint_signal():
-        time.sleep(2)
+    def sim_kill():
+        time.sleep(0.05)
         os.kill(pid, SIGINT)
 
     # send sigint in a different thread
-    thread = threading.Thread(target=sigint_signal)
-    thread.daemon = True
-    thread.start()
+    timer = threading.Timer(0.5, sim_kill)
+    timer.start()
 
-    try:
+    with pytest.raises(RunEngineInterrupted):
         RE_abort(wait_plan())
-    except RunEngineInterrupted:
-        # we expect to interrupt the RunEngine
-        # other exceptions should break the test
-        pass
 
     assert RE_abort.state == 'idle'
-    assert RE_abort._exit_status == 'abort'
+    assert RE_abort._exit_status == 'success'
