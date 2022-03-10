@@ -1,6 +1,6 @@
 import logging
 from functools import wraps
-from typing import Callable
+from typing import Any, Callable
 
 from bluesky import RunEngine
 from bluesky.utils import RunEngineInterrupted
@@ -8,40 +8,7 @@ from bluesky.utils import RunEngineInterrupted
 from .utils import HelpfulNamespace
 
 logger = logging.getLogger(__name__)
-
-
-def run_scan_namespace(
-    RE: RunEngine,
-    plan_namespace: HelpfulNamespace,
-) -> HelpfulNamespace:
-    """
-    Create a namespace with shortcuts to run every input plan on the RE.
-
-    This namespace came about because users were creating this sort of
-    thing themselves and losing time over getting the specifics
-    exactly right. It's also quite a lot of overhead to manually wrap
-    every scan that you'd want to use.
-
-    This is an alternative to ipython magics-based plan runners.
-
-    Parameters
-    ----------
-    RE : RunEngine
-        The run engine to use in the shortcut wrappers.
-    plan_namespace : HelpfulNamespace
-        A HelpfulNamespace containing all the plans to wrap.
-
-    Returns
-    -------
-    run_scan_namespace:
-        A mirror of plan_namespace with every plan wrapped for quick calls
-        from the RunEngine.
-    """
-    runners = HelpfulNamespace()
-    for name, plan in plan_namespace._get_items():
-        logger.debug('Wrapping plan %s with run_engine_wrapper.', name)
-        setattr(runners, name, run_engine_wrapper(RE, plan))
-    return runners
+registry = {}
 
 
 def run_engine_wrapper(RE: RunEngine, plan: Callable) -> Callable:
@@ -95,16 +62,20 @@ def run_engine_wrapper(RE: RunEngine, plan: Callable) -> Callable:
     return run_scan
 
 
-registry = {}
+class ImproperRunWrapperUse(RuntimeError):
+    ...
 
 
-def register_namespace(
+def initialize_wrapper_namespaces(
     RE: RunEngine,
     plan_namespace: HelpfulNamespace,
-    run_namespace: HelpfulNamespace,
-) -> None:
+    daq: Any,
+) -> HelpfulNamespace:
     """
     Pick a RE/namespace set to use for register_plan.
+
+    Populate the namespaces appropriately using the original contents of
+    plan_namespace.
 
     This is used internally in hutch_python to prime future calls
     to register_plan.
@@ -115,23 +86,38 @@ def register_namespace(
         The RunEngine to use.
     plan_namespace : HelpfulNamespace
         The namespace of normal bluesky plans.
-    run_namespace : HelpfulNamespace
-        The namespace of run-engine-wrapped plans.
+    daq : Daq
+        The daq object to use as another way to access daq plans.
+
+    Returns
+    -------
+    re : HelpfulNamespace
+        The namespace of run-wrapped scans.
     """
     registry['RE'] = RE
     registry['plan'] = plan_namespace
-    registry['run'] = run_namespace
+    registry['daq'] = daq,
+    registry['re'] = HelpfulNamespace()
+
+    for name, plan in plan_namespace._get_items():
+        logger.debug('Wrapping plan %s with run_engine_wrapper.', name)
+        register_plan(plan=plan, name=name, initial=True)
+
+    return registry['re']
 
 
-def register_plan(plan: Callable, name: str) -> None:
+def register_plan(plan: Callable, name: str, initial: bool = False) -> None:
     """
-    Utility to add user-defined plans to the session namespaces.
+    Utility to add plans to the session namespaces.
 
     For this work properly, plan must be a generator function, not
     an open generator.
 
     The plan itself will be added to the main plans namespace,
     and a wrapped version will be added to the main run namespace.
+    If the plan begins with the string "daq_" and does not clobber
+    existing attributes on the daq object, it will also be grafted
+    onto the daq instance with a truncated name.
 
     Parameters
     ----------
@@ -139,14 +125,30 @@ def register_plan(plan: Callable, name: str) -> None:
         A generator capable of being used in a bluesky scan.
     name : str
         The name to use as the attribute for our plan.
+    initial : bool
+        Whether or not this is the first-time load process.
+        During the first load, we are reading from the original
+        plan namespace, so we shouldn't be filling back to it.
     """
-    setattr(registry['plan'], name, plan)
-    setattr(
-        registry['run'],
-        name,
-        run_engine_wrapper(registry['RE'], plan),
-    )
-
-
-class ImproperRunWrapperUse(RuntimeError):
-    ...
+    if not initial:
+        setattr(registry['plan'], name, plan)
+    wrapped = run_engine_wrapper(registry['RE'], plan)
+    setattr(registry['run'], name, wrapped)
+    daq = registry['daq']
+    if daq is None:
+        return
+    if name.startswith('daq_'):
+        short_name = name.removeprefix('daq_')
+        if hasattr(daq, short_name):
+            logger.warning(
+                'Could not add %s scan to daq, name conflict!',
+                short_name,
+            )
+        else:
+            setattr(daq, short_name, wrapped)
+            try:
+                tab_helper = daq._tab
+            except AttributeError:
+                pass
+            else:
+                tab_helper.add(short_name)

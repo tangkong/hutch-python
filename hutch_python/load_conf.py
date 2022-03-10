@@ -34,8 +34,7 @@ from .namespace import class_namespace
 from .ophyd_settings import setup_ophyd
 from .options import load_options
 from .qs_load import get_qs_objs
-from .run_engine_wrapper import (run_scan_namespace, register_namespace,
-                                 register_plan)
+from .run_engine_wrapper import initialize_wrapper_namespaces, register_plan
 from .user_load import get_user_objs
 from .utils import (get_current_experiment, hutch_banner, safe_load,
                     HelpfulNamespace)
@@ -109,8 +108,10 @@ def load_conf(conf, hutch_dir=None, args=None):
     - Create a ``logs`` namespace that allows the user to configure the
       logging settings.
     - Create a ``RunEngine``, ``RE``
-    - Import ``plan_defaults`` and include ``bp``, ``bps``, and ``bpp``
     - Create a ``daq`` object with ``RE`` registered.
+    - Import ``plan_defaults`` and include ``bp``, ``bps``, and ``bpp``.
+    - Add a ``re`` namespace of ready-to-run scan functions as a mirror of
+      ``bp``. Graft all daq-integrated scans onto the ``daq`` object.
     - Create a ``scan_pvs`` object, and ``enable`` it.
     - Use ``hutch`` and ``daq_platform`` keys to create the ``elog`` object
       and configure it to match the correct experiment.
@@ -318,31 +319,6 @@ def load_conf(conf, hutch_dir=None, args=None):
             bec='Bluesky best-effort callback for visualization settings.',
             )
 
-    # Collect Plans
-    with safe_load('bluesky plans'):
-        run_namespace = run_scan_namespace(
-            RE=RE,
-            plan_namespace=plan_defaults.plans,
-        )
-        register_namespace(
-            RE=RE,
-            plan_namespace=plan_defaults.plans,
-            run_namespace=run_namespace,
-        )
-        cache(
-            bp=plan_defaults.plans,
-            bps=plan_defaults.plan_stubs,
-            bpp=plan_defaults.preprocessors,
-            run=run_namespace,
-            register_plan=register_plan,
-            )
-        cache.doc(
-            bp='Namespace of full bluesky plans.',
-            bps='Namespace of bluesky plan building blocks (stubs).',
-            bpp='Namespace of bluesky plan preprocessors.',
-            run='Wrapped plans for quick running.'
-            )
-
     # Inline calculations
     with safe_load('calc utils'):
         cache(calc=calc_defaults.calc_namespace)
@@ -384,6 +360,27 @@ def load_conf(conf, hutch_dir=None, args=None):
             logger.info('Skip daq because daq_type is nodaq.')
         else:
             raise RuntimeError('Not loading daq, invalid daq_type.')
+
+    # Collect Plans and Plan Wrappers
+    with safe_load('bluesky plans'):
+        run_namespace = initialize_wrapper_namespaces(
+            RE=RE,
+            plan_namespace=plan_defaults.plans,
+            daq=getattr(cache.objs, 'daq', None),
+        )
+        cache(
+            bp=plan_defaults.plans,
+            bps=plan_defaults.plan_stubs,
+            bpp=plan_defaults.preprocessors,
+            re=run_namespace,
+            register_plan=register_plan,
+            )
+        cache.doc(
+            bp='Namespace of full bluesky plans.',
+            bps='Namespace of bluesky plan building blocks (stubs).',
+            bpp='Namespace of bluesky plan preprocessors.',
+            re='Wrapped plans for quick running.'
+            )
 
     # Scan PVs
     if hutch is not None:
