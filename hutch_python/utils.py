@@ -10,7 +10,6 @@ import os
 import signal
 import socket
 import sys
-import threading
 import time
 from contextlib import contextmanager
 from functools import partial
@@ -453,5 +452,5 @@ class AbortSigintHandler(SignalHandler):
     def handle_signals(self):
         # Check for pause requests from keyboard.
         if self.RE.state.is_running:
-            threading.Thread(target=self.RE.stop()).start()
+            self.RE.stop()
             print("Aborting current run.")
