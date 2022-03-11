@@ -1,5 +1,6 @@
 import logging
 from functools import update_wrapper
+from inspect import signature
 from typing import Any, Callable
 
 from bluesky import RunEngine
@@ -59,7 +60,10 @@ class RunEngineWrapper:
             print(exc)
 
     def __repr__(self):
-        return f'<run-wrapper for {self.plan.__module__}.{self.plan.__name__}>'
+        return (
+            f'<run_wrapper for {self.plan.__module__}'
+            f'.{self.plan.__name__}{str(signature(self.plan))}>'
+        )
 
 
 class ImproperRunWrapperUse(RuntimeError):
@@ -86,7 +90,10 @@ class PlanWrapper:
         return self.plan(*args, **kwargs)
 
     def __repr__(self):
-        return f'<bluesky plan {self.plan.__module__}.{self.plan.__name__}>'
+        return (
+            f'<bluesky_plan defined as {self.plan.__module__}'
+            f'.{self.plan.__name__}{str(signature(self.plan))}>'
+        )
 
 
 def initialize_wrapper_namespaces(
