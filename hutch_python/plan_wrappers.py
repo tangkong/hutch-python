@@ -154,7 +154,7 @@ def register_plan(plan: Callable, name: str) -> None:
     """
     logger.debug('Adding wrapped plan %s to plan namespace', name)
     setattr(registry['plan'], name, PlanWrapper(plan))
-    wrapped = RunEngineWrapper(registry['RE'], plan)
+    wrapped = RunEngineWrapper(plan, registry['RE'])
     logger.debug('Adding wrapped runner %s to re namespace', name)
     setattr(registry['re'], name, wrapped)
     daq = registry['daq']

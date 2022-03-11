@@ -34,7 +34,7 @@ from .namespace import class_namespace
 from .ophyd_settings import setup_ophyd
 from .options import load_options
 from .qs_load import get_qs_objs
-from .run_engine_wrapper import initialize_wrapper_namespaces, register_plan
+from .plan_wrappers import initialize_wrapper_namespaces, register_plan
 from .user_load import get_user_objs
 from .utils import (get_current_experiment, hutch_banner, safe_load,
                     HelpfulNamespace)

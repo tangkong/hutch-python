@@ -8,10 +8,10 @@ from bluesky.plans import scan
 from bluesky.utils import RunEngineInterrupted
 from ophyd.sim import motor
 
-from hutch_python.run_engine_wrapper import (ImproperRunWrapperUse,
-                                             PlanWrapper, RunEngineWrapper,
-                                             initialize_wrapper_namespaces,
-                                             register_plan, registry)
+from hutch_python.plan_wrappers import (ImproperRunWrapperUse, PlanWrapper,
+                                        RunEngineWrapper,
+                                        initialize_wrapper_namespaces,
+                                        register_plan, registry)
 from hutch_python.utils import HelpfulNamespace
 
 logger = logging.getLogger(__name__)
