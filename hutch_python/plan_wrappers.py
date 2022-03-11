@@ -12,6 +12,32 @@ logger = logging.getLogger(__name__)
 registry = {}
 
 
+class PlanWrapper:
+    """
+    Wrap a plan for a better repr.
+
+    For this work properly, plan must be a generator function, not
+    an open generator.
+
+    Parameters
+    ----------
+    plan : generator function
+        A generator capable of being used in a bluesky scan.
+    """
+    def __init__(self, plan: Callable):
+        self.plan = plan
+        update_wrapper(self, plan)
+
+    def __call__(self, *args, **kwargs):
+        return self.plan(*args, **kwargs)
+
+    def __repr__(self):
+        return (
+            f'<bluesky_plan defined as {self.plan.__module__}'
+            f'.{self.plan.__name__}{str(signature(self.plan))}>'
+        )
+
+
 class RunEngineWrapper:
     """
     Wrap a plan to automatically include the RE() call.
@@ -68,32 +94,6 @@ class RunEngineWrapper:
 
 class ImproperRunWrapperUse(RuntimeError):
     ...
-
-
-class PlanWrapper:
-    """
-    Wrap a plan for a better repr.
-
-    For this work properly, plan must be a generator function, not
-    an open generator.
-
-    Parameters
-    ----------
-    plan : generator function
-        A generator capable of being used in a bluesky scan.
-    """
-    def __init__(self, plan: Callable):
-        self.plan = plan
-        update_wrapper(self, plan)
-
-    def __call__(self, *args, **kwargs):
-        return self.plan(*args, **kwargs)
-
-    def __repr__(self):
-        return (
-            f'<bluesky_plan defined as {self.plan.__module__}'
-            f'.{self.plan.__name__}{str(signature(self.plan))}>'
-        )
 
 
 def initialize_wrapper_namespaces(
