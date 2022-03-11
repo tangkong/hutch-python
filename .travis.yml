@@ -28,6 +28,8 @@ env:
     # CONDA_EXTRAS) but for pip
     - PIP_EXTRAS="."
 
+    - MPLBACKEND=agg
+
 jobs:
   allow_failures:
     - name: "Python - PIP"
