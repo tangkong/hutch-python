@@ -1,5 +1,5 @@
 import logging
-from functools import wraps
+from functools import update_wrapper
 from typing import Any, Callable
 
 from bluesky import RunEngine
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 registry = {}
 
 
-def run_engine_wrapper(RE: RunEngine, plan: Callable) -> Callable:
+class RunEngineWrapper:
     """
     Wrap a plan to automatically include the RE() call.
 
@@ -20,8 +20,8 @@ def run_engine_wrapper(RE: RunEngine, plan: Callable) -> Callable:
 
     Note that this changes the nature of the plan. What was
     originally a generator function that takes no actions on its own
-    becomes a function that directly moves hardware and orchestrates
-    data collection.
+    becomes a wrapped class that directly moves hardware and orchestrates
+    data collection through its __call__ method.
 
     This will also stop the previous run engine run if the run engine
     has not been cleaned up.
@@ -33,37 +33,60 @@ def run_engine_wrapper(RE: RunEngine, plan: Callable) -> Callable:
 
     Parameters
     ----------
-    RE : RunEngine
-        The run engine to call this plan with.
     plan : generator function
         A generator capable of being used in a bluesky scan.
-
-    Returns
-    -------
-    runner : function
-        A function that runs the scan directly, including moving
-        hardware and orchestrating data collection.
+    RE : RunEngine
+        The run engine to call this plan with.
     """
-    @wraps(plan)
-    def run_scan(*args, **kwargs):
-        if RE.state.is_running:
+    def __init__(self, plan: Callable, RE: RunEngine):
+        self.plan = plan
+        self._RE = RE
+        update_wrapper(self, plan)
+
+    def __call__(self, *args, **kwargs):
+        if self._RE.state.is_running:
             raise ImproperRunWrapperUse(
                 'There is already a scan in progress! Cannot start a new one! '
                 'Either we are improperly nested inside another scan or there '
                 'are multiple threads trying to use the same RE instance.'
             )
-        if not RE.state.is_idle:
+        if not self._RE.state.is_idle:
             logger.info('Previous scan still open, calling stop')
-            RE.stop()
+            self._RE.stop()
         try:
-            return RE(plan(*args, **kwargs))
+            return self._RE(self.plan(*args, **kwargs))
         except RunEngineInterrupted as exc:
             print(exc)
-    return run_scan
+
+    def __repr__(self):
+        return f'<run-wrapper for {self.plan.__module__}.{self.plan.__name__}>'
 
 
 class ImproperRunWrapperUse(RuntimeError):
     ...
+
+
+class PlanWrapper:
+    """
+    Wrap a plan for a better repr.
+
+    For this work properly, plan must be a generator function, not
+    an open generator.
+
+    Parameters
+    ----------
+    plan : generator function
+        A generator capable of being used in a bluesky scan.
+    """
+    def __init__(self, plan: Callable):
+        self.plan = plan
+        update_wrapper(self, plan)
+
+    def __call__(self, *args, **kwargs):
+        return self.plan(*args, **kwargs)
+
+    def __repr__(self):
+        return f'<bluesky plan {self.plan.__module__}.{self.plan.__name__}>'
 
 
 def initialize_wrapper_namespaces(
@@ -100,13 +123,12 @@ def initialize_wrapper_namespaces(
     registry['re'] = HelpfulNamespace()
 
     for name, plan in plan_namespace._get_items():
-        logger.debug('Wrapping plan %s with run_engine_wrapper.', name)
-        register_plan(plan=plan, name=name, initial=True)
+        register_plan(plan=plan, name=name)
 
     return registry['re']
 
 
-def register_plan(plan: Callable, name: str, initial: bool = False) -> None:
+def register_plan(plan: Callable, name: str) -> None:
     """
     Utility to add plans to the session namespaces.
 
@@ -130,10 +152,10 @@ def register_plan(plan: Callable, name: str, initial: bool = False) -> None:
         During the first load, we are reading from the original
         plan namespace, so we shouldn't be filling back to it.
     """
-    if not initial:
-        setattr(registry['plan'], name, plan)
-    wrapped = run_engine_wrapper(registry['RE'], plan)
-    logger.debug('Adding wrapped %s to re namespace', name)
+    logger.debug('Adding wrapped plan %s to plan namespace', name)
+    setattr(registry['plan'], name, PlanWrapper(plan))
+    wrapped = RunEngineWrapper(registry['RE'], plan)
+    logger.debug('Adding wrapped runner %s to re namespace', name)
     setattr(registry['re'], name, wrapped)
     daq = registry['daq']
     if daq is None:

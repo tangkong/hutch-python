@@ -9,9 +9,9 @@ from bluesky.utils import RunEngineInterrupted
 from ophyd.sim import motor
 
 from hutch_python.run_engine_wrapper import (ImproperRunWrapperUse,
+                                             PlanWrapper, RunEngineWrapper,
                                              initialize_wrapper_namespaces,
-                                             register_plan, registry,
-                                             run_engine_wrapper)
+                                             register_plan, registry)
 from hutch_python.utils import HelpfulNamespace
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ def RE() -> RunEngine:
 
 @pytest.fixture(scope='function')
 def run_scan(RE: RunEngine) -> Callable:
-    return run_engine_wrapper(RE, scan)
+    return RunEngineWrapper(scan, RE)
 
 
 def do_standard_check(run_scan: Callable):
@@ -33,6 +33,16 @@ def do_standard_check(run_scan: Callable):
     assert result.exit_status == 'success'
     assert motor.position == 10
     return result
+
+
+def test_plan_wrapper_runs(RE):
+    logger.debug('test_plan_wrapper_runs')
+    plan = PlanWrapper(scan)
+
+    def thin_wrapper(*args, **kwargs):
+        return RE(plan(*args, **kwargs))
+
+    do_standard_check(thin_wrapper)
 
 
 def test_run_engine_wrapper_runs(run_scan: Callable):
