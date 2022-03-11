@@ -1,4 +1,5 @@
-from typing import Callable
+import logging
+from typing import Any, Callable
 
 import pytest
 from bluesky import RunEngine
@@ -7,10 +8,13 @@ from bluesky.plans import scan
 from bluesky.utils import RunEngineInterrupted
 from ophyd.sim import motor
 
-from hutch_python.run_engine_wrapper import (
-    ImproperRunWrapperUse, register_namespace, register_plan,
-    run_engine_wrapper, run_scan_namespace)
+from hutch_python.run_engine_wrapper import (ImproperRunWrapperUse,
+                                             initialize_wrapper_namespaces,
+                                             register_plan, registry,
+                                             run_engine_wrapper)
 from hutch_python.utils import HelpfulNamespace
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope='function')
@@ -32,6 +36,7 @@ def do_standard_check(run_scan: Callable):
 
 
 def test_run_engine_wrapper_runs(run_scan: Callable):
+    logger.debug('test_run_engine_wrapper_runs')
     do_standard_check(run_scan)
 
 
@@ -39,6 +44,8 @@ def test_run_engine_wrapper_from_interrupt(
     RE: RunEngine,
     run_scan: Callable,
 ):
+    logger.debug('test_run_engine_wrapper_from_interrupt')
+
     def interrupt_plan():
         yield from null()
         yield from pause()
@@ -55,6 +62,8 @@ def test_run_engine_wrapper_nested_bad(
     RE: RunEngine,
     run_scan: Callable,
 ):
+    logger.debug('test_run_engine_wrapper_nested_bad')
+
     def bad_plan():
         yield from null()
         run_scan()
@@ -65,32 +74,48 @@ def test_run_engine_wrapper_nested_bad(
 
 
 @pytest.fixture(scope='function')
-def plan_namespace():
-    return HelpfulNamespace(scan=scan)
+def plan_namespace() -> HelpfulNamespace:
+    return HelpfulNamespace(
+        scan=scan,
+        daq_scan=scan,
+    )
 
 
 @pytest.fixture(scope='function')
-def run_namespace(RE: RunEngine, plan_namespace: HelpfulNamespace):
-    return run_scan_namespace(
+def wrapper_registry(
+    RE: RunEngine,
+    plan_namespace: HelpfulNamespace,
+) -> dict[str, Any]:
+    daq = HelpfulNamespace()
+    registry.clear()
+    initialize_wrapper_namespaces(
         RE=RE,
         plan_namespace=plan_namespace,
+        daq=daq,
     )
+    yield registry
+    registry.clear()
 
 
-def test_run_scan_namespace(run_namespace: HelpfulNamespace):
+def test_run_scan_namespace(wrapper_registry: dict[str, Any]):
+    logger.debug('test_run_scan_namespace')
+    run_namespace = wrapper_registry['re']
     do_standard_check(run_namespace.scan)
 
 
-def test_registry(
-    RE: RunEngine,
-    plan_namespace: HelpfulNamespace,
-    run_namespace: HelpfulNamespace,
-):
-    register_namespace(
-        RE=RE,
-        plan_namespace=plan_namespace,
-        run_namespace=run_namespace,
-    )
+def test_daq_scan_object(wrapper_registry: dict[str, Any]):
+    logger.debug('test_daq_scan_object')
+    run_namespace = wrapper_registry['re']
+    daq_object = wrapper_registry['daq']
+    assert run_namespace.daq_scan is daq_object.scan
+    do_standard_check(daq_object.scan)
+
+
+def test_registry(wrapper_registry: dict[str, Any]):
+    logger.debug('test_registry')
+    plan_namespace = wrapper_registry['plan']
+    run_namespace = wrapper_registry['re']
+    daq_object = wrapper_registry['daq']
 
     def some_random_plan(*args, **kwargs):
         yield from scan(*args, **kwargs)
@@ -105,3 +130,9 @@ def test_registry(
     plan_namespace.some_random_plan
 
     do_standard_check(run_namespace.some_random_plan)
+
+    register_plan(plan=some_random_plan, name='daq_super_plan')
+    plan_namespace.daq_super_plan
+
+    do_standard_check(run_namespace.daq_super_plan)
+    do_standard_check(daq_object.super_plan)

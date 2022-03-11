@@ -96,7 +96,7 @@ def initialize_wrapper_namespaces(
     """
     registry['RE'] = RE
     registry['plan'] = plan_namespace
-    registry['daq'] = daq,
+    registry['daq'] = daq
     registry['re'] = HelpfulNamespace()
 
     for name, plan in plan_namespace._get_items():
@@ -133,7 +133,8 @@ def register_plan(plan: Callable, name: str, initial: bool = False) -> None:
     if not initial:
         setattr(registry['plan'], name, plan)
     wrapped = run_engine_wrapper(registry['RE'], plan)
-    setattr(registry['run'], name, wrapped)
+    logger.debug('Adding wrapped %s to re namespace', name)
+    setattr(registry['re'], name, wrapped)
     daq = registry['daq']
     if daq is None:
         return
@@ -145,6 +146,11 @@ def register_plan(plan: Callable, name: str, initial: bool = False) -> None:
                 short_name,
             )
         else:
+            logger.debug(
+                'Adding wrapped %s to the daq object as %s',
+                name,
+                short_name,
+            )
             setattr(daq, short_name, wrapped)
             try:
                 tab_helper = daq._tab
