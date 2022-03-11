@@ -452,6 +452,6 @@ class AbortSigintHandler(SignalHandler):
 
     def handle_signals(self):
         # Check for pause requests from keyboard.
-        if self.RE.state.is_running and (not self.RE._interrupted):
+        if self.RE.state.is_running:
             threading.Thread(target=self.RE.stop()).start()
             print("Aborting current run.")
