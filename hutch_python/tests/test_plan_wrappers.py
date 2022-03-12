@@ -155,3 +155,11 @@ def test_plan_wrapper_invalid_args():
 
     with pytest.raises(TypeError):
         PlanWrapper(scan([], motor, 0, 10, 11))
+
+
+def test_double_wrapper():
+    logger.debug('test_double_wrapper')
+    wrapper_one = PlanWrapper(scan)
+    wrapper_two = PlanWrapper(wrapper_one)
+    assert wrapper_one.plan is scan
+    assert wrapper_two.plan is scan

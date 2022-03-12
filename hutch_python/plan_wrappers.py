@@ -24,6 +24,8 @@ class PlanWrapper:
     plan : generator function
         A generator capable of being used in a bluesky scan.
     """
+    plan: Callable
+
     def __init__(self, plan: Callable):
         if not callable(plan):
             raise TypeError(
@@ -31,7 +33,10 @@ class PlanWrapper:
                 'any other non-callable object. '
                 f'Found plan={plan} of type {type(plan)}.'
             )
-        self.plan = plan
+        if isinstance(plan, PlanWrapper):
+            self.plan = plan.plan
+        else:
+            self.plan = plan
         update_wrapper(self, plan)
 
     def __call__(self, *args, **kwargs):
