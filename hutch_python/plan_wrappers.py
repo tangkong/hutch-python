@@ -25,6 +25,12 @@ class PlanWrapper:
         A generator capable of being used in a bluesky scan.
     """
     def __init__(self, plan: Callable):
+        if not callable(plan):
+            raise TypeError(
+                'Wrapped plan must be a callable, not an open generator or '
+                'any other non-callable object. '
+                f'Found plan={plan} of type {type(plan)}.'
+            )
         self.plan = plan
         update_wrapper(self, plan)
 
@@ -38,7 +44,7 @@ class PlanWrapper:
         )
 
 
-class RunEngineWrapper:
+class RunEngineWrapper(PlanWrapper):
     """
     Wrap a plan to automatically include the RE() call.
 
@@ -66,9 +72,8 @@ class RunEngineWrapper:
         The run engine to call this plan with.
     """
     def __init__(self, plan: Callable, RE: RunEngine):
-        self.plan = plan
+        super().__init__(plan)
         self._RE = RE
-        update_wrapper(self, plan)
 
     def __call__(self, *args, **kwargs):
         if self._RE.state.is_running:

@@ -146,3 +146,12 @@ def test_registry(wrapper_registry: dict[str, Any]):
 
     do_standard_check(run_namespace.daq_super_plan)
     do_standard_check(daq_object.super_plan)
+
+
+def test_plan_wrapper_invalid_args():
+    logger.debug('test_plan_wrapper_invalid_args')
+    with pytest.raises(TypeError):
+        PlanWrapper(None)
+
+    with pytest.raises(TypeError):
+        PlanWrapper(scan([], motor, 0, 10, 11))
