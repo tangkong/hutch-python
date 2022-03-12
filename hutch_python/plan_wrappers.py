@@ -154,10 +154,6 @@ def register_plan(plan: Callable, name: str) -> None:
         A generator capable of being used in a bluesky scan.
     name : str
         The name to use as the attribute for our plan.
-    initial : bool
-        Whether or not this is the first-time load process.
-        During the first load, we are reading from the original
-        plan namespace, so we shouldn't be filling back to it.
     """
     logger.debug('Adding wrapped plan %s to plan namespace', name)
     setattr(registry['plan'], name, PlanWrapper(plan))
