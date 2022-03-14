@@ -2,13 +2,15 @@ import asyncio
 import logging
 import os
 import threading
-import time
-from signal import SIGINT
+import time as ttime
+from signal import SIGINT, SIGQUIT
 
 import bluesky.plan_stubs as bps
 import IPython.lib.pretty as pretty
 import pytest
 from bluesky import RunEngine
+from bluesky.plan_stubs import abs_set
+from bluesky.preprocessors import finalize_wrapper
 from bluesky.utils import RunEngineInterrupted
 
 from hutch_python import utils
@@ -131,10 +133,12 @@ def test_hutch_banner():
 
 @pytest.fixture(scope='function')
 def RE_abort():
+    """ RunEngine with extra context_managers """
     loop = asyncio.new_event_loop()
     loop.set_debug(True)
     RE = RunEngine({}, loop=loop,
-                   context_managers=[utils.AbortSigintHandler])
+                   context_managers=[utils.AbortSigintHandler,
+                                     utils.SigquitHandler])
 
     yield RE
 
@@ -142,7 +146,7 @@ def RE_abort():
         RE.halt()
 
 
-def test_abort_RE(RE_abort):
+def test_sigint_RE(RE_abort):
     # get pid so we can send SIGINT to it specifically
     pid = os.getpid()
 
@@ -151,7 +155,7 @@ def test_abort_RE(RE_abort):
         yield from bps.sleep(10)
 
     def sim_kill():
-        time.sleep(0.05)
+        ttime.sleep(0.05)
         os.kill(pid, SIGINT)
 
     # send sigint in a different thread
@@ -163,3 +167,41 @@ def test_abort_RE(RE_abort):
 
     assert RE_abort.state == 'idle'
     assert RE_abort._exit_status == 'success'
+
+
+def test_sigquit_two_hits(RE_abort):
+    import time
+
+    from ophyd.sim import motor
+    motor.delay = .5
+
+    pid = os.getpid()
+
+    def sim_kill(n):
+        for j in range(n):
+            time.sleep(.05)
+            os.kill(pid, SIGQUIT)
+
+    lp = RE_abort.loop
+    motor.loop = lp
+
+    def self_sig_int_plan():
+        # three hits will quit pytest
+        threading.Timer(.05, sim_kill, (2,)).start()
+        yield from abs_set(motor, 1, wait=True)
+
+    start_time = ttime.time()
+    with pytest.raises(RunEngineInterrupted):
+        RE_abort(finalize_wrapper(self_sig_int_plan(),
+                                  abs_set(motor, 0, wait=True)))
+    end_time = ttime.time()
+
+    assert RE_abort.state == 'paused'
+    # not enough time for motor to cleanup, but long enough to start
+    assert 0.05 < end_time - start_time < 0.3
+    RE_abort.abort()  # now cleanup
+
+    done_cleanup_time = ttime.time()
+    # this should be 0.5 (the motor.delay) above, leave sloppy for CI
+    assert 0.3 < done_cleanup_time - end_time < 0.6
+    assert RE_abort.state == 'idle'
