@@ -471,7 +471,7 @@ class SigquitHandler(SignalHandler):
         super().__init__(signal.SIGQUIT, log=RE.log)
         self.RE = RE
         self.last_sigint_time = None  # time most recent SIGQUIT was processed
-        self.num_sigints_processed = 0  # count SIGQUITs processed
+        self.count = 0  # count SIGQUITs processed
 
     def __enter__(self):
         return super().__enter__()
@@ -484,7 +484,7 @@ class SigquitHandler(SignalHandler):
             return
 
         if (self.last_sigint_time is None or
-                time.time() - self.last_sigint_time > 10):
+                time.monotonic() - self.last_sigint_time > 10):
             # reset the counter to 1
             # It's been 10 seconds since the last SIGQUIT. Reset.
             self.count = 1
@@ -495,18 +495,18 @@ class SigquitHandler(SignalHandler):
             # weeee push these to threads to not block the main thread
             threading.Thread(target=self.RE.request_pause,
                              args=(True,)).start()
-            print("A 'deferred pause' has been requested. The "
-                  "RunEngine will pause at the next checkpoint. "
-                  "To pause immediately, hit Ctrl+\\ again in the "
-                  "next 10 seconds.")
+            logger.warning("A 'deferred pause' has been requested. "
+                           "The RunEngine will pause at the next "
+                           "checkpoint. To pause immediately, hit "
+                           "Ctrl+\\ again in the next 10 seconds.")
 
-            self.last_sigint_time = time.time()
+            self.last_sigint_time = time.monotonic()
         elif self.count == 2:
-            print('trying a second time')
+            logger.warning('trying a second time')
             # - Ctrl+\ twice within 10 seconds -> hard pause
             logger.debug("RunEngine detected two SIGQUITs. "
                          "A hard pause will be requested.")
 
             threading.Thread(target=self.RE.request_pause,
                              args=(False,)).start()
-        self.last_sigint_time = time.time()
+        self.last_sigint_time = time.monotonic()
