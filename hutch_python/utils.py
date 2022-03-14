@@ -10,6 +10,7 @@ import os
 import signal
 import socket
 import sys
+import threading
 import time
 from contextlib import contextmanager
 from functools import partial
@@ -439,12 +440,15 @@ def get_fully_qualified_domain_name():
 
 abort_msg = """
 Your RunEngine has been interrupted.  If you aborted the current run (Ctrl+C),
-the RunEngine is ready for use.  If you paused the run, you must resume,
-abort, stop, halt the RunEngine before continuing.
+the RunEngine is ready for use.  If you paused the run (Ctrl+\\), you must
+resume, abort, stop, halt the RunEngine before continuing.
 """
 
 
 class AbortSigintHandler(SignalHandler):
+    """
+    Interprets SIGINT (Ctrl+C) as an abort request.
+    """
     def __init__(self, RE):
         super().__init__(signal.SIGINT, log=RE.log)
         self.RE = RE
@@ -453,4 +457,54 @@ class AbortSigintHandler(SignalHandler):
         # Check for pause requests from keyboard.
         if self.RE.state.is_running:
             self.RE.stop()
-            print("Aborting current run.")
+            # Use our own logging
+            logger.warning("Aborting current run.")
+
+
+class SigquitHandler(SignalHandler):
+    """
+    Interprets SIGQUIT (Ctrl+\\) as standard RunEngine interrupt behavior.
+    Copied verbatim from bluesky.utils.SigintHandler, lacking a way to
+    subclassing the original while changing the signal type.
+    """
+    def __init__(self, RE):
+        super().__init__(signal.SIGQUIT, log=RE.log)
+        self.RE = RE
+        self.last_sigint_time = None  # time most recent SIGQUIT was processed
+        self.num_sigints_processed = 0  # count SIGQUITs processed
+
+    def __enter__(self):
+        return super().__enter__()
+
+    def handle_signals(self):
+        # Check for pause requests from keyboard.
+        # TODO, there is a possible race condition between the two
+        # pauses here
+        if self.RE.state.is_running and (not self.RE._interrupted):
+            if (self.last_sigint_time is None or
+                    time.time() - self.last_sigint_time > 10):
+                # reset the counter to 1
+                # It's been 10 seconds since the last SIGQUIT. Reset.
+                self.count = 1
+                if self.last_sigint_time is not None:
+                    logger.debug("It has been 10 seconds since the "
+                                 "last SIGQUIT. Resetting SIGQUIT "
+                                 "handler.")
+                # weeee push these to threads to not block the main thread
+                threading.Thread(target=self.RE.request_pause,
+                                 args=(True,)).start()
+                print("A 'deferred pause' has been requested. The "
+                      "RunEngine will pause at the next checkpoint. "
+                      "To pause immediately, hit Ctrl+\\ again in the "
+                      "next 10 seconds.")
+
+                self.last_sigint_time = time.time()
+            elif self.count == 2:
+                print('trying a second time')
+                # - Ctrl+\ twice within 10 seconds -> hard pause
+                logger.debug("RunEngine detected two SIGQUITs. "
+                             "A hard pause will be requested.")
+
+                threading.Thread(target=self.RE.request_pause,
+                                 args=(False,)).start()
+            self.last_sigint_time = time.time()
