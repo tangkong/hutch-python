@@ -480,31 +480,33 @@ class SigquitHandler(SignalHandler):
         # Check for pause requests from keyboard.
         # TODO, there is a possible race condition between the two
         # pauses here
-        if self.RE.state.is_running and (not self.RE._interrupted):
-            if (self.last_sigint_time is None or
-                    time.time() - self.last_sigint_time > 10):
-                # reset the counter to 1
-                # It's been 10 seconds since the last SIGQUIT. Reset.
-                self.count = 1
-                if self.last_sigint_time is not None:
-                    logger.debug("It has been 10 seconds since the "
-                                 "last SIGQUIT. Resetting SIGQUIT "
-                                 "handler.")
-                # weeee push these to threads to not block the main thread
-                threading.Thread(target=self.RE.request_pause,
-                                 args=(True,)).start()
-                print("A 'deferred pause' has been requested. The "
-                      "RunEngine will pause at the next checkpoint. "
-                      "To pause immediately, hit Ctrl+\\ again in the "
-                      "next 10 seconds.")
+        if not self.RE.state.is_running or self.RE._interrupted:
+            return
 
-                self.last_sigint_time = time.time()
-            elif self.count == 2:
-                print('trying a second time')
-                # - Ctrl+\ twice within 10 seconds -> hard pause
-                logger.debug("RunEngine detected two SIGQUITs. "
-                             "A hard pause will be requested.")
+        if (self.last_sigint_time is None or
+                time.time() - self.last_sigint_time > 10):
+            # reset the counter to 1
+            # It's been 10 seconds since the last SIGQUIT. Reset.
+            self.count = 1
+            if self.last_sigint_time is not None:
+                logger.debug("It has been 10 seconds since the "
+                             "last SIGQUIT. Resetting SIGQUIT "
+                             "handler.")
+            # weeee push these to threads to not block the main thread
+            threading.Thread(target=self.RE.request_pause,
+                             args=(True,)).start()
+            print("A 'deferred pause' has been requested. The "
+                  "RunEngine will pause at the next checkpoint. "
+                  "To pause immediately, hit Ctrl+\\ again in the "
+                  "next 10 seconds.")
 
-                threading.Thread(target=self.RE.request_pause,
-                                 args=(False,)).start()
             self.last_sigint_time = time.time()
+        elif self.count == 2:
+            print('trying a second time')
+            # - Ctrl+\ twice within 10 seconds -> hard pause
+            logger.debug("RunEngine detected two SIGQUITs. "
+                         "A hard pause will be requested.")
+
+            threading.Thread(target=self.RE.request_pause,
+                             args=(False,)).start()
+        self.last_sigint_time = time.time()
