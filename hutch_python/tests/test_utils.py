@@ -146,6 +146,7 @@ def RE_abort():
         RE.halt()
 
 
+@skip_if_win32_generic
 def test_sigint_RE(RE_abort):
     # get pid so we can send SIGINT to it specifically
     pid = os.getpid()
@@ -169,6 +170,7 @@ def test_sigint_RE(RE_abort):
     assert RE_abort._exit_status == 'success'
 
 
+@skip_if_win32_generic
 def test_sigquit_two_hits(RE_abort):
     import time
 
