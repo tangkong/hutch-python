@@ -37,7 +37,8 @@ from .qs_load import get_qs_objs
 from .plan_wrappers import initialize_wrapper_namespaces, register_plan
 from .user_load import get_user_objs
 from .utils import (get_current_experiment, hutch_banner, safe_load,
-                    HelpfulNamespace)
+                    HelpfulNamespace, AbortSigintHandler,
+                    SigquitHandler, abort_msg)
 
 try:
     from elog import HutchELog
@@ -301,7 +302,9 @@ def load_conf(conf, hutch_dir=None, args=None):
 
     # Make RunEngine
     with safe_load('run engine'):
-        RE = RunEngine({})
+        RE = RunEngine({}, context_managers=[AbortSigintHandler,
+                                             SigquitHandler])
+        RE.pause_msg = abort_msg
         initialize_qt_teleporter()
         bec = BestEffortCallback()
         if matplotlib.get_backend() not in {"Qt5Agg", "QtAgg"}:
