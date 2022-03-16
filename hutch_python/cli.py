@@ -96,6 +96,15 @@ def configure_ipython_session():
     ipy_config.TerminalInteractiveShell.autoformatter = None
     # Set up tab completion modifications
     configure_tab_completion(ipy_config)
+
+    # remove force exit key bind from <ctrl-\\>
+    ipy_config.InteractiveShellApp.exec_lines = (
+        "import IPython; "
+        "from prompt_toolkit.keys import Keys; "
+        "ip = IPython.get_ipython(); "
+        "cb = Keys.ControlBackslash; "
+        "ip.pt_app.key_bindings.remove(cb) "
+    )
     return ipy_config
 
 
