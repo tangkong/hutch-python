@@ -90,9 +90,13 @@ def get_env_info():
 
     banner = (
         'Environment Information\n'
-        f'  conda env: {conda_ver}\n'
-        f'  dev pkgs: {dev_pkgs}'
+        f'  Conda Environment: {conda_ver}\n'
+        f'  Development Packages: {" ".join(dev_pkgs)}'
     )
+
+    logger.info(
+        f'Conda Environment: {conda_ver}, '
+        f'Development Packages: {" ".join(dev_pkgs)}')
     return banner
 
 
