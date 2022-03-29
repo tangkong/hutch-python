@@ -16,6 +16,7 @@ from IPython import start_ipython
 from traitlets.config import Config
 
 from .constants import CONDA_BASE, DIR_MODULE
+from .env_version import get_env_info, log_env
 from .load_conf import load
 from .log_setup import configure_log_directory, debug_mode, setup_logging
 
@@ -69,37 +70,6 @@ def configure_tab_completion(ipy_config):
         IPython.core.completer.dir2 = dir
 
 
-def get_env_info():
-    """
-    Gather python environment info.
-
-    Returns
-    -------
-    banner : str
-        String with conda environment, dev packages
-    """
-    banner = ""
-
-    # grab activated conda env
-    conda_ver = os.environ.get('CONDA_DEFAULT_ENV', 'None')
-    dev_pkgs = [
-        os.path.basename(os.path.dirname(p))
-        for p in os.environ.get('PYTHONPATH', 'None').split(":")
-        if p
-    ]
-
-    banner = (
-        'Environment Information\n'
-        f'  Conda Environment: {conda_ver}\n'
-        f'  Development Packages: {" ".join(dev_pkgs)}'
-    )
-
-    logger.info(
-        f'Conda Environment: {conda_ver}, '
-        f'Development Packages: {" ".join(dev_pkgs)}')
-    return banner
-
-
 def configure_ipython_session():
     """
     Configure a new IPython session.
@@ -137,7 +107,7 @@ def configure_ipython_session():
         "ip.pt_app.key_bindings.remove(cb) "
     )
 
-    # modify ipython banner
+    # add env info to ipython banner
     ipy_config.TerminalInteractiveShell.banner2 = get_env_info()
 
     return ipy_config
@@ -168,6 +138,9 @@ def main():
 
     # Do the first log message, now that logging is ready
     logger.debug('cli starting with args %s', args)
+
+    # Check and display the environment info as appropriate (very early)
+    log_env()
 
     # Options that mean skipping the python environment
     if args.create:
