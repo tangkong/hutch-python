@@ -69,6 +69,33 @@ def configure_tab_completion(ipy_config):
         IPython.core.completer.dir2 = dir
 
 
+def get_env_info():
+    """
+    Gather python environment info.
+
+    Returns
+    -------
+    banner : str
+        String with conda environment, dev packages
+    """
+    banner = ""
+
+    # grab activated conda env
+    conda_ver = os.environ.get('CONDA_DEFAULT_ENV', 'None')
+    dev_pkgs = [
+        os.path.basename(os.path.dirname(p))
+        for p in os.environ.get('PYTHONPATH', 'None').split(":")
+        if p
+    ]
+
+    banner = (
+        'Environment Information\n'
+        f'  conda env: {conda_ver}\n'
+        f'  dev pkgs: {dev_pkgs}'
+    )
+    return banner
+
+
 def configure_ipython_session():
     """
     Configure a new IPython session.
@@ -105,6 +132,10 @@ def configure_ipython_session():
         "cb = Keys.ControlBackslash; "
         "ip.pt_app.key_bindings.remove(cb) "
     )
+
+    # modify ipython banner
+    ipy_config.TerminalInteractiveShell.banner2 = get_env_info()
+
     return ipy_config
 
 
