@@ -53,7 +53,7 @@ def get_standard_dev_pkgs() -> set[str]:
         return set()
     pkg_names = set()
     for part in pythonpath.split(':'):
-        if any([(s in part) for s in _dev_ignore_list]) or (not part):
+        if any(((s in part) for s in _dev_ignore_list)) or (not part):
             continue
         pkg_names.add(os.path.basename(os.path.dirname(part)))
     return pkg_names
