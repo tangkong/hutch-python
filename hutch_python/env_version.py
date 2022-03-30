@@ -18,13 +18,13 @@ def log_env() -> None:
     """Collect environment information and log at appropriate levels."""
     dev_pkgs = get_standard_dev_pkgs()
     if dev_pkgs:
-        logger.info(
+        logger.debug(
             'Using conda env %s with dev packages %s',
             get_conda_env_name(),
             ', '.join(sorted(dev_pkgs)),
         )
     else:
-        logger.info(
+        logger.debug(
             'Using conda env %s with no dev packages',
             get_conda_env_name(),
         )
@@ -33,7 +33,7 @@ def log_env() -> None:
 
 def dump_env() -> list[str]:
     """
-    Get the full env spec.
+    Get all packages nad versions from the current environment.
     conda list is slow, use pkg_resources instead
     this might miss dev overrides
     """
@@ -60,7 +60,7 @@ def get_standard_dev_pkgs() -> set[str]:
 
 
 def get_env_info() -> str:
-
+    """ Collect environment information and format as banner """
     conda_ver = get_conda_env_name()
     dev_pkgs = get_standard_dev_pkgs()
 
