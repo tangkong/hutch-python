@@ -16,6 +16,7 @@ from IPython import start_ipython
 from traitlets.config import Config
 
 from .constants import CONDA_BASE, DIR_MODULE
+from .env_version import get_env_info, log_env
 from .load_conf import load
 from .log_setup import configure_log_directory, debug_mode, setup_logging
 
@@ -105,6 +106,10 @@ def configure_ipython_session():
         "cb = Keys.ControlBackslash; "
         "ip.pt_app.key_bindings.remove(cb) "
     )
+
+    # add env info to ipython banner
+    ipy_config.TerminalInteractiveShell.banner2 = get_env_info()
+
     return ipy_config
 
 
@@ -133,6 +138,9 @@ def main():
 
     # Do the first log message, now that logging is ready
     logger.debug('cli starting with args %s', args)
+
+    # Check and display the environment info as appropriate (very early)
+    log_env()
 
     # Options that mean skipping the python environment
     if args.create:
