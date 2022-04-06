@@ -72,6 +72,16 @@ def configure_tab_completion(ipy_config):
 
 
 def get_startup_hook(cfg):
+    """
+    Gather startup commands to run after IPython initialization.
+    In order to avoid running code on import, we gather commands as
+    a string.
+
+    Parameters
+    ----------
+    cfg : str
+        Path to conf.yml file
+    """
     # we want to get source without importing the files
     with open(Path(__file__).parent / '_startup_script.py') as f:
         d = f.read()
@@ -119,7 +129,7 @@ def configure_ipython_session(cfg):
     # Set up tab completion modifications
     configure_tab_completion(ipy_config)
 
-    # remove force exit key bind from <ctrl-\\>
+    # Run startup hook code
     ipy_config.InteractiveShellApp.exec_lines = get_startup_hook(cfg)
 
     # add env info to ipython banner
