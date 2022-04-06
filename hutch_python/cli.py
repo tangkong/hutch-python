@@ -71,7 +71,7 @@ def configure_tab_completion(ipy_config):
         IPython.core.completer.dir2 = dir
 
 
-def get_startup_hook(cfg):
+def get_startup_hook(cfg=None):
     """
     Gather startup commands to run after IPython initialization.
     In order to avoid running code on import, we gather commands as
@@ -82,9 +82,12 @@ def get_startup_hook(cfg):
     cfg : str
         Path to conf.yml file
     """
-    # we want to get source without importing the files
+    # hutch-python specific ipython modifications
     with open(Path(__file__).parent / '_startup_script.py') as f:
         d = f.read()
+
+    if not cfg:
+        return d
 
     with open(cfg, 'r') as f:
         conf = yaml.safe_load(f)
