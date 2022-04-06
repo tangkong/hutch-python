@@ -83,6 +83,7 @@ def get_startup_hook(cfg=None):
         Path to conf.yml file
     """
     # hutch-python specific ipython modifications
+    logger.debug('adding standard hutch-python post-init hooks.')
     with open(Path(__file__).parent / '_startup_script.py') as f:
         d = f.read()
 
@@ -98,13 +99,14 @@ def get_startup_hook(cfg=None):
             post_load = [post_load]
 
         for fp in post_load:
+            logger.debug(f'adding file {fp} for execution post-init')
             with open(fp) as ff:
                 d += ff.read()
 
     return d
 
 
-def configure_ipython_session(cfg):
+def configure_ipython_session(cfg=None):
     """
     Configure a new IPython session.
 
@@ -133,7 +135,8 @@ def configure_ipython_session(cfg):
     configure_tab_completion(ipy_config)
 
     # Run startup hook code
-    ipy_config.InteractiveShellApp.exec_lines = get_startup_hook(cfg)
+    lines = get_startup_hook(cfg=cfg)
+    ipy_config.InteractiveShellApp.exec_lines = lines
 
     # add env info to ipython banner
     ipy_config.TerminalInteractiveShell.banner2 = get_env_info()
@@ -205,7 +208,7 @@ def main():
     if script is None:
         # Finally start the interactive session
         start_ipython(argv=['--quick'], user_ns=objs,
-                      config=configure_ipython_session(args.cfg))
+                      config=configure_ipython_session(cfg=args.cfg))
     else:
         # Instead of setting up ipython, run the script with objs
         with open(script) as fn:

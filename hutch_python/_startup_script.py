@@ -4,6 +4,9 @@ Startup script files to be run after ipython is initialized via:
 
 Code here will take executed after both IPython has been loaded and
 the namespace has been populated.
+
+safe_load not used to try and keep on-screen messages minimal, as
+they would show up after the IPython banner.
 """
 
 import logging
