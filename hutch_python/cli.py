@@ -70,6 +70,14 @@ def configure_tab_completion(ipy_config):
         IPython.core.completer.dir2 = dir
 
 
+def _get_startup_hook():
+    # we want to get source without importing the files
+    with open(Path(__file__).parent / '_startup_script.py') as f:
+        d = f.read()
+
+    return d
+
+
 def configure_ipython_session():
     """
     Configure a new IPython session.
@@ -99,13 +107,7 @@ def configure_ipython_session():
     configure_tab_completion(ipy_config)
 
     # remove force exit key bind from <ctrl-\\>
-    ipy_config.InteractiveShellApp.exec_lines = (
-        "import IPython; "
-        "from prompt_toolkit.keys import Keys; "
-        "ip = IPython.get_ipython(); "
-        "cb = Keys.ControlBackslash; "
-        "ip.pt_app.key_bindings.remove(cb) "
-    )
+    ipy_config.InteractiveShellApp.exec_lines = _get_startup_hook()
 
     # add env info to ipython banner
     ipy_config.TerminalInteractiveShell.banner2 = get_env_info()
