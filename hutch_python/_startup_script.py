@@ -14,6 +14,7 @@ from prompt_toolkit.keys import Keys
 
 logger = logging.getLogger(__name__)
 
+# Unbind Ctrl+\\
 try:
     # minimize namespace pollution
     IPython.get_ipython().pt_app.key_bindings.remove(
@@ -26,5 +27,11 @@ try:
     # RE, ELog will already exist by now
     elogc = ELogPoster(elog, IPython.get_ipython())  # noqa
     RE.subscribe(elogc)  # noqa
+except Exception as exc:
+    logger.debug(exc, exc_info=True)
+
+# Disable auto-suggestions.  Currently no config option exists.
+try:
+    IPython.get_ipython().pt_app.auto_suggest = None
 except Exception as exc:
     logger.debug(exc, exc_info=True)
