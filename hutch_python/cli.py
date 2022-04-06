@@ -11,6 +11,7 @@ from pathlib import Path
 
 import IPython
 import matplotlib
+import yaml
 from cookiecutter.main import cookiecutter
 from IPython import start_ipython
 from traitlets.config import Config
@@ -70,15 +71,27 @@ def configure_tab_completion(ipy_config):
         IPython.core.completer.dir2 = dir
 
 
-def _get_startup_hook():
+def get_startup_hook(cfg):
     # we want to get source without importing the files
     with open(Path(__file__).parent / '_startup_script.py') as f:
         d = f.read()
 
+    with open(cfg, 'r') as f:
+        conf = yaml.safe_load(f)
+
+    if 'post_load' in conf:
+        post_load = conf['post_load']
+        if isinstance(post_load, str):
+            post_load = [post_load]
+
+        for fp in post_load:
+            with open(fp) as ff:
+                d += ff.read()
+
     return d
 
 
-def configure_ipython_session():
+def configure_ipython_session(cfg):
     """
     Configure a new IPython session.
 
@@ -107,7 +120,7 @@ def configure_ipython_session():
     configure_tab_completion(ipy_config)
 
     # remove force exit key bind from <ctrl-\\>
-    ipy_config.InteractiveShellApp.exec_lines = _get_startup_hook()
+    ipy_config.InteractiveShellApp.exec_lines = get_startup_hook(cfg)
 
     # add env info to ipython banner
     ipy_config.TerminalInteractiveShell.banner2 = get_env_info()
@@ -179,7 +192,7 @@ def main():
     if script is None:
         # Finally start the interactive session
         start_ipython(argv=['--quick'], user_ns=objs,
-                      config=configure_ipython_session())
+                      config=configure_ipython_session(args.cfg))
     else:
         # Instead of setting up ipython, run the script with objs
         with open(script) as fn:
