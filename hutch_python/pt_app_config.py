@@ -1,0 +1,15 @@
+import logging
+
+from prompt_toolkit.keys import Keys
+
+from .utils import safe_load
+
+logger = logging.getLogger(__name__)
+
+
+def load_ipython_extension(ipython):
+    # Unbind Ctrl+\\
+    with safe_load('disable ctrl+\\, auto suggestions'):
+        ipython.pt_app.key_bindings.remove(
+            Keys.ControlBackslash
+        )
