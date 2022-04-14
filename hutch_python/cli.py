@@ -11,13 +11,12 @@ from pathlib import Path
 
 import IPython
 import matplotlib
-import yaml
 from cookiecutter.main import cookiecutter
 from IPython import start_ipython
 from traitlets.config import Config
 
 from .constants import CONDA_BASE, DIR_MODULE
-from .env_version import get_env_info, log_env
+from .env_version import log_env
 from .load_conf import load
 from .log_setup import configure_log_directory, debug_mode, setup_logging
 
@@ -71,41 +70,6 @@ def configure_tab_completion(ipy_config):
         IPython.core.completer.dir2 = dir
 
 
-def get_startup_hook(cfg=None):
-    """
-    Gather startup commands to run after IPython initialization.
-    In order to avoid running code on import, we gather commands as
-    a string.
-
-    Parameters
-    ----------
-    cfg : str
-        Path to conf.yml file
-    """
-    # hutch-python specific ipython modifications
-    logger.debug('adding standard hutch-python post-init hooks.')
-    with open(Path(__file__).parent / '_startup_script.py') as f:
-        d = f.read()
-
-    if not cfg:
-        return d
-
-    with open(cfg, 'r') as f:
-        conf = yaml.safe_load(f)
-
-    if 'post_load' in conf:
-        post_load = conf['post_load']
-        if isinstance(post_load, str):
-            post_load = [post_load]
-
-        for fp in post_load:
-            logger.debug(f'adding file {fp} for execution post-init')
-            with open(fp) as ff:
-                d += ff.read()
-
-    return d
-
-
 def configure_ipython_session(cfg=None):
     """
     Configure a new IPython session.
@@ -119,7 +83,8 @@ def configure_ipython_session(cfg=None):
     # Important Utilities
     ipy_config.InteractiveShellApp.extensions = [
         'hutch_python.ipython_log',
-        'hutch_python.bug'
+        'hutch_python.bug',
+        'hutch_python.pt_app_config'
     ]
     # Matplotlib setup for ipython (automatically do %matplotlib)
     backend = matplotlib.get_backend().replace('Agg', '').lower()
@@ -129,17 +94,20 @@ def configure_ipython_session(cfg=None):
                        'Methods that create plots will not '
                        'function properly.')
 
-    # Disable reformatting input with black
+    # Disable reformatting in put with black
     ipy_config.TerminalInteractiveShell.autoformatter = None
     # Set up tab completion modifications
     configure_tab_completion(ipy_config)
 
-    # Run startup hook code
-    lines = get_startup_hook(cfg=cfg)
-    ipy_config.InteractiveShellApp.exec_lines = lines
+    # disable default banner
+    ipy_config.TerminalIPythonApp.display_banner = False
 
-    # add env info to ipython banner
-    ipy_config.TerminalInteractiveShell.banner2 = get_env_info()
+    # Run startup hook code, print banner after startup hook files
+    files = [
+             str(Path(__file__).parent / 'startup_script.py'),
+             str(Path(__file__).parent / 'print_hint_banner.py')
+            ]
+    ipy_config.InteractiveShellApp.exec_files = files
 
     return ipy_config
 
