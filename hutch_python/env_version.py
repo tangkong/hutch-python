@@ -67,7 +67,7 @@ def get_env_info() -> str:
     banner = (
         'Environment Information\n'
         f'  Conda Environment: {conda_ver}\n'
-        f'  Development Packages: {" ".join(dev_pkgs)}'
+        f'  Development Packages: {" ".join(dev_pkgs)}\n'
     )
 
     return banner
