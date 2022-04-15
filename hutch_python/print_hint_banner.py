@@ -1,9 +1,19 @@
 """
 Print a custom banner with some more helpful hints and information
 for hutch-python sessions.
+
+Startup script files to be run after ipython is initialized via:
+``c.InteractiveTerminalApp.exec_files``
+
+Code here will take executed after both IPython has been loaded and
+the namespace has been populated with hutch objects.
+
+These will be run as standalone python files, and should not be
+imported from.
 """
 
 import sys
+from typing import List
 
 from hutch_python.env_version import get_env_info
 
@@ -12,7 +22,7 @@ default_namespaces = ['a', 'm', 's', 'd', 'x', 'sim', 'camviewer',
 default_objects = ['RE', 'daq', 'elog', 'archive']
 
 
-def gather_hint_table(namespace):
+def gather_hint_table(namespace: List[str]) -> str:
     """
     Gather variable name and short description into a table if the
     variable name is in the current global namespace

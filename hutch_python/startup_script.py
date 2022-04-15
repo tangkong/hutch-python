@@ -1,4 +1,6 @@
 """
+Initialize the ELogPoster callback and subscribe it to the RunEngine
+
 Startup script files to be run after ipython is initialized via:
 ``c.InteractiveTerminalApp.exec_files``
 
