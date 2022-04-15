@@ -70,7 +70,7 @@ def configure_tab_completion(ipy_config):
         IPython.core.completer.dir2 = dir
 
 
-def configure_ipython_session(cfg=None):
+def configure_ipython_session():
     """
     Configure a new IPython session.
 
@@ -94,7 +94,7 @@ def configure_ipython_session(cfg=None):
                        'Methods that create plots will not '
                        'function properly.')
 
-    # Disable reformatting in put with black
+    # Disable reformatting input with black
     ipy_config.TerminalInteractiveShell.autoformatter = None
     # Set up tab completion modifications
     configure_tab_completion(ipy_config)
@@ -176,7 +176,7 @@ def main():
     if script is None:
         # Finally start the interactive session
         start_ipython(argv=['--quick'], user_ns=objs,
-                      config=configure_ipython_session(cfg=args.cfg))
+                      config=configure_ipython_session())
     else:
         # Instead of setting up ipython, run the script with objs
         with open(script) as fn:
