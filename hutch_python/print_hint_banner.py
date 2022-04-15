@@ -7,23 +7,34 @@ import sys
 
 from hutch_python.env_version import get_env_info
 
-default_namespaces = ['a', 'm', 's', 'camviewer', 'bp', 're']
-default_objects = ['RE', 'daq', 'elog', 'archive', ]
+default_namespaces = ['a', 'm', 's', 'd', 'x', 'sim', 'camviewer',
+                      'bp', 're']
+default_objects = ['RE', 'daq', 'elog', 'archive']
 
-dirs = dir()
 
+def gather_hint_table(namespace):
+    """
+    Gather variable name and short description into a table if the
+    variable name is in the current global namespace
+    """
+    global_ns = globals()
+    ns = [x for x in namespace if x in global_ns.keys()]
 
-def filter_list(defaults):
-    # I don't know why I can't use dir() inside the comprehension
-    return [x for x in defaults if x in dirs]
+    out = ''
+    for k in ns:
+        out += f"  {k} - {getattr(global_ns[k], '_desc', 'N/A')}\n"
+
+    return out
 
 
 base_banner = (
     "-----------------------------------\n"
     f'{get_env_info()}'
     "-----------------------------------\n"
-    f'Helpful Namespaces: {filter_list(default_namespaces)}\n'
-    f'Useful objects: {filter_list(default_objects)}\n'
+    f'Helpful Namespaces:\n'
+    f'{gather_hint_table(default_namespaces)}\n'
+    f'Useful objects:\n'
+    f'{gather_hint_table(default_objects)}\n'
 )
 
 
