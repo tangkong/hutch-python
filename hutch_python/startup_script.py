@@ -11,14 +11,10 @@ These will be run as standalone python files, and should not be
 imported from.
 """
 
-import logging
-
 import IPython
 from nabs.callbacks import ELogPoster
 
 from hutch_python.utils import safe_load
-
-logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
     with safe_load('ELogPoster'):

@@ -1,3 +1,9 @@
+"""
+This file defines an ipython extension to configure the terminal app.
+Currently this configures:
+- disabling the Ctrl+\\ keybind
+"""
+
 import logging
 
 from prompt_toolkit.keys import Keys
