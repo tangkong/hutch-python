@@ -104,8 +104,8 @@ def configure_ipython_session():
 
     # Run startup hook code, print banner after startup hook files
     files = [
-             str(Path(__file__).parent / 'startup_script.py'),
-             str(Path(__file__).parent / 'print_hint_banner.py')
+             str(DIR_MODULE / 'startup_script.py'),
+             str(DIR_MODULE / 'print_hint_banner.py')
             ]
     ipy_config.InteractiveShellApp.exec_files = files
 

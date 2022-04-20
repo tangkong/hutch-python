@@ -12,7 +12,6 @@ These will be run as standalone python files, and should not be
 imported from.
 """
 
-import sys
 from typing import List
 
 from hutch_python.env_version import get_env_info
@@ -28,7 +27,7 @@ def gather_hint_table(namespace: List[str]) -> str:
     variable name is in the current global namespace
     """
     global_ns = globals()
-    ns = [x for x in namespace if x in global_ns.keys()]
+    ns = [x for x in namespace if x in global_ns]
 
     out = ''
     for k in ns:
@@ -37,16 +36,16 @@ def gather_hint_table(namespace: List[str]) -> str:
     return out
 
 
-base_banner = (
-    "-----------------------------------\n"
-    f'{get_env_info()}'
-    "-----------------------------------\n"
-    f'Helpful Namespaces:\n'
-    f'{gather_hint_table(default_namespaces)}\n'
-    f'Useful objects:\n'
-    f'{gather_hint_table(default_objects)}\n'
-)
+base_banner = f"""
+-----------------------------------
+{get_env_info()}
+-----------------------------------
+Helpful Namespaces:
+{gather_hint_table(default_namespaces)}
+Useful objects:
+{gather_hint_table(default_objects)}
+"""
 
 
 if __name__ == '__main__':
-    sys.stdout.write(base_banner)
+    print(base_banner)

@@ -11,13 +11,22 @@ These will be run as standalone python files, and should not be
 imported from.
 """
 
-import IPython
-from nabs.callbacks import ELogPoster
 
-from hutch_python.utils import safe_load
+def _configure_elog_poster():
+    import IPython
+    from nabs.callbacks import ELogPoster
 
-if __name__ == '__main__':
+    from hutch_python.utils import safe_load
+
     with safe_load('ELogPoster'):
         # RE, ELog will already exist by now
-        elogc = ELogPoster(elog, IPython.get_ipython())  # noqa
-        RE.subscribe(elogc)  # noqa
+        elog = globals().get('elog', None)
+        RE = globals().get('RE', None)
+        assert elog is not None
+
+        elogc = ELogPoster(elog, IPython.get_ipython())
+        RE.subscribe(elogc)
+
+
+if __name__ == '__main__':
+    _configure_elog_poster()
