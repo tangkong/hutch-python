@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def load_ipython_extension(ipython):
     # Unbind Ctrl+\\
-    with safe_load('disable ctrl+\\, auto suggestions'):
+    with safe_load('disable ctrl+\\'):
         ipython.pt_app.key_bindings.remove(
             Keys.ControlBackslash
         )
