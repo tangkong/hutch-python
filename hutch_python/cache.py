@@ -107,11 +107,13 @@ class LoadCache:
             documentation about that object and why it is included.
         """
         for key, value in docs.items():
-            obj = self.objs[key]
-            if obj.__doc__:
-                obj.__doc__ = value + '\n' + textwrap.dedent(obj.__doc__)
-            else:
-                obj.__doc__ = value
+            obj = getattr(self.objs, key, None)
+            if obj:
+                if obj.__doc__:
+                    obj.__doc__ = value + '\n' + textwrap.dedent(obj.__doc__)
+                else:
+                    obj.__doc__ = value
+                obj._desc = value
 
 
 # For writing the files

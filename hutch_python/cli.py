@@ -16,7 +16,7 @@ from IPython import start_ipython
 from traitlets.config import Config
 
 from .constants import CONDA_BASE, DIR_MODULE
-from .env_version import get_env_info, log_env
+from .env_version import log_env
 from .load_conf import load
 from .log_setup import configure_log_directory, debug_mode, setup_logging
 
@@ -83,7 +83,8 @@ def configure_ipython_session():
     # Important Utilities
     ipy_config.InteractiveShellApp.extensions = [
         'hutch_python.ipython_log',
-        'hutch_python.bug'
+        'hutch_python.bug',
+        'hutch_python.pt_app_config'
     ]
     # Matplotlib setup for ipython (automatically do %matplotlib)
     backend = matplotlib.get_backend().replace('Agg', '').lower()
@@ -98,17 +99,15 @@ def configure_ipython_session():
     # Set up tab completion modifications
     configure_tab_completion(ipy_config)
 
-    # remove force exit key bind from <ctrl-\\>
-    ipy_config.InteractiveShellApp.exec_lines = (
-        "import IPython; "
-        "from prompt_toolkit.keys import Keys; "
-        "ip = IPython.get_ipython(); "
-        "cb = Keys.ControlBackslash; "
-        "ip.pt_app.key_bindings.remove(cb) "
-    )
+    # disable default banner
+    ipy_config.TerminalIPythonApp.display_banner = False
 
-    # add env info to ipython banner
-    ipy_config.TerminalInteractiveShell.banner2 = get_env_info()
+    # Run startup hook code, print banner after startup hook files
+    files = [
+             str(DIR_MODULE / 'startup_script.py'),
+             str(DIR_MODULE / 'print_hint_banner.py')
+            ]
+    ipy_config.InteractiveShellApp.exec_files = files
 
     return ipy_config
 
