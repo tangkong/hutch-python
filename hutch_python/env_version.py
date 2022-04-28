@@ -15,9 +15,11 @@ logger = logging.getLogger(__name__)
 _dev_ignore_list = ['ami', 'pdsapp']
 
 
-def not_ignored(path, ignores=_dev_ignore_list):
-    """ Return True if _dev_ignore_list isn't in path or empty"""
-    return not (any((s in path for s in ignores)) or not path)
+def not_ignored(path: list[str], ignores: list[str] = None) -> bool:
+    """ Return True if _dev_ignore_list isn't in path or empty """
+    if ignores is None:
+        ignores = _dev_ignore_list
+    return bool(path and not any((s in path for s in ignores)))
 
 
 def log_env() -> None:
@@ -57,7 +59,7 @@ def get_standard_dev_pkgs() -> set[str]:
     pythonpath = os.environ.get('PYTHONPATH', '')
     if not pythonpath:
         return set()
-    paths = pythonpath.split(':')
+    paths = pythonpath.split(os.pathsep)
     valid_paths = filter(not_ignored, paths)
     pkg_names = set(n.name for n in
                     pkgutil.iter_modules(path=valid_paths)
