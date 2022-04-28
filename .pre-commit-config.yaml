@@ -1,5 +1,12 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
+exclude: |
+    (?x)^(
+        versioneer.py|
+        docs/source/conf.py|
+        hutch_python/_version.py|
+        hutch_python/cookiecutter/.*/conf.yml|
+    )$
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
@@ -16,8 +23,7 @@ repos:
     -   id: check-yaml
         exclude: |
             (?x)^(
-                conda-recipe/meta.yaml|
-                hutch_python/cookiecutter/.*/conf.yml
+                conda-recipe/meta.yaml
             )$
     -   id: debug-statements
 
