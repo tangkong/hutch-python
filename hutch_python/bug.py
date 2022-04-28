@@ -2,19 +2,19 @@
 This module is used to both gather and report information for the purpose of
 identifying bugs
 """
-import os
 import getpass
 import logging
-import textwrap
-import tempfile
-import warnings
+import os
 import subprocess
+import tempfile
+import textwrap
+import warnings
 from configparser import ConfigParser, NoOptionError, NoSectionError
 
 import requests
 import simplejson
 from IPython.core.history import HistoryAccessor
-from IPython.core.magic import Magics, magics_class, line_magic
+from IPython.core.magic import Magics, line_magic, magics_class
 from IPython.utils.io import capture_output
 from jinja2 import Environment, PackageLoader
 

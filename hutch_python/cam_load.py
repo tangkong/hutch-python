@@ -4,12 +4,12 @@ Load Detector objects based on a camviewer config file
 import asyncio
 import logging
 from functools import partial
-from multiprocessing.pool import ThreadPool
 from multiprocessing import cpu_count
-
-from .constants import SUCCESS_LEVEL
+from multiprocessing.pool import ThreadPool
 
 from pcdsdevices.areadetector.detectors import PCDSAreaDetector
+
+from .constants import SUCCESS_LEVEL
 
 logger = logging.getLogger(__name__)
 logger.success = partial(logger.log, SUCCESS_LEVEL)
