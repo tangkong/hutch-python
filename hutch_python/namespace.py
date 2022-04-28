@@ -1,13 +1,12 @@
 """
 This module provides utilities for grouping objects into namespaces.
 """
-from inspect import isfunction
 import logging
+from inspect import isfunction
 
 from ophyd import Device
 
-from .utils import (IterableNamespace, find_class, strip_prefix,
-                    extract_objs)
+from .utils import IterableNamespace, extract_objs, find_class, strip_prefix
 
 logger = logging.getLogger(__name__)
 

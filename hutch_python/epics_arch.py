@@ -4,9 +4,8 @@ import logging
 import os
 import sys
 
-from .qs_load import get_qs_client
-
 from .constants import EPICS_ARCH_FILE_PATH
+from .qs_load import get_qs_client
 
 logger = logging.getLogger(__name__)
 

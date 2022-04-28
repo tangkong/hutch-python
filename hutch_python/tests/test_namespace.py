@@ -1,11 +1,10 @@
 import logging
 from types import SimpleNamespace
 
-from ophyd.device import Device, Component
+from ophyd.device import Component, Device
 from ophyd.signal import Signal
 
 from hutch_python.namespace import class_namespace, tree_namespace
-
 
 logger = logging.getLogger(__name__)
 

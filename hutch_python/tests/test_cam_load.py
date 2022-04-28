@@ -1,15 +1,14 @@
 import logging
 
-from ophyd.areadetector.base import EpicsSignalWithRBV
-from ophyd.sim import make_fake_device, fake_device_cache, FakeEpicsSignal
 import pytest
-
+from ophyd.areadetector.base import EpicsSignalWithRBV
+from ophyd.sim import FakeEpicsSignal, fake_device_cache, make_fake_device
 from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
 import hutch_python.cam_load as cam_load
-from hutch_python.cam_load import (read_camviewer_cfg, interpret_lines,
-                                   build_and_log, build_cam,
-                                   UnsupportedConfig, MalformedConfig)
+from hutch_python.cam_load import (MalformedConfig, UnsupportedConfig,
+                                   build_and_log, build_cam, interpret_lines,
+                                   read_camviewer_cfg)
 
 from .conftest import TST_CAM_CFG
 

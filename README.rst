@@ -49,4 +49,3 @@ packages.
 
 To automatically select the current experiment, you must run with access to
 the LCLS NFS directories.
-

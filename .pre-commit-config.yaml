@@ -1,5 +1,11 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
+exclude: |
+    (?x)^(
+        versioneer.py|
+        docs/source/conf.py|
+        hutch_python/_version.py|
+    )$
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
@@ -14,7 +20,11 @@ repos:
     -   id: check-symlinks
     -   id: check-xml
     -   id: check-yaml
-        exclude: '^(conda-recipe/meta.yaml)$'
+        exclude: |
+            (?x)^(
+                conda-recipe/meta.yaml|
+                hutch_python/cookiecutter/.*/conf.yml
+            )$
     -   id: debug-statements
 
 -   repo: https://gitlab.com/pycqa/flake8.git
