@@ -1,4 +1,8 @@
 import logging
+from pathlib import Path
+from typing import Union
+
+import yaml
 
 from . import utils
 
@@ -50,3 +54,65 @@ def get_user_objs(load, *, ask_on_failure=True):
                 )
 
     return objs
+
+
+def configure_objects(
+    obj_config: Union[str, Path],
+    objs: utils.HelpfulNamespace
+) -> utils.HelpfulNamespace:
+    """
+    Configure objects based on user provided settings.
+
+    Parameters
+    -----------
+    obj_config : Pathlike
+        Path to configuration yml file
+
+    objs : HelpfulNamespsace
+        All objects to be loaded into hutch-python
+
+    Returns
+    -------
+    objs : HelpfulNamespace
+        Modified objects
+    """
+    with utils.safe_load('configure user objects'):
+        # load yaml
+        with open(obj_config, 'r') as f:
+            cfg = yaml.safe_load(f)
+
+        # apply changes to each device
+        for dev in cfg:
+            # apply each valid configuration action
+            if 'tab_whitelist' in cfg[dev]:
+                update_whitelist(objs, dev,
+                                 cfg['dev']['tab_whitelist'])
+
+        return objs
+
+
+def update_whitelist(obj_ns: utils.HelpfulNamespace,
+                     device: str,
+                     attrs: list[str]) -> None:
+    """
+    Update ``device``'s tab completion whitelist to include ``items``
+    Device is assumed to be in ``obj_ns``
+
+    Parameters
+    ----------
+    obj_ns : HelpfulNamespace
+        Namespace of all objects
+
+    device : str
+        Name of device to edit
+
+    attrs : list[str]
+        List of attributes to add to whitelist
+    """
+    try:
+        dev = obj_ns[device]
+    except KeyError:
+        logger.warn(f'{device} not loaded, cannot configure')
+
+    for att in attrs:
+        dev._tab.add(att)
