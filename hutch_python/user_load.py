@@ -1,8 +1,9 @@
 import logging
 from pathlib import Path
-from typing import Union
+from typing import Callable, Union
 
 import yaml
+from pcdsdevices.interface import BaseInterface
 
 from . import utils
 
@@ -76,43 +77,95 @@ def configure_objects(
     objs : HelpfulNamespace
         Modified objects
     """
-    with utils.safe_load('configure user objects'):
-        # load yaml
+    with utils.safe_load('user object configuration'):
         with open(obj_config, 'r') as f:
             cfg = yaml.safe_load(f)
 
-        # apply changes to each device
-        for dev in cfg:
+        for entry in cfg:
             # apply each valid configuration action
-            if 'tab_whitelist' in cfg[dev]:
-                update_whitelist(objs, dev,
-                                 cfg['dev']['tab_whitelist'])
+            if 'tab_whitelist' in cfg[entry]:
+                update_objs(objs, entry, cfg[entry]['tab_whitelist'],
+                            update_whitelist)
+            if 'tab_blacklist' in cfg[entry]:
+                update_objs(objs, entry, cfg[entry]['tab_blacklist'],
+                            update_blacklist)
 
         return objs
 
 
-def update_whitelist(obj_ns: utils.HelpfulNamespace,
-                     device: str,
-                     attrs: list[str]) -> None:
+def update_objs(
+    obj_ns: utils.HelpfulNamespace,
+    entry: str,
+    attrs: list[str],
+    fn: Callable[[BaseInterface, list[str]], None]
+) -> None:
     """
-    Update ``device``'s tab completion whitelist to include ``items``
-    Device is assumed to be in ``obj_ns``
+    Helper function for updating object namespaces
+    obj_ns is a HelpfulNamespace, which may include other
+    HelpfulNamespace's.  As a result this must be semi-recursive.
 
     Parameters
     ----------
     obj_ns : HelpfulNamespace
         Namespace of all objects
 
-    device : str
+    entry : str
         Name of device to edit
 
     attrs : list[str]
         List of attributes to add to whitelist
-    """
-    try:
-        dev = obj_ns[device]
-    except KeyError:
-        logger.warn(f'{device} not loaded, cannot configure')
 
+    fn : Callable[[BaseInterface, list[str]], None]
+        A function that applies a change to a singular device
+    """
+    dev = getattr(obj_ns, entry, None)
+    if dev:  # look for explicit device
+        fn(dev, attrs)
+
+        return
+
+    # look for devices with class
+    for dev in obj_ns:
+        if isinstance(dev, utils.HelpfulNamespace):
+            update_objs(dev, entry, attrs, fn)
+        # a poor-man's type check, in an effort to avoid importing
+        # every device type again
+        if entry in str(type(dev)):
+            fn(dev, attrs)
+
+
+def update_whitelist(dev: BaseInterface, attrs: list[str]) -> None:
+    """
+    Update the tab whitelist for ``dev`` with each field in ``attrs``
+
+    Parameters
+    ----------
+    dev : BaseInterface
+        A single object implementing the tab completion features in
+        pcdsdevices.interface.BaseInterface
+
+    attrs : list[str]
+        List of attributes to add to whitelist
+    """
     for att in attrs:
         dev._tab.add(att)
+
+
+def update_blacklist(dev: BaseInterface, attrs: list[str]) -> None:
+    """
+    Remove each field in ``attrs`` from tab whitelist for ``dev``
+
+    Parameters
+    ----------
+    dev : BaseInterface
+        A single object implementing the tab completion features in
+        pcdsdevices.interface.BaseInterface
+
+    attrs : list[str]
+        List of attributes to add to blacklist
+    """
+    for att in attrs:
+        try:
+            dev._tab.remove(att)
+        except KeyError:
+            logger.debug(f'key: {att} not in tab completion list')
