@@ -48,17 +48,17 @@ def test_indirect(objs):
     cfg = {'a': {'tab_whitelist': ['bar']},
            'b': {'tab_whitelist': ['bar', 'dne']}}
 
-    assert 'bar' not in dev_a.__dir__()
-    assert 'bar' not in dev_b.__dir__()
+    assert 'bar' not in dir(dev_a)
+    assert 'bar' not in dir(dev_b)
     update_objs(ns, 'a', cfg['a']['tab_whitelist'],
                 update_whitelist)
-    assert 'bar' in dev_a.__dir__()
-    assert 'bar' not in dev_b.__dir__()
+    assert 'bar' in dir(dev_a)
+    assert 'bar' not in dir(dev_b)
 
     update_objs(ns, 'b', cfg['b']['tab_whitelist'],
                 update_whitelist)
-    assert 'bar' in dev_b.__dir__()
-    assert 'dne' not in dev_b.__dir__()
+    assert 'bar' in dir(dev_b)
+    assert 'dne' not in dir(dev_b)
 
 
 @pytest.mark.parametrize(
@@ -71,11 +71,11 @@ def test_load_tab_blacklist(objs):
 
     update_objs(ns, 'a', cfg['a']['tab_blacklist'],
                 update_blacklist)
-    assert 'bar' not in dev_a.__dir__()
-    assert 'foo' in dev_b.__dir__()
+    assert 'bar' not in dir(dev_a)
+    assert 'foo' in dir(dev_b)
 
-    assert 'dne' not in dev_b.__dir__()
+    assert 'dne' not in dir(dev_b)
     update_objs(ns, 'b', cfg['b']['tab_blacklist'],
                 update_blacklist)
-    assert 'foo' not in dev_b.__dir__()
-    assert 'dne' not in dev_b.__dir__()
+    assert 'foo' not in dir(dev_b)
+    assert 'dne' not in dir(dev_b)
