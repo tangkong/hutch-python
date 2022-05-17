@@ -158,7 +158,8 @@ def replace_tablist(dev: BaseInterface, attrs: list[str]) -> None:
 
 def update_kind(dev: BaseInterface, attrs: dict) -> None:
     """
-    Update the kind of components in ``dev``
+    Update the kind of components in ``dev``.  If a key matches the
+    device name, the top-level device kind will be modified.
 
     Parameters
     ----------
@@ -174,6 +175,11 @@ def update_kind(dev: BaseInterface, attrs: dict) -> None:
         if not k:
             logger.debug(f'{kind} not a valid kind.')
             continue
+
+        if cpt == dev.name:
+            dev.kind = k
+            continue
+
         c = getattr(dev, cpt, None)
         if not c:
             logger.debug(f'Device {dev.name} has no component {cpt}')
