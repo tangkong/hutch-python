@@ -39,7 +39,9 @@ If you would like to add another, please leave an
 
 (please don't take any of these as suggested modifications)
 
-* ``tab_whitelist``
+``tab_whitelist``
+^^^^^^^^^^^^^^^^^
+
 A list of items to **reveal** in the tab-completion menu.
 
 .. code-block:: YAML
@@ -49,8 +51,11 @@ A list of items to **reveal** in the tab-completion menu.
         - kind
 
 
-* ``tab_blacklist``
-A list of items to **hide** from the tab_completion menu.
+``tab_blacklist``
+^^^^^^^^^^^^^^^^^
+
+A list of items to **hide** from the tab_completion menu.  These attributes
+still exist, and are simply hidden from the tab-completion menu.
 
 .. code-block:: YAML
 
@@ -58,9 +63,11 @@ A list of items to **hide** from the tab_completion menu.
       tab_blacklist:
         - blade_01
 
-* ``replace_tablist``
+``replace_tablist``
+^^^^^^^^^^^^^^^^^^^
+
 A list of items to replace the tab completion list with.  This will
-essentially hide all items and reveal the ones specified.
+functionally hide all items and reveal the ones specified.
 
 .. code-block:: YAML
 
@@ -68,7 +75,9 @@ essentially hide all items and reveal the ones specified.
       replace_tablist:
         - position
 
-* ``kind``
+``kind``
+^^^^^^^^
+
 Modify the ophyd ``kind`` of a device and its subcomponents.  This is
 used in ophyd internals to signal if we need to "pay attention" to
 a device or not.
@@ -89,7 +98,7 @@ key-value pair.
 
 Order of Operations
 -------------------
-The order the object configuration file is written determines the order
+The order of the object configuration file determines the order
 in which modifications are applied.  Devices/Classes are modified from
 top to bottom, and the modifications are applied in the following order:
 
@@ -98,16 +107,18 @@ top to bottom, and the modifications are applied in the following order:
     #. replace tablist
     #. kind
 
-This means that if an item is added to both the whitelist and blacklist,
-it will not be shown.  Similarly the ``replace_tablist`` directive will
-take priority over the blacklist and whitelist directives.
+Later modifications can override earlier modifications.  More explicitly,
+this means that if an item is added to both the ``tab_whitelist`` and
+``tab_blacklist``, it will not be shown.  Similarly the ``replace_tablist``
+directive will take priority over the ``tab_blacklist`` and
+``tab_whitelist`` directives.
 
 
 Loading the configuration file
 ------------------------------
 To use the configuration settings you've described, simply reference
 your configuration yaml file in your ``conf.yml`` file with the
-key ``obj_config``
+key ``obj_config``.  See :ref:`obj_conf_yaml`.
 
 .. code-block:: YAML
 
@@ -120,6 +131,8 @@ Example ``obj_conf.yml``
 .. code-block:: YAML
 
     # Configuration options can be applied to a single device by name
+    # this hides at2l0.blade_01, shows at2l0.kind, and changes the
+    # kind of at2l0.blade_01 and at2l0.blade_02.
     at2l0:
       tab_whitelist:
         - kind
@@ -134,7 +147,7 @@ Example ``obj_conf.yml``
       tab_whitelist:
         - kind
 
-    # This try to limit the tab completion list to only `kind`
+    # This tries to limit the tab completion list to only `kind`
     FastMotor:
       replace_tablist:
         - kind

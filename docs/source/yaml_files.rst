@@ -86,6 +86,8 @@ to load an experiment other than the active experiment; handy for debugging.
 This key is used to force the questionnaire and experiment file to be from a
 particular experiment.
 
+.. _obj_conf_yaml:
+
 obj_conf
 --------
 
@@ -101,6 +103,7 @@ Currently, this supports modifying:
 
 - attributes visible by tab-completion
 - the ``kind`` of an object
+
 on a class-wide or device-by-device basis.
 
 For more information, see :ref:`object-configuration`.
