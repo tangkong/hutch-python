@@ -16,6 +16,7 @@ from bluesky import RunEngine
 from bluesky.callbacks.best_effort import BestEffortCallback
 from bluesky.callbacks.core import LiveTable
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
+from event_model import RunRouter
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdaq.sim import set_sim_mode as set_daq_sim
@@ -313,7 +314,11 @@ def load_conf(conf, hutch_dir=None, args=None):
                 'be set up for qt5 for bluesky scans to work!'
                 )
             bec.disable_plots()
-        RE.subscribe(bec)
+
+        from nabs.callbacks import BECOptionFactoryFaker
+        bec_rr = RunRouter([BECOptionFactoryFaker(bec)])
+
+        RE.subscribe(bec_rr)
         # Enable scientific notation for big/small numbers in LiveTable
         LiveTable._FMT_MAP['number'] = 'g'
         cache(RE=RE, bec=bec)
