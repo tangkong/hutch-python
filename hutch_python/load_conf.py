@@ -13,11 +13,9 @@ import matplotlib
 import yaml
 from archapp.interactive import EpicsArchive
 from bluesky import RunEngine
-from bluesky.callbacks.best_effort import BestEffortCallback
 from bluesky.callbacks.core import LiveTable
 from bluesky.callbacks.mpl_plotting import initialize_qt_teleporter
-from event_model import RunRouter
-from nabs.callbacks import BECOptionFactoryFaker
+from nabs.callbacks import BECOptionsPerRun
 from pcdsdaq.daq import Daq
 from pcdsdaq.scan_vars import ScanVars
 from pcdsdaq.sim import set_sim_mode as set_daq_sim
@@ -308,7 +306,7 @@ def load_conf(conf, hutch_dir=None, args=None):
                                              SigquitHandler])
         RE.pause_msg = abort_msg
         initialize_qt_teleporter()
-        bec = BestEffortCallback()
+        bec = BECOptionsPerRun()
         if matplotlib.get_backend() not in {"Qt5Agg", "QtAgg"}:
             logger.warning(
                 'Disabling bluesky scan plots. Matplotlib config must '
@@ -316,9 +314,7 @@ def load_conf(conf, hutch_dir=None, args=None):
                 )
             bec.disable_plots()
 
-        bec_rr = RunRouter([BECOptionFactoryFaker(bec)])
-
-        RE.subscribe(bec_rr)
+        RE.subscribe(bec)
         # Enable scientific notation for big/small numbers in LiveTable
         LiveTable._FMT_MAP['number'] = 'g'
         cache(RE=RE, bec=bec)
