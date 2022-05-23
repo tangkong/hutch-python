@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Callable, Tuple, Union
 
 import yaml
-from ophyd import Kind
+from ophyd import Device, Kind
 from pcdsdevices.interface import BaseInterface
 
 from . import utils
@@ -101,23 +101,21 @@ def replace_tablist(dev: BaseInterface, attrs: list[str]) -> None:
     attrs : list[str]
         list of attributes to replace ``dev`` tablist with
     """
-    for old_att in dir(dev):
-        dev._tab.remove(old_att)
+    dev._tab.reset()
 
     for att in attrs:
         dev._tab.add(att)
 
 
-def update_kind(dev: BaseInterface, attrs: dict) -> None:
+def update_kind(dev: Device, attrs: dict) -> None:
     """
     Update the kind of components in ``dev``.  If a key matches the
     device name, the top-level device kind will be modified.
 
     Parameters
     ----------
-    dev : BaseInterface
-        A single object implementing the tab completion features in
-        pcdsdevices.interface.BaseInterface
+    dev : ophyd.Device
+        A single Ophyd Device with Kind attributes
 
     attrs : dict
         configuration for kind settings on ``dev``
