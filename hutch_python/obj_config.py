@@ -39,7 +39,6 @@ def update_objs(
     dev = getattr(obj_ns, entry, None)
     if dev:  # look for explicit device
         fn(dev, attrs)
-
         return
 
     # look for devices with class
