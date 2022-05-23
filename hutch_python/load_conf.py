@@ -32,10 +32,11 @@ from .happi import get_happi_objs, get_lightpath
 from .lcls import global_devices, global_device_docs
 from .namespace import class_namespace
 from .ophyd_settings import setup_ophyd
+from .obj_config import configure_objects
 from .options import load_options
 from .qs_load import get_qs_objs
 from .plan_wrappers import initialize_wrapper_namespaces, register_plan
-from .user_load import get_user_objs, configure_objects
+from .user_load import get_user_objs
 from .utils import (get_current_experiment, hutch_banner, safe_load,
                     HelpfulNamespace, AbortSigintHandler,
                     SigquitHandler, abort_msg)
