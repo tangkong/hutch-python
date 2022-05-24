@@ -15,8 +15,8 @@ def update_objs(
     obj_ns: utils.HelpfulNamespace,
     entry: str,
     attrs: dict,
-    fn: Callable[[BaseInterface, Union[dict, list[str]]], None]
-) -> None:
+    fn: Callable[[BaseInterface, Union[dict, list[str]]], None],
+) -> bool:
     """
     Helper function for updating object namespaces
     obj_ns is a HelpfulNamespace, which may include other
@@ -35,20 +35,43 @@ def update_objs(
 
     fn : Callable[[BaseInterface, dict], None]
         A function that applies a change to a singular device
+
+    Returns
+    -------
+    bool
+        True if modification was applied, False otherwise
+
     """
     dev = getattr(obj_ns, entry, None)
     if dev:  # look for explicit device
-        fn(dev, attrs)
-        return
+        try:
+            fn(dev, attrs)
+            # if we match a specific device, there should be no dupes
+            return True
+        except AttributeError:
+            # if class is in namespace, can be misinterpreted as a device
+            # currently covered by AttributeError, might not be futureproof
+            logger.warning(f'{dev} cannot be modified with {fn.__name__}')
 
     # look for devices with class
+    found_ns = False
+    found_match = False
+    found = False
     for dev in obj_ns:
         if isinstance(dev, utils.HelpfulNamespace):
-            update_objs(dev, entry, attrs, fn)
+            found_ns = update_objs(dev, entry, attrs, fn)
         # a poor-man's type check, in an effort to avoid importing
         # every device type again
         if entry == type(dev).__name__:
             fn(dev, attrs)
+            found_match = True
+
+        # need to keep found conditions separate, and not overwrite them
+        # with each iter. (could search through ns without finding a match)
+        if found_ns or found_match:
+            found = True
+
+    return found
 
 
 def update_whitelist(dev: BaseInterface, attrs: list[str]) -> None:
@@ -181,7 +204,15 @@ def configure_objects(
 
         for entry in cfg:
             # apply each valid configuration action
+            found = False
             for k, fn in mod_list:
                 if k in cfg[entry]:
-                    update_objs(objs, entry, cfg[entry][k], fn)
+                    found = update_objs(objs, entry, cfg[entry][k], fn)
+
+            # warn if device not found
+            if not found:
+                logger.warning(
+                    f'Entry ({entry}) not found in current session, '
+                    f'cannot apply changes ({fn.__name__}) '
+                )
         return objs
