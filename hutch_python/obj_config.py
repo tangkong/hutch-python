@@ -101,7 +101,8 @@ def replace_tablist(dev: BaseInterface, attrs: list[str]) -> None:
     attrs : list[str]
         list of attributes to replace ``dev`` tablist with
     """
-    dev._tab.reset()
+    for old_att in dir(dev):
+        dev._tab.remove(old_att)
 
     for att in attrs:
         dev._tab.add(att)
