@@ -32,6 +32,7 @@ from .happi import get_happi_objs, get_lightpath
 from .lcls import global_devices, global_device_docs
 from .namespace import class_namespace
 from .ophyd_settings import setup_ophyd
+from .obj_config import configure_objects
 from .options import load_options
 from .qs_load import get_qs_objs
 from .plan_wrappers import initialize_wrapper_namespaces, register_plan
@@ -226,6 +227,21 @@ def load_conf(conf, hutch_dir=None, args=None):
                          'load objects from questionnaire or experiment '
                          'file.'))
 
+    try:
+        obj_config = conf['obj_config']
+        if isinstance(obj_config, str):
+            if obj_config[0] == '/':
+                obj_config = Path(obj_config)
+            else:
+                obj_config = Path(hutch_dir) / obj_config
+        else:
+            logger.error('Invalid obj_config conf %s, must be string.',
+                         obj_config)
+            obj_config = None
+    except KeyError:
+        obj_config = None
+        logger.info(('Missing obj_config from conf. Will skip applying '
+                     'user settings to devices.'))
     try:
         # Configure whether we use the LCLS-I or LCLS-II daq
         daq_type = conf['daq_type']
@@ -527,6 +543,10 @@ def load_conf(conf, hutch_dir=None, args=None):
             else:
                 setup_preset_paths(hutch=beamline_presets,
                                    exp=experiment_presets)
+
+    # configure objects
+    if obj_config is not None:
+        configure_objects(obj_config, all_objs)
 
     # Write db.txt info file to the user's module
     try:
