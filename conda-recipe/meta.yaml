@@ -28,7 +28,7 @@ requirements:
     - jinja2 >=2.11.0
     - lightpath >=0.6.0
     - matplotlib >=3.4.0
-    - nabs >=1.3.0
+    - nabs >=1.5.0
     - pcdscalc >=0.3.0
     - pcdsdaq >=2.3.0
     - pcdsdevices >=4.7.0
