@@ -189,27 +189,27 @@ class IPythonLogger:
                 _indented(line_traceback),
             )
 
-            if thread:
-                last_input = self.ipython_in[-1] if self.ipython_in else ""
-                message = textwrap.dedent(
-                    f"""\
-                    Thread: {thread.name}
-                    Last user input: {line_num} {last_input}
-                    """.rstrip()
-                )
-            else:
+            if not thread:
                 message = f"In [{line_num}]: {line_input}"
+            else:
+                last_input = self.ipython_in[-1] if self.ipython_in else ""
+                message = "\n".join(
+                    (
+                        f"Thread: {thread.name}",
+                        f"Last user input: {line_num} {last_input}",
+                    )
+                )
+
+            full_message = "\n".join(
+                (
+                    message,
+                    f"Exception: {exc_type.__name__}: {exc_value}",
+                    f"File: {exc_file} line {exc_line}",
+                ),
+            )
 
             log_exception_to_central_server(
-                exc_info,
-                stacklevel=2,
-                message=textwrap.dedent(
-                    f"""\
-                    {message}
-                    Exception: {exc_type.__name__}: {exc_value}
-                    File: {exc_file} line {exc_line}
-                    """.rstrip()
-                ),
+                exc_info, stacklevel=2, message=full_message
             )
         finally:
             self.prev_err_value = exc_value
