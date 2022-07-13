@@ -153,7 +153,7 @@ class IPythonLogger:
 
     @_log_errors
     def _log_exception(
-        self, exc_info, line_input="[n/a]", background=False, thread=None
+        self, exc_info, line_input="", background=False, thread=None
     ):
         """
         Logs the given exception.
@@ -164,7 +164,7 @@ class IPythonLogger:
             The exception information.
 
         line_input: str, optional
-            The user input associated with the given line.
+            The user input associated with the given line, if available.
 
         background : bool, optional
             Set if the exception happened in the background as part of an
@@ -177,7 +177,6 @@ class IPythonLogger:
         try:
             line_num = len(self.ipython_in) - 1
             line_traceback = ''.join(traceback.format_exception(*exc_info))
-            thread = f" ({thread})" if thread else ""
             exc_file, exc_line = _get_file_and_line_from_traceback(
                 exc_traceback
             )
@@ -190,14 +189,25 @@ class IPythonLogger:
                 _indented(line_traceback),
             )
 
+            if thread:
+                last_input = self.ipython_in[-1] if self.ipython_in else ""
+                message = textwrap.dedent(
+                    f"""\
+                    Thread: {thread.name}
+                    Last user input: {line_num} {last_input}
+                    """.rstrip()
+                )
+            else:
+                message = f"In [{line_num}]: {line_input}"
+
             log_exception_to_central_server(
                 exc_info,
                 stacklevel=2,
                 message=textwrap.dedent(
                     f"""\
-                    Input: [{line_num}{thread}] {line_input}
-                    File: {exc_file} line {exc_line}
+                    {message}
                     Exception: {exc_type.__name__}: {exc_value}
+                    File: {exc_file} line {exc_line}
                     """.rstrip()
                 ),
             )
