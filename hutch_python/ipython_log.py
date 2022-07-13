@@ -196,7 +196,7 @@ class IPythonLogger:
                 message = "\n".join(
                     (
                         f"Thread: {thread.name}",
-                        f"Last user input: {line_num} {last_input}",
+                        f"Last user input [{line_num}]: {last_input}",
                     )
                 )
 
