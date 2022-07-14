@@ -146,6 +146,9 @@ class QSBackend:
             return
 
     # Dummy methods to make this "look like a database"
+    def clear_cache(self, *args, **kwargs):
+        pass
+
     def all_devices(self, *args, **kwargs):
         pass
 

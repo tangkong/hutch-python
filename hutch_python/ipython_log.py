@@ -9,6 +9,8 @@ import sys
 import textwrap
 import threading
 import traceback
+import types
+from typing import Tuple
 
 from .constants import INPUT_LEVEL
 from .log_setup import log_exception_to_central_server
@@ -18,6 +20,14 @@ logger.input = functools.partial(logger.log, INPUT_LEVEL)
 logger.setLevel(INPUT_LEVEL)
 
 _ip_logger = None
+
+EXCEPTION_MESSAGE_FOR_LOG_FILE = """\
+Exception in IPython session%s. Last input line %s:
+%s
+
+Exception details:
+%s
+""".rstrip()
 
 
 def _log_errors(func):
@@ -30,6 +40,33 @@ def _log_errors(func):
         except Exception:
             logger.input('Logging error', exc_info=True)
     return wrapped
+
+
+def _get_file_and_line_from_traceback(
+    tb: types.TracebackType,
+    *,
+    on_error: str = "unknown"
+) -> Tuple[str, int]:
+    """
+    Get the last source filename and line number from the traceback.
+
+    Parameters
+    ----------
+    tb : traceback
+    on_error : str, optional
+        The default filename if unable to determine the source code location
+        from the traceback.
+
+    Returns
+    -------
+    filename : str
+    lineno : int
+    """
+    try:
+        last_frame, exc_line = tuple(traceback.walk_tb(tb))[-1]
+        return (last_frame.f_code.co_filename, exc_line)
+    except Exception:
+        return (on_error, 0)
 
 
 _indented = functools.partial(textwrap.indent, prefix=' ' * 4)
@@ -116,7 +153,7 @@ class IPythonLogger:
 
     @_log_errors
     def _log_exception(
-        self, exc_info, line_input="[n/a]", background=False, thread=None
+        self, exc_info, line_input="", background=False, thread=None
     ):
         """
         Logs the given exception.
@@ -127,7 +164,7 @@ class IPythonLogger:
             The exception information.
 
         line_input: str, optional
-            The user input associated with the given line.
+            The user input associated with the given line, if available.
 
         background : bool, optional
             Set if the exception happened in the background as part of an
@@ -140,29 +177,39 @@ class IPythonLogger:
         try:
             line_num = len(self.ipython_in) - 1
             line_traceback = ''.join(traceback.format_exception(*exc_info))
-            thread = f" ({thread})" if thread else ""
-            logger.input(
-                """\
-Exception in IPython session%s. Last input line %s:
-%s
+            exc_file, exc_line = _get_file_and_line_from_traceback(
+                exc_traceback
+            )
 
-Exception details:
-%s
-""".rstrip(),
+            logger.input(
+                EXCEPTION_MESSAGE_FOR_LOG_FILE,
                 thread,
                 line_num,
                 _indented(line_input),
                 _indented(line_traceback),
             )
 
+            if not thread:
+                message = f"In [{line_num}]: {line_input}"
+            else:
+                last_input = self.ipython_in[-1] if self.ipython_in else ""
+                message = "\n".join(
+                    (
+                        f"Thread: {thread.name}",
+                        f"Last user input [{line_num}]: {last_input}",
+                    )
+                )
+
+            full_message = "\n".join(
+                (
+                    message,
+                    f"Exception: {exc_type.__name__}: {exc_value}",
+                    f"File: {exc_file} line {exc_line}",
+                ),
+            )
+
             log_exception_to_central_server(
-                exc_info,
-                stacklevel=2,
-                message=f"""\
-Line: {line_num}{thread}
-Input: {line_input}
-Exception: {exc_type.__name__}: {exc_value}
-""".rstrip(),
+                exc_info, stacklevel=2, message=full_message
             )
         finally:
             self.prev_err_value = exc_value
