@@ -1,5 +1,6 @@
 import logging
 import queue
+import uuid
 from logging.handlers import QueueHandler
 from pathlib import Path
 
@@ -71,7 +72,7 @@ def setup_queue_console():
             queue_handler = handler
             break
     queue_handler.name = 'console'
-    queue_handler.level = 20
+    queue_handler.level = logging.INFO
     return queue_handler
 
 
@@ -84,16 +85,20 @@ def clear(queue):
 
 def assert_is_info(queue):
     clear(queue)
-    logger.info('hello')
-    logger.debug('goodbye')
-    assert 'hello' in queue.get(block=False).getMessage()
-    assert queue.empty()
+    info_msg = str(uuid.uuid4())
+    debug_msg = str(uuid.uuid4())
+    logger.info(info_msg)
+    logger.debug(debug_msg)
+    messages = [rec.getMessage() for rec in clear(queue)]
+    assert info_msg in messages
+    assert debug_msg not in messages
 
 
 def assert_is_debug(queue):
     clear(queue)
-    logger.debug('goodbye')
-    assert 'goodbye' in queue.get(block=False).getMessage()
+    debug_msg = str(uuid.uuid4())
+    logger.debug(debug_msg)
+    assert debug_msg in [rec.getMessage() for rec in clear(queue)]
 
 
 def test_set_console_level(log_queue):
