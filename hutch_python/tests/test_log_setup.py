@@ -71,7 +71,7 @@ def setup_queue_console():
             queue_handler = handler
             break
     queue_handler.name = 'console'
-    queue_handler.level = 20
+    queue_handler.level = logging.INFO
     return queue_handler
 
 
