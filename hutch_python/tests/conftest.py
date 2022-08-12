@@ -26,7 +26,7 @@ except ImportError:
     HutchELog = None
 try:
     import lightpath
-    from lightpath import beamlines
+    from lightpath.config import beamlines
 except ImportError:
     lightpath = None
     beamlines = None
