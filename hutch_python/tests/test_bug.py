@@ -3,6 +3,7 @@ import os
 import pathlib
 import tempfile
 
+import pytest
 import simplejson
 from requests import Response
 
@@ -66,6 +67,7 @@ def test_get_current_environment():
         assert env == 'test-environment'
 
 
+@pytest.mark.xfail
 def test_bug_report(monkeypatch, temporary_config):
     logger.debug('test_bug_report')
     # Patch in our fake user input function
