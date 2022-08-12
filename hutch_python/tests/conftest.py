@@ -283,4 +283,3 @@ def cleanup_ophydobj():
                 pv.auto_monitor = False
                 pv.clear_callbacks()
     this_test_ophydobj.clear()
-
