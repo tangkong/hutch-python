@@ -13,6 +13,7 @@ import zmq
 from epics import PV
 from ophyd.areadetector.plugins import PluginBase
 from ophyd.device import Component as Cpt
+from ophyd.ophydobj import OphydObject
 from ophyd.signal import Signal
 from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
@@ -246,3 +247,40 @@ class DummyZMQSocket:
 def dummy_zmq_lcls2(monkeypatch):
     # monkeypatch such that the lcls2 daq doesn't actually connect to things
     monkeypatch.setattr(zmq, 'Context', DummyZMQContext)
+
+
+this_test_ophydobj = []
+
+
+@pytest.fixture(scope='session', autouse=True)
+def register_ophydobj():
+    """
+    Save references to all the ophydobj we create.
+    """
+    OphydObject.add_instantiation_callback(this_test_ophydobj.append)
+
+
+@pytest.fixture(scope='function', autouse=True)
+def cleanup_ophydobj():
+    """
+    Disable ophydobj that were created by the test.
+
+    We need to do this or they can persist between tests, clogging the logs
+    as the PVs update and causing race conditions.
+    """
+    yield
+    for obj in this_test_ophydobj:
+        # Should probably destroy here but it segfaults
+        # Need to remove all subs, disable the monitor, remove callbacks
+        # Might fail on non-pyepics idk
+        obj.unsubscribe_all()
+        for pv_attr in ('_read_pv', '_write_pv'):
+            try:
+                pv = getattr(obj, pv_attr)
+            except AttributeError:
+                pass
+            else:
+                pv.auto_monitor = False
+                pv.clear_callbacks()
+    this_test_ophydobj.clear()
+
