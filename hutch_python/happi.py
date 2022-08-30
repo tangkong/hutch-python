@@ -14,7 +14,7 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-def get_happi_objs(db, hutch):
+def get_happi_objs(db, beampath, hutch):
     """
     Get the relevant items for ``hutch`` from ``db``.
 
@@ -38,21 +38,15 @@ def get_happi_objs(db, hutch):
     # Load the happi Client
     client = happi.Client(path=db)
     containers = list()
-    if beamlines is None:
-        beamline_conf = []
-    else:
-        # Find upstream items based on lightpath configuration
-        beamline_conf = beamlines.get(hutch.upper())
-    # Something strange is happening if there are no upstream items
-    if not beamline_conf:
-        logger.warning("Unable to find lightpath for %s",
-                       hutch.upper())
-        beamline_conf = {}
-    # Add the complete hutch beamline
-    beamline_conf[hutch.upper()] = {}
-    # Base beamline
-    for beamline, conf in beamline_conf.items():
+
+    # find upstream beamlines based on devices in beampath
+    # should be data in 'beamline' happi key
+    lines = set((dev.md.beamline for dev in beampath.devices))
+    lines.add(hutch.upper())
+
+    for beamline in lines:
         # Assume we want hutch items that are active
+        # items can be lightpath-inactive
         reqs = dict(beamline=beamline, active=True)
         results = client.search(**reqs)
         blc = [res.item for res in results]
@@ -98,4 +92,4 @@ def get_lightpath(db, hutch):
     # Allow the lightpath module to create a path
     lc = lightpath.LightController(client, endstations=[hutch.upper()])
     # Return the BeamPath object created by the LightController
-    return lc.beamlines[hutch.upper()]
+    return lc.active_path(hutch.upper())

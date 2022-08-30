@@ -437,13 +437,14 @@ def load_conf(conf, hutch_dir=None, args=None):
     # Happi db and Lightpath
     if db is not None:
         with safe_load('database'):
-            happi_objs = get_happi_objs(db, hutch)
-            cache(**happi_objs)
             bp = get_lightpath(db, hutch)
             if bp is not None and bp.devices:
                 beampath_name = "{}_beampath".format(hutch.lower())
                 cache(**{beampath_name: bp})
                 cache.doc(**{beampath_name: 'Lightpath beam path object.'})
+            # Gather relevant objects given the BeamPath
+            happi_objs = get_happi_objs(db, bp, hutch)
+            cache(**happi_objs)
 
     # ArchApp
     with safe_load('archapp'):
