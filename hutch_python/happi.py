@@ -35,8 +35,11 @@ def get_happi_objs(
 
     Parameters
     ----------
+    db: ``str``
+        path to the happi database
+
     light_ctrl: lightpath.LightController
-        LightController instance constructe from the happi db
+        LightController instance constructed from the happi db
 
     endstation: ``str``
         Name of hutch
@@ -47,7 +50,7 @@ def get_happi_objs(
         A mapping from item name to item
     """
     # Load the happi Client
-    if light_ctrl is not None:
+    if None not in (light_ctrl, lightpath):
         client = light_ctrl.client
     else:
         client = happi.Client(path=db)

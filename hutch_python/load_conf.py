@@ -444,14 +444,14 @@ def load_conf(conf, hutch_dir=None, args=None):
             cache(**happi_objs)
 
             # create and store beampath
-            bp = lc.active_path(hutch.upper())
-            if bp is not None and bp.devices:
+            if lc is not None:
+                bp = lc.active_path(hutch.upper())
                 beampath_name = "{}_beampath".format(hutch.lower())
                 cache(**{beampath_name: bp})
                 cache.doc(**{beampath_name: 'Lightpath beam path object.'})
 
-            cache(**{'light_ctrl': lc})
-            cache.doc(**{'light_ctrl': 'Lightpath LightController object.'})
+                cache(**{'light_ctrl': lc})
+                cache.doc(light_ctrl='Lightpath LightController object')
 
     # ArchApp
     with safe_load('archapp'):
