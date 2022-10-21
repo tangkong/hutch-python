@@ -11,6 +11,7 @@ try:
     from lightpath.config import beamlines
 except ImportError:
     lightpath = None
+    LightController = None
     beamlines = None
 
 logger = logging.getLogger(__name__)
