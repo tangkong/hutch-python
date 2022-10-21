@@ -26,7 +26,7 @@ env:
 
     # Extra dependencies needed to run the test with Pip (similar to
     # CONDA_EXTRAS) but for pip
-    - PIP_EXTRAS="."
+    - PIP_EXTRAS="lightpath ."
 
 import:
   - pcdshub/pcds-ci-helpers:travis/shared_configs/setup-env-ui.yml
