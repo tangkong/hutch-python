@@ -26,10 +26,11 @@ except ImportError:
     HutchELog = None
 try:
     import lightpath
-    from lightpath.config import beamlines
+    from lightpath.config import beamlines, sources
 except ImportError:
     lightpath = None
     beamlines = None
+    sources = None
 try:
     from psdaq.control.BlueskyScan import BlueskyScan
 except ImportError:
