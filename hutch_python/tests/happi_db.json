@@ -5,7 +5,7 @@
         "args": [],
         "beamline": "TST",
         "creation": "Sat Jan 13 13:48:43 2018",
-        "device_class": "lightpath.mock_devices.Valve",
+        "device_class": "types.SimpleNamespace",
         "input_branches": [
             "X0"
         ],
@@ -36,7 +36,7 @@
         "args": [],
         "beamline": "TST",
         "creation": "Sat Jan 13 13:49:51 2018",
-        "device_class": "lightpath.mock_devices.Valve",
+        "device_class": "types.SimpleNamespace",
         "input_branches": [
             "X0"
         ],
@@ -67,7 +67,7 @@
         "args": [],
         "beamline": "TST",
         "creation": "Sat Jan 13 13:50:36 2018",
-        "device_class": "lightpath.mock_devices.Valve",
+        "device_class": "types.SimpleNamespace",
         "input_branches": [
             "X0"
         ],
