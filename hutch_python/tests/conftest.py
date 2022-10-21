@@ -11,12 +11,15 @@ from queue import Queue
 import pytest
 import zmq
 from epics import PV
+from ophyd.areadetector.base import EpicsSignalWithRBV
 from ophyd.areadetector.plugins import PluginBase
 from ophyd.device import Component as Cpt
 from ophyd.ophydobj import OphydObject
 from ophyd.signal import Signal
+from ophyd.sim import FakeEpicsSignal, fake_device_cache, make_fake_device
 from pcdsdevices.areadetector.detectors import PCDSAreaDetector
 
+import hutch_python.cam_load as cam_load
 import hutch_python.qs_load
 import hutch_python.utils
 
@@ -27,6 +30,10 @@ except ImportError:
 try:
     import lightpath
     from lightpath.config import beamlines, sources
+
+    # patch lightpath config to have proper lines/sources
+    beamlines['TST'] = ['X0']
+    sources.append('X0')
 except ImportError:
     lightpath = None
     beamlines = None
@@ -284,3 +291,10 @@ def cleanup_ophydobj():
                 pv.auto_monitor = False
                 pv.clear_callbacks()
     this_test_ophydobj.clear()
+
+
+@pytest.fixture(autouse=True)
+def patch_areadet():
+    fake_device_cache[EpicsSignalWithRBV] = FakeEpicsSignal
+    FakeDet = make_fake_device(PCDSAreaDetector)
+    cam_load.PCDSAreaDetector = FakeDet

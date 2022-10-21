@@ -27,7 +27,7 @@
         "screen": null,
         "stand": null,
         "system": null,
-        "type": "pcdsdevices.happi.containers.LCLSLightpathItem",
+        "type": "pcdsdevices.happi.containers.LCLSItem",
         "z": 1.0
     },
     "Tst:Dev:2": {
@@ -58,7 +58,7 @@
         "screen": null,
         "stand": null,
         "system": null,
-        "type": "pcdsdevices.happi.containers.LCLSLightpathItem",
+        "type": "pcdsdevices.happi.containers.LCLSItem",
         "z": 2.0
     },
     "Tst:Dev:3": {
@@ -89,7 +89,7 @@
         "screen": null,
         "stand": null,
         "system": null,
-        "type": "pcdsdevices.happi.containers.LCLSLightpathItem",
+        "type": "pcdsdevices.happi.containers.LCLSItem",
         "z": -1.0
     }
 }
