@@ -440,7 +440,7 @@ def load_conf(conf, hutch_dir=None, args=None):
             lc = get_lightpath(db, hutch)
 
             # Gather relevant objects given the BeamPath
-            happi_objs = get_happi_objs(lc, hutch)
+            happi_objs = get_happi_objs(db, lc, hutch)
             cache(**happi_objs)
 
             # create and store beampath

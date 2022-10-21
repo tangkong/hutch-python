@@ -22,7 +22,7 @@ def test_happi_objs():
     sources.append('X0')
     # Only select active objects
     lc = get_lightpath(db, 'tst')
-    objs = get_happi_objs(lc, 'tst')
+    objs = get_happi_objs(db, lc, 'tst')
     assert len(objs) == 2
     assert all([obj.md.active for obj in objs.values()])
     # Make sure we can handle an empty JSON file

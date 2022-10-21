@@ -3,6 +3,7 @@ import logging
 from typing import Dict
 
 import happi
+import ophyd
 from happi.loader import load_devices
 
 try:
@@ -18,9 +19,10 @@ logger = logging.getLogger(__name__)
 
 
 def get_happi_objs(
+    db: str,
     light_ctrl: LightController,
     endstation: str,
-) -> Dict[str, happi.HappiItem]:
+) -> Dict[str, ophyd.Device]:
     """
     Get the relevant items for ``endstation`` from the happi database ``db``.
 
@@ -36,7 +38,7 @@ def get_happi_objs(
     light_ctrl: lightpath.LightController
         LightController instance constructe from the happi db
 
-    hutch: ``str``
+    endstation: ``str``
         Name of hutch
 
     Returns
@@ -45,9 +47,20 @@ def get_happi_objs(
         A mapping from item name to item
     """
     # Load the happi Client
-    client = light_ctrl.client
+    if light_ctrl is not None:
+        client = light_ctrl.client
+    else:
+        client = happi.Client(path=db)
     containers = list()
 
+    if light_ctrl is None:
+        # lightpath was unavailable, search by beamline name
+        reqs = dict(beamline=endstation.upper(), active=True)
+        results = client.search(**reqs)
+        containers.extend(res.item for res in results)
+        return _load_devices(*containers)
+
+    # if lightpath exists, we can grab upstream devices
     dev_names = set()
     paths = light_ctrl.beamlines[endstation.upper()]
     for path in paths:
@@ -75,6 +88,20 @@ def get_happi_objs(
         else:
             logger.warning("No items found in database for %s",
                            line.upper())
+
+    return _load_devices(*containers)
+
+
+def _load_devices(*containers: happi.HappiItem):
+    """
+    Load objects specified by the provided containers.
+    Optionally keeps track of loading times and logs them
+
+    Returns
+    -------
+    types.SimpleNamespace or Mapping
+        namespace mapping device name to its ophyd.Device
+    """
 
     # Instantiate the devices needed
     sig = inspect.signature(load_devices)
