@@ -1,11 +1,13 @@
 import inspect
 import logging
+from typing import Dict
 
 import happi
 from happi.loader import load_devices
 
 try:
     import lightpath
+    from lightpath import LightController
     from lightpath.config import beamlines
 except ImportError:
     lightpath = None
@@ -14,18 +16,24 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
-def get_happi_objs(db, beampath, hutch):
+def get_happi_objs(
+    light_ctrl: LightController,
+    endstation: str,
+) -> Dict[str, happi.HappiItem]:
     """
-    Get the relevant items for ``hutch`` from ``db``.
+    Get the relevant items for ``endstation`` from the happi database ``db``.
 
     This depends on a JSON ``happi`` database stored somewhere in the file
     system and handles setting up the ``happi.Client`` and querying the data
     base for items.
 
+    Uses the paths found by the LightController, but does not use it to
+    load the devices so we can do so ourselves and log load times.
+
     Parameters
     ----------
-    db: ``str``
-        Path to database
+    light_ctrl: lightpath.LightController
+        LightController instance constructe from the happi db
 
     hutch: ``str``
         Name of hutch
@@ -36,26 +44,37 @@ def get_happi_objs(db, beampath, hutch):
         A mapping from item name to item
     """
     # Load the happi Client
-    client = happi.Client(path=db)
+    client = light_ctrl.client
     containers = list()
 
-    # find upstream beamlines based on devices in beampath
-    # should be data in 'beamline' happi key
-    lines = set((dev.md.beamline for dev in beampath.devices))
-    lines.add(hutch.upper())
+    dev_names = set()
+    paths = light_ctrl.beamlines[endstation.upper()]
+    for path in paths:
+        dev_names.update(path)
 
-    for beamline in lines:
+    # gather happi items for each of these
+    for name in dev_names:
+        results = client.search(name=name)
+        containers.extend(res.item for res in results)
+
+    # also any device with the same beamline name
+    # since lightpath only grabs lightpath-active devices
+    beamlines = set(it.beamline for it in containers)
+
+    for line in beamlines:
         # Assume we want hutch items that are active
         # items can be lightpath-inactive
-        reqs = dict(beamline=beamline, active=True)
+        reqs = dict(beamline=line, active=True)
         results = client.search(**reqs)
-        blc = [res.item for res in results]
+        blc = [res.item for res in results
+               if res.item.name not in dev_names]
         # Add the beamline containers to the complete list
         if blc:
             containers.extend(blc)
         else:
             logger.warning("No items found in database for %s",
-                           beamline.upper())
+                           line.upper())
+
     # Instantiate the devices needed
     sig = inspect.signature(load_devices)
     if "include_load_time" in sig.parameters:
@@ -66,9 +85,9 @@ def get_happi_objs(db, beampath, hutch):
     return dev_namespace.__dict__
 
 
-def get_lightpath(db, hutch):
+def get_lightpath(db, hutch) -> LightController:
     """
-    Create a lightpath from relevant ``happi`` objects.
+    Create a ``lightpath.LightController`` from relevant ``happi`` objects.
 
     Parameters
     ----------
@@ -80,9 +99,11 @@ def get_lightpath(db, hutch):
 
     Returns
     -------
-    path: ``lightpath.BeamPath``
-        Object that provides a convenient way to visualize all the devices
-        that may block the beam on the way to the interaction point.
+    path: ``lightpath.LightController``
+        Object that contains the a representation of the facility graph.  Can
+        be used to access a ``BeamPath``, which provides a convenient way to
+        visualize all the devices that may block the beam on the way to the
+        interaction point.
     """
     if None in (lightpath, beamlines):
         logger.warning('Lightpath module is not available.')
@@ -91,5 +112,6 @@ def get_lightpath(db, hutch):
     client = happi.Client(path=db)
     # Allow the lightpath module to create a path
     lc = lightpath.LightController(client, endstations=[hutch.upper()])
-    # Return the BeamPath object created by the LightController
-    return lc.active_path(hutch.upper())
+    # Return paths (names only) seen by the LightController
+    # avoid loding the devices so hutch-python can keep track of it
+    return lc
