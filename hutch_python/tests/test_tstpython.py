@@ -30,9 +30,7 @@ def test_tstpython_scripts():
 
 try:
     import colorama  # noqa
-
-    # has_colorama = True
-    has_colorama = False
+    has_colorama = True
 except ImportError:
     has_colorama = False
 
