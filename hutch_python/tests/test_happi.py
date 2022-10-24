@@ -7,19 +7,19 @@ import simplejson
 
 from hutch_python.happi import get_happi_objs, get_lightpath
 
-from .conftest import beamlines, requires_lightpath, sources
+from . import conftest
 
 logger = logging.getLogger(__name__)
 
 
-@requires_lightpath
+@conftest.requires_lightpath
 def test_happi_objs():
     logger.debug("test_happi_objs")
     db = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                       'happi_db.json')
     # patch lightpath configs to include test db beamline
-    beamlines['TST'] = ['X0']
-    sources.append('X0')
+    conftest.beamlines['TST'] = ['X0']
+    conftest.sources.append('X0')
     # Only select active objects
     lc = get_lightpath(db, 'tst')
     objs = get_happi_objs(db, lc, 'tst')
@@ -34,7 +34,7 @@ def test_happi_objs():
             lc = get_lightpath(tmp.name, 'tst')
 
 
-@requires_lightpath
+@conftest.requires_lightpath
 def test_get_lightpath():
     logger.debug("test_get_lightpath")
     db = os.path.join(os.path.abspath(os.path.dirname(__file__)),
