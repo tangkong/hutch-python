@@ -56,7 +56,7 @@ def get_happi_objs(
         client = happi.Client(path=db)
     containers = list()
 
-    if light_ctrl is None:
+    if light_ctrl is None or (endstation.upper() not in light_ctrl.beamlines):
         # lightpath was unavailable, search by beamline name
         reqs = dict(beamline=endstation.upper(), active=True)
         results = client.search(**reqs)
