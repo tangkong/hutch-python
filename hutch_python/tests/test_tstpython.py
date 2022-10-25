@@ -3,8 +3,11 @@ from pathlib import Path
 from subprocess import STDOUT, CalledProcessError, check_output
 
 import pytest
+from packaging import version
 
-from .conftest import skip_if_win32_generic
+# need to import beamline configuration to pass through as global?
+# this may need a second look, or more proper monkeypatching
+from .conftest import beamlines, skip_if_win32_generic, sources  # noqa
 
 logger = logging.getLogger(__name__)
 tstpython = Path(__file__).parent / 'tstpython'
@@ -31,12 +34,22 @@ try:
 except ImportError:
     has_colorama = False
 
+try:
+    import lightpath
+    lightpath_version = lightpath.__version__
+except ImportError:
+    lightpath_version = '0.0.0'
+
 
 # See bluesky.log, ophyd.log for places where colorama is initialized
 # This is supposed to be safe but apparently colorama is buggy
 @pytest.mark.skipif(has_colorama,
                     reason=('IPython breaks in a pseudo-tty if any package '
                             'initializes colorama, ruining this test.'))
+@pytest.mark.skipif(
+    version.parse(lightpath.__version__) <= version.parse('1.0.0'),
+    reason='Need lightpath config read bugfix from PR#167'
+)
 def test_tstpython_ipython():
     logger.debug('test_tstpython_ipython')
 
