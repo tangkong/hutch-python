@@ -88,9 +88,10 @@ def get_happi_objs(
         # Add the beamline containers to the complete list
         if blc:
             containers.extend(blc)
-        else:
-            logger.warning("No items found in database for %s",
-                           line.upper())
+
+    if len(containers) < 1:
+        logger.warning(f'{len(containers)} active devices found for '
+                       'this beampath')
 
     return _load_devices(*containers)
 
