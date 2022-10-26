@@ -26,7 +26,7 @@ requirements:
     - happi >=1.9.0
     - ipython >=7.26.0
     - jinja2 >=2.11.0
-    - lightpath >=1.0.0
+    - lightpath >=1.0.1
     - matplotlib >=3.4.0
     - nabs >=1.5.0
     - pcdscalc >=0.3.0
