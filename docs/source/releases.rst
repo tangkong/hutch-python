@@ -8,7 +8,7 @@ v1.18.0 (2022-10-25)
 Features
 --------
 - Updates database loading to utilize updated lightpath (v1.0.0)
-  for loading devices. This makes the newe, reworked version of
+  for loading devices. This makes the newer, reworked version of
   lightpath available in the session instead of the old version.
 
 Maintenance
