@@ -77,6 +77,7 @@ def get_happi_objs(
     # also any device with the same beamline name
     # since lightpath only grabs lightpath-active devices
     beamlines = set(it.beamline for it in containers)
+    beamlines.add(endstation.upper())
 
     for line in beamlines:
         # Assume we want hutch items that are active
