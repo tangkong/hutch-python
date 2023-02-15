@@ -20,13 +20,13 @@ env:
     # Extra dependencies needed to run the tests which are not included
     # at the recipe and dev-requirements.txt. E.g. PyQt
     # pandoc/pypandoc - used to translate README.md for sphinx
-    - CONDA_EXTRAS="pip pandoc pypandoc"
+    - CONDA_EXTRAS="pip pandoc pypandoc ipython=8.4.0"
     # Requirements file with contents for tests dependencies
     - CONDA_REQUIREMENTS="dev-requirements.txt"
 
     # Extra dependencies needed to run the test with Pip (similar to
     # CONDA_EXTRAS) but for pip
-    - PIP_EXTRAS="lightpath ."
+    - PIP_EXTRAS="lightpath ipython==8.4.0 ."
 
 import:
   - pcdshub/pcds-ci-helpers:travis/shared_configs/setup-env-ui.yml
