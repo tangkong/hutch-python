@@ -1,11 +1,10 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 exclude: |
-    (?x)^(
-        versioneer.py|
-        docs/source/conf.py|
-        hutch_python/_version.py|
-    )$
+  (?x)^(
+    hutch_python/_version.py|
+  )$
+
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -20,11 +19,7 @@ repos:
     -   id: check-symlinks
     -   id: check-xml
     -   id: check-yaml
-        exclude: |
-            (?x)^(
-                conda-recipe/meta.yaml|
-                hutch_python/cookiecutter/.*/conf.yml
-            )$
+        exclude: '^(conda-recipe/meta.yaml)$'
     -   id: debug-statements
 
 -   repo: https://github.com/pycqa/flake8.git
@@ -33,6 +28,6 @@ repos:
     -   id: flake8
 
 -   repo: https://github.com/timothycrosley/isort
-    rev: 5.12.0
+    rev: 5.11.4
     hooks:
     -   id: isort
