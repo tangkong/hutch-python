@@ -6,3 +6,4 @@ packaging
 pytest
 pytest-timeout
 flake8
+sphinxcontrib-jquery
