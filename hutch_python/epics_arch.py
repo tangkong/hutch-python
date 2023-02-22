@@ -89,7 +89,7 @@ def create_arch_file(experiment, hutch=None, path=None, dry_run=False):
         # set the path to write the epicsArch file to.
         if path:
             if path and not os.path.exists(path):
-                raise IOError('Invalid path: %s' % path)
+                raise OSError('Invalid path: %s' % path)
             file_path = path
         elif hutch:
             file_path = EPICS_ARCH_FILE_PATH.format(hutch.lower())
@@ -184,7 +184,7 @@ def create_file(exp_name, path):
     """
     data_list = get_questionnaire_data(exp_name)
     if not os.path.exists(path):
-        raise IOError('Invalid path: %s' % path)
+        raise OSError('Invalid path: %s' % path)
     exp_name = str(exp_name)
     file_path = ''.join((path, 'epicsArch_', exp_name, '.txt'))
 

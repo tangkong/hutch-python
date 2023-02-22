@@ -46,7 +46,7 @@ def _get_file_and_line_from_traceback(
     tb: types.TracebackType,
     *,
     on_error: str = "unknown"
-) -> Tuple[str, int]:
+) -> tuple[str, int]:
     """
     Get the last source filename and line number from the traceback.
 

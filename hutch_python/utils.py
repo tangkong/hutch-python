@@ -348,7 +348,7 @@ def find_class(class_path, check_defaults=True):
                                       check_defaults=False)
                 except AttributeError:
                     pass
-        raise ImportError('Could not find_class for {}'.format(class_path))
+        raise ImportError(f'Could not find_class for {class_path}')
 
 
 def strip_prefix(name, strip_text):
@@ -420,7 +420,7 @@ def hutch_banner(hutch_name='Hutch '):
     f = pyfiglet.Figlet(font='big')
     banner = f.renderText(text)
     if hutch_name in HUTCH_COLORS:
-        banner = '\x1b[{}m'.format(HUTCH_COLORS[hutch_name]) + banner
+        banner = f'\x1b[{HUTCH_COLORS[hutch_name]}m' + banner
     print(banner)
 
 

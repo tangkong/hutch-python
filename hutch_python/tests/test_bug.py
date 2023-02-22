@@ -81,7 +81,7 @@ def test_bug_report(monkeypatch, temporary_config):
         # Post report
         report_bug(captured_output='A printed message',
                    description='A description of the bug')
-    bug = simplejson.load(open(tmp.name, 'r'))
+    bug = simplejson.load(open(tmp.name))
     # Check GitHub authentication
     assert FakeSession.past_auth == {'github_user': 'github_pw'}
     # Test proxy host information

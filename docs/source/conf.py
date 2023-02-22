@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # hutch-python documentation build configuration file, created by
 # sphinx-quickstart.

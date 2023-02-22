@@ -55,7 +55,7 @@ class FakeExecutionResult:
 
 class FakeIPython:
     """A fake replacement of IPython's ``TerminalInteractiveShell``."""
-    user_ns: Dict[str, Any]
+    user_ns: dict[str, Any]
     events: FakeIPythonEvents
 
     def __init__(self):
@@ -89,7 +89,7 @@ def ipylog(log_queue, fake_ipython) -> IPythonLogger:
 
 def next_pertinent_log_record(
     queue: Queue,
-    pertinent_loggers: Optional[List[str]] = None
+    pertinent_loggers: Optional[list[str]] = None
 ) -> logging.LogRecord:
     """
     Get the next relevant log record from the queue.
@@ -127,7 +127,7 @@ def next_pertinent_log_record(
 
 def next_pertinent_log_message(
     queue: Queue,
-    pertinent_loggers: Optional[List[str]] = None
+    pertinent_loggers: Optional[list[str]] = None
 ) -> str:
     """
     Get the next relevant log message from the queue.
@@ -162,7 +162,7 @@ def next_pertinent_log_message(
 
 def assert_no_more_messages(
     queue: Queue,
-    pertinent_loggers: Optional[List[str]] = None
+    pertinent_loggers: Optional[list[str]] = None
 ) -> None:
     """
     Assert that no more relevant messages are available from a queue.

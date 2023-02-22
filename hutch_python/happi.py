@@ -22,7 +22,7 @@ def get_happi_objs(
     db: str,
     light_ctrl: LightController,
     endstation: str,
-) -> Dict[str, ophyd.Device]:
+) -> dict[str, ophyd.Device]:
     """
     Get the relevant items for ``endstation`` from the happi database ``db``.
 
@@ -76,7 +76,7 @@ def get_happi_objs(
 
     # also any device with the same beamline name
     # since lightpath only grabs lightpath-active devices
-    beamlines = set(it.beamline for it in containers)
+    beamlines = {it.beamline for it in containers}
     beamlines.add(endstation.upper())
 
     for line in beamlines:
