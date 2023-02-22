@@ -61,9 +61,10 @@ def get_standard_dev_pkgs() -> set[str]:
         return set()
     paths = pythonpath.split(os.pathsep)
     valid_paths = filter(not_ignored, paths)
-    pkg_names = {n.name for n in
-                    pkgutil.iter_modules(path=valid_paths)
-                    if n.ispkg}
+    pkg_names = {
+        n.name for n in pkgutil.iter_modules(path=valid_paths)
+        if n.ispkg
+    }
 
     return pkg_names
 

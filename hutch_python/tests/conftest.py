@@ -48,7 +48,7 @@ except ImportError:
 skip_if_win32_generic = pytest.mark.skipif(
     sys.platform == 'win32',
     reason='Does not run on Windows',
-    )
+)
 skip_if_win32_pcdsdaq = pytest.mark.skipif(
     sys.platform == 'win32',
     reason='Fails on Windows (pcdsdaq)',

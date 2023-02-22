@@ -44,4 +44,4 @@ def setup_ophyd():
         timeout=float(os.environ.get(READ_VAR, 2.0)),
         write_timeout=float(os.environ.get(WRITE_VAR, 5.0)),
         auto_monitor=os.environ.get(AUTO_VAR, 'false').lower() in AUTO_TRUE,
-        )
+    )

@@ -64,7 +64,7 @@ def test_print_dry_run(items, capsys):
             '* tape_x', 'XPP:LBL:MMN:04', '* transducer_y',
             'XPP:LBL:MMN:05', '* xes_y', 'XPP:LBL:MMN:06', '* lbl',
             'XPP:USR:EVR:TRIG0', '* acromag', 'XPP:USR:ao1'
-            ]
+        ]
         expected_str = ''
         for m in expected_list:
             expected_str += m + '\n'

@@ -12,10 +12,13 @@
 
 import os
 import sys
+
 import sphinx_rtd_theme
 
 module_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../")
 sys.path.insert(0, module_path)
+
+import hutch_python  # noqa: E402
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -62,8 +65,6 @@ project = "hutch-python"
 # built documents.
 #
 # The short X.Y version.
-import hutch_python
-
 version = str(hutch_python.__version__)
 # The full version, including alpha/beta/rc tags.
 release = str(hutch_python.__version__)

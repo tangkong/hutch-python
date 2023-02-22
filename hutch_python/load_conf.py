@@ -182,8 +182,7 @@ def load_conf(conf, hutch_dir=None, args=None):
             hutch = None
     except KeyError:
         hutch = None
-        logger.info('Missing hutch from conf. Will skip elog '
-                     'and cameras.')
+        logger.info("Missing hutch from conf. Will skip elog and cameras.")
 
     # Display the banner
     if hutch is None:
@@ -203,8 +202,7 @@ def load_conf(conf, hutch_dir=None, args=None):
             db = None
     except KeyError:
         db = None
-        logger.info('Missing db from conf. Will skip loading from shared '
-                     'database.')
+        logger.info('Missing db from conf. Will skip loading from shared database.')
     try:
         load = conf['load']
         if not isinstance(load, (str, list)):
@@ -223,9 +221,11 @@ def load_conf(conf, hutch_dir=None, args=None):
     except KeyError:
         experiment = None
         if hutch is None:
-            logger.info('Missing hutch and experiment from conf. Will not '
-                         'load objects from questionnaire or experiment '
-                         'file.')
+            logger.info(
+                "Missing hutch and experiment from conf. Will not "
+                "load objects from questionnaire or experiment "
+                "file."
+            )
 
     try:
         obj_config = conf['obj_config']
@@ -240,8 +240,9 @@ def load_conf(conf, hutch_dir=None, args=None):
             obj_config = None
     except KeyError:
         obj_config = None
-        logger.info('Missing obj_config from conf. Will skip applying '
-                     'user settings to devices.')
+        logger.info(
+            'Missing obj_config from conf. Will skip applying user settings to devices.'
+        )
     try:
         # Configure whether we use the LCLS-I or LCLS-II daq
         daq_type = conf['daq_type']
@@ -327,7 +328,7 @@ def load_conf(conf, hutch_dir=None, args=None):
             logger.warning(
                 'Disabling bluesky scan plots. Matplotlib config must '
                 'be set up for qt5 for bluesky scans to work!'
-                )
+            )
             bec.disable_plots()
 
         RE.subscribe(bec)
@@ -337,7 +338,7 @@ def load_conf(conf, hutch_dir=None, args=None):
         cache.doc(
             RE='Bluesky plan executor.',
             bec='Bluesky best-effort callback for visualization settings.',
-            )
+        )
 
     # Inline calculations
     with safe_load('calc utils'):
@@ -394,13 +395,13 @@ def load_conf(conf, hutch_dir=None, args=None):
             bpp=plan_defaults.preprocessors,
             re=run_namespace,
             register_plan=register_plan,
-            )
+        )
         cache.doc(
             bp='Namespace of full bluesky plans.',
             bps='Namespace of bluesky plan building blocks (stubs).',
             bpp='Namespace of bluesky plan preprocessors.',
-            re='Wrapped plans for quick running.'
-            )
+            re='Wrapped plans for quick running.',
+        )
 
     # Scan PVs
     if hutch is not None:
@@ -532,7 +533,7 @@ def load_conf(conf, hutch_dir=None, args=None):
             slits='Namespace of all slits objects.',
             detectors='Namespace of all ami detector objects.',
             all_objects='Namespace of all loaded objects.',
-            )
+        )
 
     # Install Presets
     if hutch_dir is not None:
