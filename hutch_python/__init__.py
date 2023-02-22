@@ -1,7 +1,5 @@
+from .version import __version__  # noqa: F401
 import logging
 
-from . import _version
 
 logger = logging.getLogger(__name__)
-
-__version__ = _version.get_versions()['version']
