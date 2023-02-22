@@ -9,4 +9,3 @@ omit =
     #tests
     *test*
     hutch_python/tests/*
-    hutch_python/cookiecutter/*
