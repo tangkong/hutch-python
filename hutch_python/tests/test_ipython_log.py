@@ -2,7 +2,7 @@ import dataclasses
 import logging
 import sys
 from queue import Empty, Queue
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 import pytest
 

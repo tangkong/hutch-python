@@ -12,7 +12,6 @@ These will be run as standalone python files, and should not be
 imported from.
 """
 
-from typing import List
 
 from hutch_python.env_version import get_env_info
 

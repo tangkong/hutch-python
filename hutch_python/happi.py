@@ -1,6 +1,5 @@
 import inspect
 import logging
-from typing import Dict
 
 import happi
 import ophyd

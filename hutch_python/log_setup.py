@@ -36,7 +36,6 @@ import collections
 import logging
 import logging.config
 import os
-import sys
 import textwrap
 import threading
 import time

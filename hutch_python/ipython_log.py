@@ -10,7 +10,6 @@ import textwrap
 import threading
 import traceback
 import types
-from typing import Tuple
 
 from .constants import INPUT_LEVEL
 from .log_setup import log_exception_to_central_server

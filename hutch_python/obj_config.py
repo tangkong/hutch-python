@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Callable, Tuple, Union
+from typing import Callable, Union
 
 import yaml
 from ophyd import Device, Kind
