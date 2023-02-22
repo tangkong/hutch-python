@@ -17,8 +17,14 @@ jobs:
       # Extras that will be installed for both conda/pip:
       testing-extras: ""
       # Extras to be installed only for conda-based testing:
-      conda-testing-extras: "ipython=8.4.0 pandoc pypandoc"
+      conda-testing-extras: "ipython=8.4.0"
       # Extras to be installed only for pip-based testing:
-      pip-testing-extras: "ipython==8.4.0 lightpath"
+      pip-testing-extras: "ipython==8.4.0"
+      # System packages to be installed only for conda-based testing:
+      conda-system-packages: ""
+      # System packages to be installed only for pip-based testing:
+      pip-system-packages: ""
+      # System packages to be installed only for documentation:
+      docs-system-packages: "pandoc"
       # Set if using setuptools-scm for the conda-build workflow
       use-setuptools-scm: true
