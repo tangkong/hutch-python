@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Callable, Tuple, Union
+from typing import Callable, Union
 
 import yaml
 from ophyd import Device, Kind
@@ -174,7 +174,7 @@ mods = [
 def configure_objects(
     obj_config: Union[str, Path],
     objs: utils.HelpfulNamespace,
-    mod_list: list[Tuple[str, Callable]] = None
+    mod_list: list[tuple[str, Callable]] = None
 ) -> utils.HelpfulNamespace:
     """
     Configure objects based on user provided settings.
@@ -197,7 +197,7 @@ def configure_objects(
         Modified objects
     """
     with utils.safe_load('user object configuration'):
-        with open(obj_config, 'r') as f:
+        with open(obj_config) as f:
             cfg = yaml.safe_load(f)
         if mod_list is None:
             mod_list = mods

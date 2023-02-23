@@ -7,11 +7,11 @@ def global_devices():
     """
     return dict(
         beam_stats=BeamStats(),
-        lcls=LCLS()
-        )
+        lcls=LCLS(),
+    )
 
 
 global_device_docs = {
-    'beam_stats': 'Summary of the most important beam statistics.',
-    'lcls': 'Collection of all upstream x-ray diagnostics.',
-    }
+    "beam_stats": "Summary of the most important beam statistics.",
+    "lcls": "Collection of all upstream x-ray diagnostics.",
+}

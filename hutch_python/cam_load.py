@@ -49,7 +49,7 @@ def interpret_cfg(filename, pvnames=None):
     info: ``list of str``
         Valid inputs for build_cam
     """
-    with open(filename, 'r') as f:
+    with open(filename) as f:
         lines = f.readlines()
 
     if pvnames is None:

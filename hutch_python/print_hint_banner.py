@@ -12,7 +12,6 @@ These will be run as standalone python files, and should not be
 imported from.
 """
 
-from typing import List
 
 from hutch_python.env_version import get_env_info
 
@@ -21,7 +20,7 @@ default_namespaces = ['a', 'm', 's', 'd', 'x', 'sim', 'camviewer',
 default_objects = ['RE', 'daq', 'elog', 'archive']
 
 
-def gather_hint_table(namespace: List[str]) -> str:
+def gather_hint_table(namespace: list[str]) -> str:
     """
     Gather variable name and short description into a table if the
     variable name is in the current global namespace

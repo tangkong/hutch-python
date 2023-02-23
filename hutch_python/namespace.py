@@ -148,9 +148,11 @@ def tree_namespace(scope=None):
                     setattr(upper_space, key, IterableNamespace())
                 upper_space = getattr(upper_space, key)
             if hasattr(upper_space, name):
-                logger.warning(('Tried to add {} to {}, but something was '
-                                'already there. Two devices share the same '
-                                'name!'.format(name, upper_space)))
+                logger.warning(
+                    f"Tried to add {name} to {upper_space}, but something was "
+                    f"already there. Two devices share the same "
+                    f"name!"
+                )
             else:
                 setattr(upper_space, name, obj)
     logger.debug('Created tree namespace %s', tree_space)

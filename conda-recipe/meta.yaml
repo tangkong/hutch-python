@@ -1,52 +1,59 @@
-{% set data = load_setup_py_data() %}
+{% set package_name = "hutch_python" %}
+{% set import_name = "hutch_python" %}
+{% set version = load_file_regex(load_file=os.path.join(import_name, "_version.py"), regex_pattern=".*version = '(\S+)'").group(1) %}
 
 package:
-  name: hutch-python
-  version : {{ data.get('version') }}
+  name: {{ package_name }}
+  version: {{ version }}
 
 source:
   path: ..
 
 build:
-  number: 1
+  number: 0
   noarch: python
+  script: {{ PYTHON }} -m pip install . -vv
 
 requirements:
   build:
-    - python >=3.9
-    - setuptools
-
+  - python >=3.9
+  - setuptools_scm
+  - pip
   run:
-    - python >=3.9
-    - archapp >=1.0.2
-    - bluesky >=1.8.0
-    - coloredlogs >=15.0.0
-    - cookiecutter >=1.7.0
-    - elog >=1.1.0
-    - happi >=1.9.0
-    - ipython >=7.26.0
-    - jinja2 >=2.11.0
-    - lightpath >=1.0.1
-    - matplotlib >=3.4.0
-    - nabs >=1.5.0
-    - pcdscalc >=0.3.0
-    - pcdsdaq >=2.3.0
-    - pcdsdevices >=7.0.0
-    - pcdsutils >=0.6.0
-    - psdaq-control-minimal >=3.3.19
-    - psdm_qs_cli >=0.3.1
-    - pyfiglet >=0.8.0
-    - pyqt <5.15.0
-    - pyyaml >=5.4.0
-    - requests >=2.26.0
-    - simplejson >=3.17.0
+  - python >=3.9
+  - archapp >=1.0.2
+  - bluesky >=1.8.0
+  - coloredlogs >=15.0.0
+  - cookiecutter >=1.7.0
+  - elog >=1.1.0
+  - happi >=1.9.0
+  - ipython >=7.26.0
+  - jinja2 >=2.11.0
+  - lightpath >=1.0.1
+  - matplotlib >=3.4.0
+  - nabs >=1.5.0
+  - pcdscalc >=0.3.0
+  - pcdsdaq >=2.3.0
+  - pcdsdevices >=7.0.0
+  - pcdsutils >=0.6.0
+  - psdaq-control-minimal >=3.3.19
+  - psdm_qs_cli >=0.3.1
+  - pyfiglet >=0.8.0
+  - pyqt <5.15.0
+  - pyyaml >=5.4.0
+  - requests >=2.26.0
+  - simplejson >=3.17.0
 
 test:
-  imports:
-    - hutch_python
   commands:
-    - hutch-python --help
-    - epicsarch-qs --help
+  - hutch-python --help
+  - epicsarch-qs --help
+  imports:
+  - hutch_python
+  requires:
+  - packaging
+  - pytest
+  - pytest-timeout
 
 about:
   home: https://github.com/pcdshub/hutch-python

@@ -36,4 +36,4 @@ calc_namespace = HelpfulNamespace(
     be_lens=collect_functions(['pcdscalc.be_lens_calcs']),
     common=collect_functions(['pcdscalc.common']),
     diffraction=collect_functions(['pcdscalc.diffraction']),
-    )
+)

@@ -36,7 +36,6 @@ import collections
 import logging
 import logging.config
 import os
-import sys
 import textwrap
 import threading
 import time
@@ -123,7 +122,7 @@ def get_log_filename(extension: str = '.log') -> Path:
 
 def _read_logging_config() -> dict:
     """Read the logging configuration file into a dictionary."""
-    with open(constants.FILE_YAML, 'rt') as f:
+    with open(constants.FILE_YAML) as f:
         return yaml.safe_load(f.read())
 
 
@@ -361,19 +360,19 @@ class ObjectFilter(logging.Filter):
 
     def _count_update(self) -> None:
         """Log count update - every second."""
-        noisy_loggers = set(
+        noisy_loggers = {
             name
             for name, count in tuple(self.name_to_log_count_1s.items())
             if count > self.noisy_threshold_1s > 0
-        ) | set(
+        } | {
             name
             for name, count in tuple(self.name_to_log_count_10s.items())
             if count > self.noisy_threshold_10s > 0
-        ) | set(
+        } | {
             name
             for name, count in tuple(self.name_to_log_count_60s.items())
             if count > self.noisy_threshold_60s > 0
-        )
+        }
 
         for noisy_logger in sorted(noisy_loggers):
             if noisy_logger in self.whitelist:
@@ -525,7 +524,7 @@ class ObjectFilter(logging.Filter):
     @property
     def object_names(self) -> set[str]:
         """The names of all contained objects."""
-        return set(obj.name for obj in self.objects)
+        return {obj.name for obj in self.objects}
 
     def filter(self, record: logging.LogRecord) -> bool:
         name: Optional[str] = getattr(record, "ophyd_object_name", None)
@@ -732,7 +731,7 @@ def get_handler(name):
     for handler in root.handlers:
         if handler.name == name:
             return handler
-    raise RuntimeError('No {} handler'.format(name))
+    raise RuntimeError(f'No {name} handler')
 
 
 def get_console_level():
@@ -881,7 +880,6 @@ def log_exception_to_central_server(
 
     message = message or f'[{context}] {exc_value}'
     kwargs = dict()
-    if sys.version_info >= (3, 8):
-        kwargs = dict(stacklevel=stacklevel + 1)
+    kwargs = dict(stacklevel=stacklevel + 1)
 
     central_logger.log(level, message, exc_info=exc_info, **kwargs)

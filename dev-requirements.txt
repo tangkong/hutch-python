@@ -1,8 +1,4 @@
-sphinx
-sphinx_rtd_theme
-nbsphinx
-doctr
+lightpath
 packaging
 pytest
 pytest-timeout
-flake8

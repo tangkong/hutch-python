@@ -10,7 +10,6 @@ import textwrap
 import threading
 import traceback
 import types
-from typing import Tuple
 
 from .constants import INPUT_LEVEL
 from .log_setup import log_exception_to_central_server
@@ -46,7 +45,7 @@ def _get_file_and_line_from_traceback(
     tb: types.TracebackType,
     *,
     on_error: str = "unknown"
-) -> Tuple[str, int]:
+) -> tuple[str, int]:
     """
     Get the last source filename and line number from the traceback.
 
