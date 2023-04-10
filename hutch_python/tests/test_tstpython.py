@@ -36,7 +36,7 @@ except ImportError:
 
 try:
     import lightpath
-    lightpath_version = lightpath.__version__
+    lightpath_version = str(lightpath.__version__)
 except ImportError:
     lightpath_version = '0.0.0'
 
@@ -47,7 +47,7 @@ except ImportError:
                     reason=('IPython breaks in a pseudo-tty if any package '
                             'initializes colorama, ruining this test.'))
 @pytest.mark.skipif(
-    version.parse(lightpath.__version__) <= version.parse('1.0.0'),
+    version.parse(lightpath_version) <= version.parse('1.0.0'),
     reason='Need lightpath config read bugfix from PR#167'
 )
 def test_tstpython_ipython():

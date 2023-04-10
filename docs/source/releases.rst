@@ -1,6 +1,19 @@
 Release History
 ###############
 
+v1.18.2 (2023-04-11)
+====================
+
+Maintenance
+-----------
+- Fix an issue where the test suite would not run with the latest
+  lightpath. This was a test-suite only bug, not a runtime
+  function bug.
+
+Contributors
+------------
+- zllentz
+
 
 v1.18.1 (2023-04-04)
 ====================
