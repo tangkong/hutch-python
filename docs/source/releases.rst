@@ -1,6 +1,20 @@
 Release History
 ###############
 
+v1.18.3 (2023-04-11)
+====================
+
+Maintenance
+-----------
+- Set the package name back to hutch-python for conda builds
+  for consistency's sake.
+
+Contributors
+------------
+- klauer
+- zllentz
+
+
 v1.18.2 (2023-04-11)
 ====================
 
