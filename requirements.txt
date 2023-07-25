@@ -13,7 +13,6 @@ pcdsdaq>=2.3.0
 pcdsdevices>=7.0.0
 pcdsutils>=0.5.0
 psdaq-control-minimal
-psdm_qs_cli
 pyfiglet>=0.8.0
 pyqt5
 pyyaml>=5.4.0
@@ -22,3 +21,6 @@ simplejson>=3.17.0
 
 # Some are unavailable on pypi:
 # elog
+
+# Some are broken on pypi:
+# psdm_qs_cli
