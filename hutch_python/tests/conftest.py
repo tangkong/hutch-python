@@ -254,7 +254,8 @@ class DummyZMQSocket:
         pass
 
     def recv(self, *args, **kwargs):
-        return b""
+        # Trick the fake daq into stopping itself
+        return b"shutdown"
 
 
 @pytest.fixture(scope='function')
