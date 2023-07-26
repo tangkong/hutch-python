@@ -12,16 +12,15 @@ pcdscalc>=0.3.0
 pcdsdaq>=2.3.0
 pcdsdevices>=7.0.0
 pcdsutils>=0.5.0
+psdaq-control-minimal
 pyfiglet>=0.8.0
-pyqt5<5.15.0
+pyqt5
 pyyaml>=5.4.0
 requests>=2.26.0
 simplejson>=3.17.0
 
 # Some are unavailable on pypi:
 # elog
-# psdaq-control-minimal
 
 # Some are broken on pypi:
-# lightpath
 # psdm_qs_cli

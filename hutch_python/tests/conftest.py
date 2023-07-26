@@ -250,6 +250,13 @@ class DummyZMQSocket:
     def recv_json(self, *args, **kwargs):
         return {}
 
+    def send(self, *args, **kwargs):
+        pass
+
+    def recv(self, *args, **kwargs):
+        # Trick the fake daq into stopping itself
+        return b"shutdown"
+
 
 @pytest.fixture(scope='function')
 def dummy_zmq_lcls2(monkeypatch):

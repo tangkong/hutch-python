@@ -158,7 +158,7 @@ def main():
             except KeyError:
                 # Take a stab at some non-conda defaults; ideally these would
                 # be configurable with argparse.
-                base = Path(sys.executable).parent
+                base = str(Path(sys.executable).parent)
                 env = hutch
         logger.info(('Creating hutch-python dir for hutch %s using'
                      ' base=%s env=%s'), hutch, base, env)
