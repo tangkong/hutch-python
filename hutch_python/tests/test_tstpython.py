@@ -57,5 +57,5 @@ def test_tstpython_ipython():
     # then exit. There should be no NameError.
     ipy_text = check_output([tstpython], universal_newlines=True,
                             input='unique_device\n')
-    assert 'IPython' in ipy_text
+    assert 'Environment Information' in ipy_text
     assert 'NameError' not in ipy_text
