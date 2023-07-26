@@ -1,6 +1,30 @@
 Release History
 ###############
 
+
+v1.18.4 (2023-07-26)
+====================
+
+Maintenance
+-----------
+- Unpin strict pyqt pin, we now just require pyqt5 of any flavor.
+- Fix a bug where non-conda installs and non-standard conda installs
+  (like mambabuild intermediates) would be unable to use the
+  `hutch-python --create` cookiecutter tool.
+- Add send and recv methods to the fake zmq socket because newer
+  versions of the lcls2 daq code are expecting recv.
+- Fix pyproject.toml typo docs -> doc.
+- Update requirements.txt for accuracy now that
+  psdaq-control-minimal is available on pypi.
+- Include docs-versions-menu for the sphinx docs builds.
+
+
+Contributors
+------------
+- klauer
+- zllentz
+
+
 v1.18.3 (2023-04-11)
 ====================
 
