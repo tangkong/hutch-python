@@ -41,6 +41,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "nbsphinx",
     "sphinx.ext.mathjax",
+    "docs_versions_menu",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
