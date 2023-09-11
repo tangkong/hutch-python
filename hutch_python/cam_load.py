@@ -230,7 +230,7 @@ def get_det_prefix(pv_info):
     """
     pv_info = pv_info.split(';')
     try:
-        detector_prefix = pv_info[1]
+        detector_prefix = pv_info[1].strip()
     except IndexError:
         # Not provided in config, guess from image base
         detector_prefix = ':'.join(pv_info[0].split(':')[:-1])
