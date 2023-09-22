@@ -31,23 +31,27 @@ def collect_functions(modules):
                 pass
     return HelpfulNamespace(**functions)
 
+
 # import specific function to have at the top level of the namespace
+funcs = {}
 try:
-    from pcdscalc.diffraction import (bragg_angle, darwin_width)
+    from pcdscalc.diffraction import bragg_angle, darwin_width
+    funcs['bragg_angle'] = bragg_angle
+    funcs['darwin_width'] = darwin_width
 except ImportError:
     print("Failed to import functions from pcdscalc.diffraction")
 
 try:
     from pcdscalc.xray import transmission
+    funcs['transmission'] = transmission
 except ImportError:
     print("Failed to import functions from pcdscalc.xray")
 
 calc_namespace = HelpfulNamespace(
-    darwin_width=darwin_width,
-    bragg_angle=bragg_angle,
-    transmission=transmission,
     be_lens=collect_functions(['pcdscalc.be_lens_calcs']),
     common=collect_functions(['pcdscalc.common']),
     diffraction=collect_functions(['pcdscalc.diffraction']),
-    xray=collect_functions(['pcdscalc.xray'])
+    xray=collect_functions(['pcdscalc.xray']),
+    **funcs
+
 )
