@@ -28,19 +28,25 @@ def _create_parser():
 
     parser.add_argument('--dry-run', action='store_true', default=False,
                         help='Print to stdout what would be written in the '
-                        'archFIle.')
+                        'archFile.')
+
+    parser.add_argument('--update', action='store_true', default=False,
+                        help='Check the current archFile for existing relevant qsdata. If constains,'
+                        ' then update with the new information.'
+                        ' If not, overwrite the existing file with the new data.')
     return parser
 
 
 def main():
     """Entry point."""
+    print("\nepicsarch-qs test script")
     parser = _create_parser()
     parsed_args = parser.parse_args()
     kwargs = vars(parsed_args)
     create_arch_file(**kwargs)
 
 
-def create_arch_file(experiment, hutch=None, path=None, dry_run=False):
+def create_arch_file(experiment, hutch=None, path=None, dry_run=False, update=False):
     """
     Create an epicsArch file for the experiment.
 
@@ -56,6 +62,8 @@ def create_arch_file(experiment, hutch=None, path=None, dry_run=False):
     dry_run : bool
         To indicate if only print to stdout the data that would be stored
         in the epicsArch file and not create the file.
+    update : bool
+        To look into the qsdata and update the epicsArch file instead of overwriting it.
 
     Examples
     --------
@@ -85,7 +93,7 @@ def create_arch_file(experiment, hutch=None, path=None, dry_run=False):
     >>> epicsarch-qs xpplv6818 --dry-run
     """
     file_path = None
-    if experiment and not dry_run:
+    if experiment and not (dry_run or update):
         # set the path to write the epicsArch file to.
         if path:
             if path and not os.path.exists(path):
@@ -98,6 +106,55 @@ def create_arch_file(experiment, hutch=None, path=None, dry_run=False):
         create_file(exp_name=experiment, path=file_path)
     elif dry_run:
         print_dry_run(experiment)
+    elif update:
+        print("\n IN UPDATE CASE")
+        update_questionaire_data(experiment)
+
+def update_questionaire_data(exp_name):
+    print("\n UPDATING QSDATA")
+    print("\nExp Name: " + exp_name + " Hutch: " + exp_name[0:3])
+
+    """Get live questionaire data"""
+    new_data = get_questionnaire_data(exp_name)
+    # for item in new_data:
+        # print(item)
+    print("\nNew Data")
+    # sorted(new_data)
+    print(new_data)
+
+    """Get local questionaire data"""
+    local_data = read_archfile(EPICS_ARCH_FILE_PATH.format(exp_name[0:3]) + 'epicsArch_' + exp_name + '.txt')
+    local_data = [r.replace("\n", "") for r in local_data]
+    print(local_data)
+
+    """
+    Now check for duplicates.
+    If found the local epicsArch file PVs and the questionaire PVs have different aliases than take the alias of the questionaire.
+    
+
+    """
+
+def read_archfile(exp_path):
+    print("\nREADING EXISTING ARCHFILE")
+    print("\nLocal Experiment Path"+exp_path)
+
+    """First try with readlines()"""
+    with open(exp_path, "r") as experiment:
+        lines = experiment.readlines()
+        # sorted(lines)
+        # print(lines)
+    return lines
+
+    # """Second try"""
+    # with open(exp_path, "r") as experiment:
+    #     print(experiment)
+
+    # if items:
+    #     for item in items:
+    #         name = ''.join(('* ', item.name))
+    #         data_list.append(name)
+    #         data_list.append(item.prefix)
+    # return data_list    
 
 
 def print_dry_run(exp_name):
