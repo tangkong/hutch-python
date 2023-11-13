@@ -3,11 +3,12 @@ import argparse
 import logging
 import os
 import sys
+import warnings
 
 from collections import OrderedDict
 from .constants import EPICS_ARCH_FILE_PATH
 from .qs_load import get_qs_client
-
+from itertools import chain
 logger = logging.getLogger(__name__)
 
 
@@ -40,7 +41,7 @@ def _create_parser():
 
 def main():
     """Entry point."""
-    print("\nepicsarch-qs test script")
+    print("\nepicsarch-qs test script, git")
     parser = _create_parser()
     parsed_args = parser.parse_args()
     kwargs = vars(parsed_args)
@@ -116,64 +117,137 @@ def check_for_duplicates(exp_name):
     print("\nExp Name: " + exp_name + " Hutch: " + exp_name[0:3])
 
     """Get live questionaire data"""
-    new_data = get_questionnaire_data(exp_name)
+    qsData = get_questionnaire_data(exp_name)
 
     print("\nNew Data")
-    # sorted(new_data)
-    print(new_data)
+    # sorted(qsData)
+    print(qsData)
 
     """Get local questionaire data"""
-    local_data = read_archfile(EPICS_ARCH_FILE_PATH.format(exp_name[0:3]) + 'epicsArch_' + exp_name + '.txt')
-    local_data = [r.replace("\n", "") for r in local_data]
-    print(local_data)
+    afData = read_archfile(EPICS_ARCH_FILE_PATH.format(exp_name[0:3]) + 'epicsArch_' + exp_name + '.txt')
+    afData = [r.replace("\n", "") for r in afData]
+    # print(afData)
 
     """
-    Now check for duplicates.
+    Now check for duplicate PVs in the qs data, the code already throws a warning for duplicate aliases.
     If found the local epicsArch file PVs and the questionaire PVs have different aliases than take the alias of the questionaire.
     """
-    # convert lists to dictionaries
-    live_dict = dict(zip(new_data[::2], new_data[1::2]))
-    sorted_live_dict = dict(sorted(live_dict.items()))
-    print("\nLive Dictionary")
-    print(sorted_live_dict)
 
-    local_dict = dict(zip(local_data[::2], local_data[1::2]))
-    sorted_local_dict = dict(sorted(local_dict.items()))
-    print("\nLocal Dictionary")
-    print(sorted_local_dict)
+    # Dictionary approach
+    
+    # convert lists to dictionaries to sort. removing any spaces in the aliases and sorting dictionaries
 
-    for k in sorted_live_dict.keys():
-        if k in sorted_local_dict:
-            sorted_local_dict[k] = sorted_live_dict[k]
-    print("\nUpdated Local Directory:\n")
-    print( sorted_local_dict)
 
-    updated_arch_list = [x for item in sorted_local_dict.items() for x in item]
-    print(updated_arch_list)
-    return updated_arch_list
+    # Questionnaire
+    qsDict = dict(zip(qsData[::2], qsData[1::2]))
+    qsDict = {k.replace(" ", ""):v for k,v in qsDict.items()}
+    sorted_qsDict = dict(sorted(qsDict.items()))
+    
+
+    # ArchFile
+    afDict = dict(zip(afData[::2], afData[1::2]))
+    afDict = {k.replace(" ", ""):v for k,v in afDict.items()}
+    sorted_afDict = dict(sorted(afDict.items()))
+    
+
+
+    
+    # Check the questionaire for duplicate PVs
+
+    # Making reverse multidict to help identify duplicate values in QSD
+    rev_keyDict = {}
+    for key, value in sorted_qsDict.items():
+        rev_keyDict.setdefault(value, list()).append(key) 
+    pvDuplicate = [key for key, values in rev_keyDict.items() if len(values) > 1]
+
+    # Looking for duplicates of PVs in the questionaire
+    for dup in pvDuplicate:
+        warnings.warn("!Duplicate PV in QD!:" + str(dup))
+        for value in rev_keyDict[dup][1:]:
+            print("Removing PV duplicate from questionaire: " + value + ", " + sorted_qsDict[value])
+            del sorted_qsDict[value]
+
+    # print("\nLocal Dictionary")
+    # print(sorted_afDict)
+    # print("\nLive Sorted Dictionary")
+    # print(sorted_qsDict)
+
+    
+    # Checking for matching aliases in the questionaire and archfile
+    # if the alias has a match then update the PV
+    for k in sorted_qsDict.keys():
+        if k in sorted_afDict:
+            # print("\n(PV Match) Updating Entry: " + k + ", " + sorted_qsDict[k])
+            warnings.warn("!Alias Match in QSD and EAF! Updating PV: " + k + ", " + sorted_qsDict[k])
+            sorted_afDict[k] = sorted_qsDict[k]
+    # print("\nUpdated Local Directory:\n")
+    # print( sorted_afDict)
+
+    # Checking for matching PVs in QSD and EAF
+    # if the PV matches update the alias by removing the old key and making a new one
+    for (k,val) in sorted_qsDict.items():
+        # print(sorted_afDict[k])
+        # print("qsDict: "+qsDict[index])
+        # if val in sorted_afDict.values():
+        # this looks up the key in the af Dictionary by finding the value
+        foundKey = get_key(val, sorted_afDict)
+        if foundKey:
+            del sorted_afDict[foundKey]
+        sorted_afDict[k] = val
+
+        # print("\n(PV Match) Updating Entry: " + k + ", " + sorted_qsDict[k])
+        warnings.warn("!PV Match in QSD and EAF! Updating Alias: " + k)
+    print("\n Final sorted afDict:\n")
+    sorted_afDict = dict(sorted(afDict.items()))
+    print(sorted_afDict)
+
+
+    updated_arch_list = [x for item in sorted_afDict.items() for x in item]
+
+    
+
+    """
+    # List approach
+
+    # converting dictionaries back to lists
+    qsData = [x for item in sorted_qsDict.items() for x in item]
+    afData = [x for item in sorted_afDict.items() for x in item]
+
+    # check to see if alias or pv exists in archfile
+    qsIndex = 0
+    afIndex = 0
+    for index, item in enumerate(qsData):
+        if item in afData:
+            print("Matched Value in AF: " + item + " Index: " + str(index))
+            # case where item is an alias, update pv
+            if item[0] == "*":
+                print("Updating A: " +afData[] + "New PV: " + qsData[qsIndex+1])
+                # afData[afIndex] = qsData[i+1]
+                pass
+            # case where item is a PV, update alias
+            elif item[3] == ":":
+                pass
+                # print("Updating PV: " + afData[i] + "New A: " + qsData[i-1])
+        qsIndex = qsIndex + 1
+
+    """
+
+
+    # print("Updated ArchFile: \n")
+    # for i in updated_arch_list:
+    #     print(i)
+    # return updated_arch_list
 
 def read_archfile(exp_path):
     print("\nREADING EXISTING ARCHFILE")
-    print("\nLocal Experiment Path: \n"+exp_path)
+    print("\nArchFile Path: \n"+exp_path)
 
     """First try with readlines()"""
     with open(exp_path, "r") as experiment:
         lines = experiment.readlines()
         # sorted(lines)
         # print(lines)
-    return lines
-
-    # """Second try"""
-    # with open(exp_path, "r") as experiment:
-    #     print(experiment)
-
-    # if items:
-    #     for item in items:
-    #         name = ''.join(('* ', item.name))
-    #         data_list.append(name)
-    #         data_list.append(item.prefix)
-    # return data_list    
-
+    return lines  
 
 def print_dry_run(exp_name):
     """
@@ -193,10 +267,15 @@ def print_dry_run(exp_name):
     """
     updated_archFile = check_for_duplicates(exp_name)
 
-    data = get_questionnaire_data(exp_name)
-    for item in data:
-        print(item)
-
+    # data = get_questionnaire_data(exp_name)
+    # for item in data:
+    #     print(item)
+def get_key(val, my_dict):
+    for k, v in my_dict.items():
+        if val == v:
+            return k
+    strError = ""
+    return strError
 
 def get_questionnaire_data(exp_name):
     """
