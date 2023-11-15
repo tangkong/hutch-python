@@ -113,17 +113,19 @@ def create_arch_file(experiment, hutch=None, path=None, dry_run=False, update=Fa
     #     update_questionaire_data(experiment)
 
 def check_for_duplicates(exp_name):
-    print("\nChecking for updates")
-    print("\nExp Name: " + exp_name + " Hutch: " + exp_name[0:3])
+    # print("\nChecking for updates")
+    # print("\nExp Name: " + exp_name + " Hutch: " + exp_name[0:3])
 
     """Get live questionaire data"""
     qsData = get_questionnaire_data(exp_name)
 
-    print("\nNew Data")
+    # print("\nNew Data")
     # sorted(qsData)
-    print(qsData)
+    # print(qsData)
 
     """Get local questionaire data"""
+    # if after doesnt exist, opt to create one
+
     afData = read_archfile(EPICS_ARCH_FILE_PATH.format(exp_name[0:3]) + 'epicsArch_' + exp_name + '.txt')
     afData = [r.replace("\n", "") for r in afData]
     # print(afData)
@@ -159,13 +161,17 @@ def check_for_duplicates(exp_name):
     for key, value in sorted_qsDict.items():
         rev_keyDict.setdefault(value, list()).append(key) 
     pvDuplicate = [key for key, values in rev_keyDict.items() if len(values) > 1]
-
+    # print("Rev Dict:\n")
+    # print(rev_keyDict)
     # Looking for duplicates of PVs in the questionaire
+    # also print out the alias for PV, change removing to warning operater to remove dup then rerun
     for dup in pvDuplicate:
-        warnings.warn("!Duplicate PV in QD!:" + str(dup))
+        # warnings.warn("!Duplicate PV in questionnaire!:" + str(dup))
+        print("!Duplicate PV in questionnaire!:" + str(dup))
         for value in rev_keyDict[dup][1:]:
-            print("Removing PV duplicate from questionaire: " + value + ", " + sorted_qsDict[value])
-            del sorted_qsDict[value]
+            print("Found PV duplicate(s) from questionnaire: " + value + ", " + sorted_qsDict[value])
+            # del sorted_qsDict[value]
+        raise Exception("Please remove duplicates and re-run script!")
 
     # print("\nLocal Dictionary")
     # print(sorted_afDict)
@@ -178,7 +184,7 @@ def check_for_duplicates(exp_name):
     for k in sorted_qsDict.keys():
         if k in sorted_afDict:
             # print("\n(PV Match) Updating Entry: " + k + ", " + sorted_qsDict[k])
-            warnings.warn("!Alias Match in QSD and EAF! Updating PV: " + k + ", " + sorted_qsDict[k])
+            print("!Alias Match in questionnaire and archfile! Updating PV: " + k + ", " + sorted_qsDict[k])
             sorted_afDict[k] = sorted_qsDict[k]
     # print("\nUpdated Local Directory:\n")
     # print( sorted_afDict)
@@ -196,51 +202,22 @@ def check_for_duplicates(exp_name):
         sorted_afDict[k] = val
 
         # print("\n(PV Match) Updating Entry: " + k + ", " + sorted_qsDict[k])
-        warnings.warn("!PV Match in QSD and EAF! Updating Alias: " + k)
-    print("\n Final sorted afDict:\n")
+        print("!PV Match in questionnaire and archfile! Updating Alias: " + k + ", " + val)
+    # print("\n Final sorted afDict:\n")
     sorted_afDict = dict(sorted(afDict.items()))
-    print(sorted_afDict)
+    # print(sorted_afDict)
 
 
     updated_arch_list = [x for item in sorted_afDict.items() for x in item]
 
-    
-
-    """
-    # List approach
-
-    # converting dictionaries back to lists
-    qsData = [x for item in sorted_qsDict.items() for x in item]
-    afData = [x for item in sorted_afDict.items() for x in item]
-
-    # check to see if alias or pv exists in archfile
-    qsIndex = 0
-    afIndex = 0
-    for index, item in enumerate(qsData):
-        if item in afData:
-            print("Matched Value in AF: " + item + " Index: " + str(index))
-            # case where item is an alias, update pv
-            if item[0] == "*":
-                print("Updating A: " +afData[] + "New PV: " + qsData[qsIndex+1])
-                # afData[afIndex] = qsData[i+1]
-                pass
-            # case where item is a PV, update alias
-            elif item[3] == ":":
-                pass
-                # print("Updating PV: " + afData[i] + "New A: " + qsData[i-1])
-        qsIndex = qsIndex + 1
-
-    """
-
-
     # print("Updated ArchFile: \n")
     # for i in updated_arch_list:
     #     print(i)
-    # return updated_arch_list
+    return updated_arch_list
 
 def read_archfile(exp_path):
-    print("\nREADING EXISTING ARCHFILE")
-    print("\nArchFile Path: \n"+exp_path)
+    # print("\nREADING EXISTING ARCHFILE")
+    # print("\nArchFile Path: \n"+exp_path)
 
     """First try with readlines()"""
     with open(exp_path, "r") as experiment:
@@ -267,9 +244,9 @@ def print_dry_run(exp_name):
     """
     updated_archFile = check_for_duplicates(exp_name)
 
-    # data = get_questionnaire_data(exp_name)
-    # for item in data:
-    #     print(item)
+    data = get_questionnaire_data(exp_name)
+    for item in data:
+        print(item)
 def get_key(val, my_dict):
     for k, v in my_dict.items():
         if val == v:
