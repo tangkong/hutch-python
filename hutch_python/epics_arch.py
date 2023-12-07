@@ -49,7 +49,7 @@ def cli_setup(args):
     logging.getLogger().addHandler(logging.NullHandler())
     shown_logger = logging.getLogger('epicsarch-qs')
     logger.setLevel(args.level)
-    print("Level: ",logger.getEffectiveLevel())
+    logger.debug("Logger Level: ",logger.getEffectiveLevel())
     logger.debug("Set logging level of %r to %r", shown_logger.name, args.level)
 
 def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=False, update=False):
@@ -145,8 +145,6 @@ def check_for_duplicates(qs_data, af_data):
     
     # Convert lists to dictionaries to sort as a key - value pair while also removing any whitespice in the aliases.
 
-    # logger.debug("Level: " + str(logger.getEffectiveLevel()))
-    # print("CFD: qs_data:\n",qs_data)
     # Questionnaire
     qsDict = dict(zip(qs_data[::2], qs_data[1::2]))
     qsDict = {k.replace(" ", ""):v for k,v in qsDict.items()}
@@ -154,7 +152,7 @@ def check_for_duplicates(qs_data, af_data):
     qsDict = {k:v.replace(" ", "") for k,v in qsDict.items()}
     qsDict = {k:v.replace("\n", "") for k,v in qsDict.items()}
     sorted_qsDict = dict(sorted(qsDict.items()))
-    # print("CFD: sorted qsdict\n", sorted_qsDict)
+
 
     if len(af_data) > 0:
         # ArchFile
@@ -164,23 +162,18 @@ def check_for_duplicates(qs_data, af_data):
         afDict = {k:v.replace(" ", "") for k,v in afDict.items()}
         afDict = {k:v.replace("\n", "") for k,v in afDict.items()}
         sorted_afDict = dict(sorted(afDict.items()))
-        print("CFD: sorted afdict\n", sorted_afDict)
     
     # Check the questionaire for duplicate PVs
 
     # Making reverse multidict to help identify duplicate values in questionnaire.
     rev_keyDict = {}
     for key, value in sorted_qsDict.items():
-        # print("CFD: Key: ", key)
         rev_keyDict.setdefault(value, list()).append(key) 
-    # print("CFD: rev_keyDict: \n",rev_keyDict)
 
     pvDuplicate = [key for key, values in rev_keyDict.items() if len(values) > 1]
     # Looking for duplicates of PVs in the questionaire
     # also print out the alias for PV, change removing to warning operater to remove dup then rerun
-    # print("CFD: pvDuplicate: ",pvDuplicate)
     for dup in pvDuplicate:
-        # print("pvDup: ", dup)
         logger.debug("!Duplicate PV in questionnaire!:" + str(dup))
         for value in rev_keyDict[dup][1:]:
             logger.debug("Found PV duplicate(s) from questionnaire: " + value + ", " + sorted_qsDict[value])
@@ -197,11 +190,8 @@ def check_for_duplicates(qs_data, af_data):
     # Checking for matching PVs in questionnaire and archfile
     # if the PV matches update the alias by removing the old key and making a new one
     for (k,val) in sorted_qsDict.items():
-        # print("CFD: Key: ", k )
-        # print("CFD: Val: ", val)
         # this looks up the key in the af Dictionary by finding the value
         foundKey = get_key(val, sorted_afDict)
-        # print("CFD: foundKey: ", foundKey)
         if k in sorted_afDict:
             logger.debug("!Alias Match in questionnaire and archfile! Updating PV: " + k + ", " + sorted_qsDict[k])
             sorted_afDict[k] = sorted_qsDict[k]
@@ -256,7 +246,6 @@ def print_dry_run(exp_name):
 
 def get_key(val, my_dict):
     for k, v in my_dict.items():
-        # print("GK: key: " + k + "val: " + v)
         if val == v:
             return k
     strError = ""
@@ -327,8 +316,7 @@ def update_file(exp_name, path):
         Directory where to create the epicsArch file.
     """
     qs_data = get_questionnaire_data(exp_name)
-    print("UpdateFile: qs_data: \n")
-    print(qs_data)
+    
     logger.debug("UpdateFile: qs_data:\n" + str(qs_data))
     
     logger.debug("\nPath: "+ str(path))
@@ -341,19 +329,14 @@ def update_file(exp_name, path):
     # if the path exists but archfile does not, create af and pull qsd
     elif os.path.exists(path) and not os.path.exists(af_path):
         logger.debug("UpdateFile: Path is valid, creating archfile\n")
-        
-        
-
         logger.debug('Creating epicsArch file for experiment: %s', exp_name)
         cleaned_data = check_for_duplicates(qs_data, {})
-        print(type(cleaned_data))
+        
     # if the path and archfile exists, update af and pull
     elif os.path.exists(path) and os.path.exists(af_path):
         logger.debug("UpdateFile: Path exists and archfile exists\n")
         af_data = read_archfile(af_path)
         cleaned_data = check_for_duplicates(qs_data, af_data)
-        # print("cleaned_data")
-        # print(cleaned_data)
 
     with open(file_path, 'w') as f:
             for data in cleaned_data:
