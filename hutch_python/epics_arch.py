@@ -7,7 +7,8 @@ import warnings
 
 from collections import OrderedDict
 from .constants import EPICS_ARCH_FILE_PATH
-from .qs_load import get_qs_client
+from .qs_load import get_qs_client, pull_cds_items
+#from .qs_load import get_qs_obj
 from itertools import chain
 logger = logging.getLogger(__name__)
 logging.basicConfig(level="INFO")
@@ -33,6 +34,9 @@ def _create_parser():
                         'archFile.')
     parser.add_argument('--level', '-l',required=False, type=str, default="INFO",
                         help='Show the debug logging stream')
+    parser.add_argument('--cds-items', nargs=2, action='store',default=None, 
+                        help="Pulls all data from CDS tab. E.g.: xppx1003221 run21 X-10032")
+    parser.add_argument('--link', '-sl', action='store_true', default=None, help="create softlink for experiement")
     return parser
 
 
@@ -52,7 +56,7 @@ def cli_setup(args):
     logger.debug("Logger Level: ",logger.getEffectiveLevel())
     logger.debug("Set logging level of %r to %r", shown_logger.name, args.level)
 
-def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=False, update=False):
+def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=False, update=False, cds_items=None, link=None):
     """
     Create an epicsArch file for the experiment.
 
@@ -107,11 +111,24 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
             file_path = path
         elif hutch:
             file_path = EPICS_ARCH_FILE_PATH.format(hutch.lower())
+        elif cds_items:
+            pull_cds_data(experiment, cds_items)
+            return
+        elif link:
+            create_softlink(experiment)
+            return
         else:
             file_path = EPICS_ARCH_FILE_PATH.format(experiment[0:3])
         update_file(exp_name=experiment, path=file_path)
     elif dry_run:
         print_dry_run(experiment)
+
+def pull_cds_data(exp, run):
+    print("in client")
+    pull_cds_items(exp, run)
+    
+def create_softlink(exp):
+    print("in softlink")
 
 def check_for_duplicates(qs_data, af_data):
 
@@ -153,7 +170,7 @@ def check_for_duplicates(qs_data, af_data):
     qsDict = {k:v.replace("\n", "") for k,v in qsDict.items()}
     sorted_qsDict = dict(sorted(qsDict.items()))
 
-
+    # If the archfile is not empty then clean it if not ,skip
     if len(af_data) > 0:
         # ArchFile
         afDict = dict(zip(af_data[::2], af_data[1::2]))
@@ -320,11 +337,11 @@ def update_file(exp_name, path):
     logger.debug("UpdateFile: qs_data:\n" + str(qs_data))
     
     logger.debug("\nPath: "+ str(path))
-    af_path = path + "epicsArch_" + exp_name + ".txt"
+    af_path = str(path) + "epicsArch_" + str(exp_name) + ".txt"
     logger.debug("\nAF Path: " + str(af_path))
     exp_name = str(exp_name)
-    file_path = ''.join((path, 'epicsArch_', exp_name, '.txt'))
-    if not os.path.exists(path):
+    file_path = ''.join((str(path), 'epicsArch_', str(exp_name), '.txt'))
+    if not os.path.exists(str(path)):
         raise OSError('Invalid path: %s' % path)
     # if the path exists but archfile does not, create af and pull qsd
     elif os.path.exists(path) and not os.path.exists(af_path):
@@ -338,6 +355,7 @@ def update_file(exp_name, path):
         af_data = read_archfile(af_path)
         cleaned_data = check_for_duplicates(qs_data, af_data)
 
+    # Write updates to the corresponding file
     with open(file_path, 'w') as f:
             for data in cleaned_data:
                 try:
