@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 import warnings
+import subprocess
 
 from collections import OrderedDict
 from .constants import EPICS_ARCH_FILE_PATH
@@ -45,11 +46,12 @@ def main():
     parser = _create_parser()
     parsed_args = parser.parse_args()
     kwargs = vars(parsed_args)
-    cli_setup(parsed_args)
+    logger_setup(parsed_args)
     logger.debug("\nepicsarch-qs test script, git")
     create_arch_file(**kwargs)
 
-def cli_setup(args):
+def logger_setup(args):
+    # Setting up the logger, to show the level when enabled
     logging.getLogger().addHandler(logging.NullHandler())
     shown_logger = logging.getLogger('epicsarch-qs')
     logger.setLevel(args.level)
@@ -115,6 +117,7 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
             pull_cds_data(experiment, cds_items)
             return
         elif link:
+            update_file(exp_name=experiment, path=EPICS_ARCH_FILE_PATH.format(experiment[0:3]))
             create_softlink(experiment)
             return
         else:
@@ -129,6 +132,12 @@ def pull_cds_data(exp, run):
     
 def create_softlink(exp):
     print("in softlink")
+    # remove the old soft link and add a new one (update), *THIS HAS NOT BEEN TESTED YET*
+    # this removes the softlink in the /cds/group/pcds/dist/pds/{}/misc/
+    rm_result = subprocess.run(['rm', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
+
+    # This adds a new softlink in /cds/group/pcds/dist/pds/{}/misc/
+    ln_result = subprocess.run(['ln', '-s', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + exp + '.txt', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
 
 def check_for_duplicates(qs_data, af_data):
 
@@ -162,7 +171,7 @@ def check_for_duplicates(qs_data, af_data):
     
     # Convert lists to dictionaries to sort as a key - value pair while also removing any whitespice in the aliases.
 
-    # Questionnaire
+    # Questionnaire Data, removing whitespaces and newline chars
     qsDict = dict(zip(qs_data[::2], qs_data[1::2]))
     qsDict = {k.replace(" ", ""):v for k,v in qsDict.items()}
     qsDict = {k.replace("\n", ""):v for k,v in qsDict.items()}
@@ -172,7 +181,7 @@ def check_for_duplicates(qs_data, af_data):
 
     # If the archfile is not empty then clean it if not ,skip
     if len(af_data) > 0:
-        # ArchFile
+        # ArchFile Data, removing whitespaces and newline chars
         afDict = dict(zip(af_data[::2], af_data[1::2]))
         afDict = {k.replace(" ", ""):v for k,v in afDict.items()}
         afDict = {k.replace("\n", ""):v for k,v in afDict.items()}
