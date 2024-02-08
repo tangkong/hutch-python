@@ -161,14 +161,13 @@ def check_for_duplicates(qs_data, af_data):
 
     """
 
+    """
+    Part 1: Parse Data from the questionnaire and the archfile
+    Part 2: Check the questionnaire for pv duplicates
+    """
     
+    # PART 1
 
-
-    # Reading in the archfile data
-    # afData = read_archfile(EPICS_ARCH_FILE_PATH.format(exp_name[0:3]) + 'epicsArch_' + exp_name + '.txt')
-    # afData = read_archfile(af_path)
-    # afData = [r.replace("\n", "") for r in afData]
-    
     # Convert lists to dictionaries to sort as a key - value pair while also removing any whitespice in the aliases.
 
     # Questionnaire Data, removing whitespaces and newline chars
@@ -189,8 +188,9 @@ def check_for_duplicates(qs_data, af_data):
         afDict = {k:v.replace("\n", "") for k,v in afDict.items()}
         sorted_afDict = dict(sorted(afDict.items()))
     
-    # Check the questionaire for duplicate PVs
+    # PART 2
 
+    # Check the questionaire for duplicate PVs
     # Making reverse multidict to help identify duplicate values in questionnaire.
     rev_keyDict = {}
     for key, value in sorted_qsDict.items():
@@ -205,7 +205,7 @@ def check_for_duplicates(qs_data, af_data):
             logger.debug("Found PV duplicate(s) from questionnaire: " + value + ", " + sorted_qsDict[value])
         raise Exception("Please remove duplicates and re-run script!")
 
-
+    # Check to see if the archfile has any data in it
     if len(af_data) == 0:
         logger.debug("CFD: Case: no archfile given, returning cleaned questionnaire data\n")
         cleaned_qs_data = [x for item in sorted_qsDict.items() for x in item]

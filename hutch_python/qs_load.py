@@ -43,9 +43,14 @@ def pull_cds_items(exp, run):
     -------
 
     """
-    print('pull_cds_items(%s)',exp)
+    """
+    pull run data from questionnaire api, then take the data and sort it
+    create Pretty Table instance and if the values from the run data contain pcdssetup
+    then put them into a seperate dictionary as they are cds items
+    """
+    logger.debug('pull_cds_items(%s)',exp)
     client = QuestionnaireClient()
-    print("in cds items, run numb:",str(run[1]))
+    logger.debug("in cds items, run numb:",str(run[1]))
     runDetails_Dict = client.getProposalDetailsForRun(str(run[0]),str(run[1]))
     sorted_runDetails_Dict = dict(sorted(runDetails_Dict.items()))
     cds_dict = {}
@@ -58,6 +63,9 @@ def pull_cds_items(exp, run):
     names are as follows:
     pcdssetup-motors, pcdssetup-areadet, pcdssetup-ao, pcdssetup-devs
     pcdssetup-ps, pcdssetup-trig, pcdssetup-vacuum, pcdssetup-temp
+
+    iterate through all cds items and label them based on their type
+    use the struct members to identify
     """
     displayList = []
     for k, v in cds_dict.items():
@@ -85,7 +93,7 @@ def pull_cds_items(exp, run):
         elif re.match('pcdssetup-temp.*-name',k):
             pv=cds_dict.get(re.sub('name', 'pvbase',k),'')
             displayList.append(QStruct(v, pv, "temperature"))
-    # print("displayList", displayList)
+    # logger.debug("displayList", displayList)
 
     for struct in displayList:
         myTable.add_row([struct.alias, struct.pvbase, struct.pvtype])
