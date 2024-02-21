@@ -127,17 +127,17 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
         print_dry_run(experiment)
 
 def pull_cds_data(exp, run):
-    print("in client")
+    logger.debug("in client")
     pull_cds_items(exp, run)
     
-def create_softlink(exp):
-    print("in softlink")
+def create_softlink(experiment):
+    logger.debug("in softlink")
     # remove the old soft link and add a new one (update), *THIS HAS NOT BEEN TESTED YET*
     # this removes the softlink in the /cds/group/pcds/dist/pds/{}/misc/
-    rm_result = subprocess.run(['rm', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
+    # rm_result = subprocess.run(['unlink', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
 
     # This adds a new softlink in /cds/group/pcds/dist/pds/{}/misc/
-    ln_result = subprocess.run(['ln', '-s', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + exp + '.txt', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
+    ln_result = subprocess.run(['ln', '-sf', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment + '.txt', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
 
 def check_for_duplicates(qs_data, af_data):
 

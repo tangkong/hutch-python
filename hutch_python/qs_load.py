@@ -19,7 +19,7 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-# Annotation with dataclass
+# Annotation with dataclass, making struct to help organize cds objects in prettytable
 @dataclass
 class QStruct:
     alias: str
@@ -29,6 +29,8 @@ class QStruct:
 def pull_cds_items(exp, run):
     """
     Gather all user obejcts from the CDS tab in the questionnaire.
+    Parse objects and sperate them based on type.
+    Display them in the console vie PrettyTable.
 
     Parameters
     ----------
