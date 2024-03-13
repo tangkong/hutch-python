@@ -7,7 +7,7 @@ import happi
 import pytest
 from conftest import cli_args
 
-from ..epics_arch import create_file, get_items, main, print_dry_run
+from ..epics_arch import get_items, main, print_dry_run, update_file
 
 logger = logging.getLogger(__name__)
 
@@ -19,17 +19,17 @@ def test_epics_arch_args():
         mock.assert_called_once()
 
 
-@patch('hutch_python.epics_arch.create_file')
-def test_create_file_with_hutch_args(create_mock):
+@patch('hutch_python.epics_arch.update_file')
+def test_update_file_with_hutch_args(create_mock):
     with cli_args(['epicsarch-qs', 'xpplv6818', '--hutch', 'xpp']):
         with patch('hutch_python.epics_arch.get_items', return_value=items):
             main()
         create_mock.assert_called_once()
 
 
-@patch('hutch_python.epics_arch.create_file')
+@patch('hutch_python.epics_arch.update_file')
 @patch('os.path.exists', return_value=True)
-def test_create_file_with_path_args(path_mock, create_mock):
+def test_update_file_with_path_args(path_mock, create_mock):
     with cli_args(['epicsarch-qs', 'xpplv6818', '--path', '/my/path/xpp/']):
         with patch('hutch_python.epics_arch.get_items', return_value=items):
             main()
@@ -37,7 +37,7 @@ def test_create_file_with_path_args(path_mock, create_mock):
 
 
 @patch('os.path.exists', return_value=False)
-def test_create_file_with_bad_path_args(path_mock):
+def test_update_file_with_bad_path_args(path_mock):
     with cli_args(['epicsarch-qs', 'xpplv6818', '--path', '/my/path/xpp/']):
         with pytest.raises(OSError):
             main()
@@ -74,10 +74,10 @@ def test_print_dry_run(items, capsys):
         assert expected_str in readout
 
 
-def test_create_file(items):
+def test_update_file(items):
     dir_path = os.path.dirname(os.path.realpath(__file__)) + '/'
     with patch('hutch_python.epics_arch.get_items', return_value=items):
-        create_file('tstlr3216', path=dir_path)
+        update_file('tstlr3216', path=dir_path)
         expected_file = ''.join((dir_path, 'epicsArch_tstlr3216.txt'))
         expected_list = [
             '* tape_x', 'XPP:LBL:MMN:04', '* transducer_y',
@@ -91,10 +91,10 @@ def test_create_file(items):
         os.remove(expected_file)
 
 
-def test_create_file_bad_path(items):
+def test_update_file_bad_path(items):
     with patch('hutch_python.epics_arch.get_items', return_value=items):
         with pytest.raises(OSError):
-            create_file('tstlr3216', path='/some/bad/path/')
+            update_file('tstlr3216', path='/some/bad/path/')
 
 
 @pytest.fixture(scope='function')

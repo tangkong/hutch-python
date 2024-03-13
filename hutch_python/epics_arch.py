@@ -2,17 +2,15 @@
 import argparse
 import logging
 import os
-import sys
-import warnings
 import subprocess
+import sys
 
-from collections import OrderedDict
 from .constants import EPICS_ARCH_FILE_PATH
 from .qs_load import get_qs_client, pull_cds_items
-#from .qs_load import get_qs_obj
-from itertools import chain
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level="INFO")
+
 
 def _create_parser():
     """Argument Parser Setup. Define shell commands."""
@@ -33,10 +31,13 @@ def _create_parser():
     parser.add_argument('--dry-run', action='store_true', default=False,
                         help='Print to stdout what would be written in the '
                         'archFile.')
-    parser.add_argument('--level', '-l',required=False, type=str, default="INFO",
+
+    parser.add_argument('--level', '-l', required=False, type=str, default="INFO",
                         help='Show the debug logging stream')
-    parser.add_argument('--cds-items', nargs=2, action='store',default=None, 
+
+    parser.add_argument('--cds-items', nargs=2, action='store', default=None,
                         help="Pulls all data from CDS tab. E.g.: xppx1003221 run21 X-10032")
+
     parser.add_argument('--link', '-sl', action='store_true', default=None, help="create softlink for experiement")
     return parser
 
@@ -50,13 +51,15 @@ def main():
     logger.debug("\nepicsarch-qs test script, git")
     create_arch_file(**kwargs)
 
+
 def logger_setup(args):
     # Setting up the logger, to show the level when enabled
     logging.getLogger().addHandler(logging.NullHandler())
     shown_logger = logging.getLogger('epicsarch-qs')
     logger.setLevel(args.level)
-    logger.debug("Logger Level: ",logger.getEffectiveLevel())
+    logger.debug("Logger Level: ", logger.getEffectiveLevel())
     logger.debug("Set logging level of %r to %r", shown_logger.name, args.level)
+
 
 def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=False, update=False, cds_items=None, link=None):
     """
@@ -126,10 +129,12 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
     elif dry_run:
         print_dry_run(experiment)
 
+
 def pull_cds_data(exp, run):
     logger.debug("in client")
     pull_cds_items(exp, run)
-    
+
+
 def create_softlink(experiment):
     logger.debug("in softlink")
     # remove the old soft link and add a new one (update), *THIS HAS NOT BEEN TESTED YET*
@@ -137,7 +142,8 @@ def create_softlink(experiment):
     # rm_result = subprocess.run(['unlink', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
 
     # This adds a new softlink in /cds/group/pcds/dist/pds/{}/misc/
-    ln_result = subprocess.run(['ln', '-sf', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment + '.txt', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
+    subprocess.run(['ln', '-sf', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment + '.txt', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
+
 
 def check_for_duplicates(qs_data, af_data):
 
@@ -153,7 +159,7 @@ def check_for_duplicates(qs_data, af_data):
     Examples
     --------
     >>> epicsarch-qs xpplv6818 --dry-run
-    
+
     Returns
     -------
     updatea_arch_list : list
@@ -165,36 +171,36 @@ def check_for_duplicates(qs_data, af_data):
     Part 1: Parse Data from the questionnaire and the archfile
     Part 2: Check the questionnaire for pv duplicates
     """
-    
+
     # PART 1
 
     # Convert lists to dictionaries to sort as a key - value pair while also removing any whitespice in the aliases.
 
     # Questionnaire Data, removing whitespaces and newline chars
     qsDict = dict(zip(qs_data[::2], qs_data[1::2]))
-    qsDict = {k.replace(" ", ""):v for k,v in qsDict.items()}
-    qsDict = {k.replace("\n", ""):v for k,v in qsDict.items()}
-    qsDict = {k:v.replace(" ", "") for k,v in qsDict.items()}
-    qsDict = {k:v.replace("\n", "") for k,v in qsDict.items()}
+    qsDict = {k.replace(" ", ""): v for k, v in qsDict.items()}
+    qsDict = {k.replace("\n", ""): v for k, v in qsDict.items()}
+    qsDict = {k: v.replace(" ", "") for k, v in qsDict.items()}
+    qsDict = {k: v.replace("\n", "") for k, v in qsDict.items()}
     sorted_qsDict = dict(sorted(qsDict.items()))
 
     # If the archfile is not empty then clean it if not ,skip
     if len(af_data) > 0:
         # ArchFile Data, removing whitespaces and newline chars
         afDict = dict(zip(af_data[::2], af_data[1::2]))
-        afDict = {k.replace(" ", ""):v for k,v in afDict.items()}
-        afDict = {k.replace("\n", ""):v for k,v in afDict.items()}
-        afDict = {k:v.replace(" ", "") for k,v in afDict.items()}
-        afDict = {k:v.replace("\n", "") for k,v in afDict.items()}
+        afDict = {k.replace(" ", ""): v for k, v in afDict.items()}
+        afDict = {k.replace("\n", ""): v for k, v in afDict.items()}
+        afDict = {k: v.replace(" ", "") for k, v in afDict.items()}
+        afDict = {k: v.replace("\n", "") for k, v in afDict.items()}
         sorted_afDict = dict(sorted(afDict.items()))
-    
+
     # PART 2
 
     # Check the questionaire for duplicate PVs
     # Making reverse multidict to help identify duplicate values in questionnaire.
     rev_keyDict = {}
     for key, value in sorted_qsDict.items():
-        rev_keyDict.setdefault(value, list()).append(key) 
+        rev_keyDict.setdefault(value, list()).append(key)
 
     pvDuplicate = [key for key, values in rev_keyDict.items() if len(values) > 1]
     # Looking for duplicates of PVs in the questionaire
@@ -215,7 +221,7 @@ def check_for_duplicates(qs_data, af_data):
 
     # Checking for matching PVs in questionnaire and archfile
     # if the PV matches update the alias by removing the old key and making a new one
-    for (k,val) in sorted_qsDict.items():
+    for (k, val) in sorted_qsDict.items():
         # this looks up the key in the af Dictionary by finding the value
         foundKey = get_key(val, sorted_afDict)
         if k in sorted_afDict:
@@ -232,13 +238,15 @@ def check_for_duplicates(qs_data, af_data):
     logger.debug(updated_arch_list)
     return updated_arch_list
 
+
 def read_archfile(exp_path):
     if os.path.exists(exp_path):
         with open(exp_path, "r") as experiment:
             lines = experiment.readlines()
-        return lines  
-    else: 
+        return lines
+    else:
         raise OSError('ArchFile not found: %s' % exp_path)
+
 
 def print_dry_run(exp_name):
     """
@@ -262,13 +270,13 @@ def print_dry_run(exp_name):
     af_path = EPICS_ARCH_FILE_PATH.format(exp_name[0:3]) + 'epicsArch_' + exp_name + '.txt'
     af_data = read_archfile(af_path)
     if not os.path.exists(af_path):
-        raise OSError('print_dry_run, invalid path: %s' % path)
+        raise OSError('print_dry_run, invalid path: %s' % af_path)
     elif os.path.exists(af_path):
         updated_archFile = check_for_duplicates(qs_data, af_data)
 
-        
         for item in updated_archFile:
             print(item)
+
 
 def get_key(val, my_dict):
     for k, v in my_dict.items():
@@ -276,6 +284,7 @@ def get_key(val, my_dict):
             return k
     strError = ""
     return strError
+
 
 def get_questionnaire_data(exp_name):
     """
@@ -342,10 +351,10 @@ def update_file(exp_name, path):
         Directory where to create the epicsArch file.
     """
     qs_data = get_questionnaire_data(exp_name)
-    
+
     logger.debug("UpdateFile: qs_data:\n" + str(qs_data))
-    
-    logger.debug("\nPath: "+ str(path))
+
+    logger.debug("\nPath: " + str(path))
     af_path = str(path) + "epicsArch_" + str(exp_name) + ".txt"
     logger.debug("\nAF Path: " + str(af_path))
     exp_name = str(exp_name)
@@ -357,7 +366,7 @@ def update_file(exp_name, path):
         logger.debug("UpdateFile: Path is valid, creating archfile\n")
         logger.debug('Creating epicsArch file for experiment: %s', exp_name)
         cleaned_data = check_for_duplicates(qs_data, {})
-        
+
     # if the path and archfile exists, update af and pull
     elif os.path.exists(path) and os.path.exists(af_path):
         logger.debug("UpdateFile: Path exists and archfile exists\n")
@@ -366,14 +375,11 @@ def update_file(exp_name, path):
 
     # Write updates to the corresponding file
     with open(file_path, 'w') as f:
-            for data in cleaned_data:
-                try:
-                    f.write(f'{data}\n')
-                except OSError as ex:
-                    logger.error('Could not write file %s, %s', file_path, ex)
-
-
-    
+        for data in cleaned_data:
+            try:
+                f.write(f'{data}\n')
+            except OSError as ex:
+                logger.error('Could not write file %s, %s', file_path, ex)
 
 
 if __name__ == '__main__':

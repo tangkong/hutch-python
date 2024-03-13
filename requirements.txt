@@ -23,4 +23,4 @@ simplejson>=3.17.0
 # elog
 
 # Some are broken on pypi:
-# psdm_qs_cli
+psdm_qs_cli
