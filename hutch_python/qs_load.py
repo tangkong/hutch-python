@@ -37,7 +37,7 @@ def pull_cds_items(exp, run):
     exp: ``str``
         The experiment's name e.g. xppx1003221
     run: ''str''
-        The run number e.g. X-10021
+        The run number e.g. run21
     ----------
     Outputs
     -------
