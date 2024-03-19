@@ -7,9 +7,15 @@ from dataclasses import dataclass
 import happi
 from happi.loader import load_devices
 from prettytable import PrettyTable
-from psdm_qs_cli import QuestionnaireClient
 
 from .utils import safe_load
+
+try:
+    import psdm_qs_cli
+    from psdm_qs_cli import QuestionnaireClient
+except ImportError:
+    psdm_qs_cli = None
+    QuestionnaireClient = None
 
 try:
     from happi.backends.qs_db import QSBackend

@@ -267,6 +267,7 @@ def print_dry_run(exp_name):
     """
     Updating experiment file.
     """
+
     af_path = EPICS_ARCH_FILE_PATH.format(exp_name[0:3]) + 'epicsArch_' + exp_name + '.txt'
     af_data = read_archfile(af_path)
     if not os.path.exists(af_path):
