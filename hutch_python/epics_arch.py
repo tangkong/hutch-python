@@ -38,7 +38,7 @@ def _create_parser():
     parser.add_argument('--cds-items', nargs=2, action='store', default=None,
                         help="Pulls all data from CDS tab. E.g.: xppx1003221 run21 X-10032")
 
-    parser.add_argument('--link', '-sl', action='store_true', default=None, help="create softlink for experiement")
+    parser.add_argument('--link', '-sl', action='store_true', default=None, help="create softlink for experiment")
     return parser
 
 
