@@ -33,7 +33,7 @@ def _create_parser():
                         'archFile.')
 
     parser.add_argument('--level', '-l', required=False, type=str, default="INFO",
-                        help='Show the debug logging stream')
+                        help='Change the logging level, e.g. DEBUG to show the debug logging stream')
 
     parser.add_argument('--cds-items', nargs=2, action='store', default=None,
                         help="Pulls all data from CDS tab. E.g.: xppx1003221 run21 X-10032")
