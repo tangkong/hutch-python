@@ -146,7 +146,6 @@ def create_softlink(experiment):
 
 
 def check_for_duplicates(qs_data, af_data):
-
     """
     Check for duplicate PVs in the questionnaire, the code already throws a warning for duplicate aliases.
     If duplicates (PV or Alias) are found in the questionnaire throw error and prompt user to fix and re-run. If they are found in the epicsArch file then step through each match and update accordingly.
