@@ -162,7 +162,7 @@ def check_for_duplicates(qs_data, af_data):
 
     Returns
     -------
-    updatea_arch_list : list
+    updated_arch_list : list
         Updated list containing sorted alias, PVs.
 
     """
