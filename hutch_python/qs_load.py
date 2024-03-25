@@ -36,9 +36,9 @@ class QStruct:
 
 def pull_cds_items(exp, run):
     """
-    Gather all user obejcts from the CDS tab in the questionnaire.
-    Parse objects and sperate them based on type.
-    Display them in the console vie PrettyTable.
+    Gather all user objects from the CDS tab in the questionnaire.
+    Parse objects and separate them based on type.
+    Display them in the console via PrettyTable.
 
     Parameters
     ----------
