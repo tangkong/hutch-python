@@ -23,7 +23,6 @@ file = "LICENSE"
 [project.scripts]
 hutch-python = "hutch_python.cli:main"
 epicsarch-qs = "hutch_python.epics_arch:main"
-epicsArchChecker = "hutch_python.epicsArchChecker:main"
 
 [tool.setuptools_scm]
 write_to = "hutch_python/_version.py"

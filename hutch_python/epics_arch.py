@@ -2,14 +2,33 @@
 import argparse
 import logging
 import os
+import re
 import subprocess
 import sys
+from dataclasses import dataclass
+
+from prettytable import PrettyTable
 
 from .constants import EPICS_ARCH_FILE_PATH
-from .qs_load import get_qs_client, pull_cds_items
+from .qs_load import get_qs_client
+
+try:
+    import psdm_qs_cli
+    from psdm_qs_cli import QuestionnaireClient
+except ImportError:
+    psdm_qs_cli = None
+    QuestionnaireClient = None
+
+
+# Annotation with dataclass, making struct to help organize cds objects in prettytable
+@dataclass
+class QStruct:
+    alias: str
+    pvbase: str
+    pvtype: str
+
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level="INFO")
 
 
 def _create_parser():
@@ -36,9 +55,10 @@ def _create_parser():
                         help='Change the logging level, e.g. DEBUG to show the debug logging stream')
 
     parser.add_argument('--cds-items', nargs=2, action='store', default=None,
-                        help="Pulls all data from CDS tab. E.g.: xppx1003221 run21 X-10032")
+                        help="Pulls all data from CDS tab in the form of a dictionary. E.g.: xppx1003221 run21 X-10032. This option will not automatically update the archfile.")
 
-    parser.add_argument('--link', '-sl', action='store_true', default=None, help="create softlink for experiment")
+    parser.add_argument('--softlink', '-sl', action='store_true', default=None, help="                   create softlink for experiment. This is run after the archfile has been updated/created.")
+    parser.add_argument('--link-path', '-sl_path', action='store', default=EPICS_ARCH_FILE_PATH, help="Provide user with option to supply custom path for softlink. Defaults to: /cds/group/pcds/dist/pds/{}/misc/.")
     return parser
 
 
@@ -48,20 +68,17 @@ def main():
     parsed_args = parser.parse_args()
     kwargs = vars(parsed_args)
     logger_setup(parsed_args)
-    logger.debug("\nepicsarch-qs test script, git")
     create_arch_file(**kwargs)
 
 
 def logger_setup(args):
     # Setting up the logger, to show the level when enabled
     logging.getLogger().addHandler(logging.NullHandler())
-    shown_logger = logging.getLogger('epicsarch-qs')
+    logging.basicConfig(level="INFO")
     logger.setLevel(args.level)
-    logger.debug("Logger Level: ", logger.getEffectiveLevel())
-    logger.debug("Set logging level of %r to %r", shown_logger.name, args.level)
 
 
-def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=False, update=False, cds_items=None, link=None):
+def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=False, cds_items=None, softlink=None, link_path=None):
     """
     Create an epicsArch file for the experiment.
 
@@ -77,8 +94,10 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
     dry_run : bool
         To indicate if only print to stdout the data that would be stored
         in the epicsArch file and not create the file.
-    update : bool
-        To look into the qsdata and update the epicsArch file instead of overwriting it.
+    link_path : str
+        Path to overwrite softlink to experiment specific arch file.
+    cds_items : str
+        Pulls cds tab data in the form of a dictionary and prints this to Pretty Table.
 
     Examples
     --------
@@ -110,39 +129,111 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
     file_path = None
     if experiment and not dry_run:
         # set the path to write the epicsArch file to.
+        if cds_items:
+            pull_cds_data(experiment, cds_items)
+            return
         if path:
             if path and not os.path.exists(path):
                 raise OSError('Invalid path: %s' % path)
             file_path = path
         elif hutch:
             file_path = EPICS_ARCH_FILE_PATH.format(hutch.lower())
-        elif cds_items:
-            pull_cds_data(experiment, cds_items)
-            return
-        elif link:
-            update_file(exp_name=experiment, path=EPICS_ARCH_FILE_PATH.format(experiment[0:3]))
-            create_softlink(experiment)
-            return
         else:
             file_path = EPICS_ARCH_FILE_PATH.format(experiment[0:3])
         update_file(exp_name=experiment, path=file_path)
+        if softlink:
+            create_softlink(experiment, link_path)
     elif dry_run:
         print_dry_run(experiment)
 
 
 def pull_cds_data(exp, run):
-    logger.debug("in client")
-    pull_cds_items(exp, run)
+    """
+    Gather all user objects from the CDS tab in the questionnaire.
+    Parse objects and separate them based on type.
+    Display them in the console via PrettyTable.
+
+    Parameters
+    ----------
+    exp: ``str``
+        The experiment's name e.g. xppx1003221
+    run: ''str''
+        The run number e.g. run21
+
+    Outputs
+    -------
+        PrettyTable visualization of cds objects
 
 
-def create_softlink(experiment):
-    logger.debug("in softlink")
-    # remove the old soft link and add a new one (update), *THIS HAS NOT BEEN TESTED YET*
-    # this removes the softlink in the /cds/group/pcds/dist/pds/{}/misc/
-    # rm_result = subprocess.run(['unlink', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
+    """
+    """
+    pull run data from questionnaire api, then take the data and sort it
+    create Pretty Table instance and if the values from the run data contain pcdssetup
+    then put them into a seperate dictionary as they are cds items
+    """
+    logger.debug('pull_cds_items(%s)', exp)
+    client = QuestionnaireClient()
+    logger.debug("in cds items, run numb:", str(run[1]))
+    runDetails_Dict = client.getProposalDetailsForRun(str(run[0]), str(run[1]))
+    sorted_runDetails_Dict = dict(sorted(runDetails_Dict.items()))
+    cds_dict = {}
+    myTable = PrettyTable(["Alias", "PV Base", "Type"])
+    for keys, vals in sorted_runDetails_Dict.items():
+        if "pcdssetup" in keys:
+            cds_dict[keys] = vals
 
-    # This adds a new softlink in /cds/group/pcds/dist/pds/{}/misc/
-    subprocess.run(['ln', '-sf', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment + '.txt', EPICS_ARCH_FILE_PATH.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
+    """
+    names are as follows:
+    pcdssetup-motors, pcdssetup-areadet, pcdssetup-ao, pcdssetup-devs
+    pcdssetup-ps, pcdssetup-trig, pcdssetup-vacuum, pcdssetup-temp
+
+    iterate through all cds items and label them based on their type
+    use the struct members to identify
+    """
+    displayList = []
+    for k, v in cds_dict.items():
+        if re.match('pcdssetup-motors.*-name', k):
+            pv = cds_dict.get(re.sub('name', 'pvbase', k), '')
+            displayList.append(QStruct(v, pv, "motors"))
+        elif re.match('pcdssetup-areadet.*-name', k):
+            pv = cds_dict.get(re.sub('name', 'pvbase', k), '')
+            displayList.append(QStruct(v, pv, "areadet"))
+        elif re.match('pcdssetup-ao.*-name', k):
+            pv = cds_dict.get(re.sub('name', 'pvbase', k), '')
+            displayList.append(QStruct(v, pv, "analog output"))
+        elif re.match('pcdssetup-devs.*-name', k):
+            pv = cds_dict.get(re.sub('name', 'pvbase', k), '')
+            displayList.append(QStruct(v, pv, "other devices"))
+        elif re.match('pcdssetup-ps.*-name', k):
+            pv = cds_dict.get(re.sub('name', 'pvname', k), '')
+            displayList.append(QStruct(v, pv, "power supplies"))
+        elif re.match('pcdssetup-trig.*-name', k):
+            pv = cds_dict.get(re.sub('name', 'pvbase', k), '')
+            displayList.append(QStruct(v, pv, "triggers"))
+        elif re.match('pcdssetup-vacuum.*-name', k):
+            pv = cds_dict.get(re.sub('name', 'pvbase', k), '')
+            displayList.append(QStruct(v, pv, "vacuum"))
+        elif re.match('pcdssetup-temp.*-name', k):
+            pv = cds_dict.get(re.sub('name', 'pvbase', k), '')
+            displayList.append(QStruct(v, pv, "temperature"))
+    # logger.debug("displayList", displayList)
+
+    for struct in displayList:
+        myTable.add_row([struct.alias, struct.pvbase, struct.pvtype])
+    print(myTable)
+
+
+def create_softlink(experiment, link_path):
+    """
+    This removes the softlink in the /cds/group/pcds/dist/pds/{}/misc/ and overwrites it with the new active experiment.
+
+    """
+
+    # Defaults new softlink in /cds/group/pcds/dist/pds/{}/misc/
+    if not os.path.exists(link_path):
+        raise OSError('Path does not exist path: %s' % link_path)
+
+    subprocess.run(['ln', '-sf', link_path.format(experiment[0:3]) + 'epicsArch_' + experiment + '.txt', link_path.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
 
 
 def check_for_duplicates(qs_data, af_data):
@@ -191,6 +282,9 @@ def check_for_duplicates(qs_data, af_data):
         afDict = {k: v.replace(" ", "") for k, v in afDict.items()}
         afDict = {k: v.replace("\n", "") for k, v in afDict.items()}
         sorted_afDict = dict(sorted(afDict.items()))
+    else:
+        afDict = {}
+        sorted_afDict = {}
 
     # PART 2
 
@@ -207,11 +301,11 @@ def check_for_duplicates(qs_data, af_data):
         logger.debug("!Duplicate PV in questionnaire!:" + str(dup))
         for value in rev_keyDict[dup][1:]:
             logger.debug("Found PV duplicate(s) from questionnaire: " + value + ", " + sorted_qsDict[value])
-        raise Exception("Please remove duplicates and re-run script!")
+        raise ValueError("Please remove duplicates and re-run script!")
 
     # Check to see if the archfile has any data in it
     if len(af_data) == 0:
-        logger.debug("CFD: Case: no archfile given, returning cleaned questionnaire data\n")
+        logger.debug("CFD: Case: no archfile given, returning cleaned questionnaire data.")
         cleaned_qs_data = [x for item in sorted_qsDict.items() for x in item]
         return cleaned_qs_data
 
@@ -242,8 +336,6 @@ def read_archfile(exp_path):
         with open(exp_path, "r") as experiment:
             lines = experiment.readlines()
         return lines
-    else:
-        raise OSError('ArchFile not found: %s' % exp_path)
 
 
 def print_dry_run(exp_name):
@@ -281,8 +373,7 @@ def get_key(val, my_dict):
     for k, v in my_dict.items():
         if val == v:
             return k
-    strError = ""
-    return strError
+    return None
 
 
 def get_questionnaire_data(exp_name):
@@ -351,14 +442,18 @@ def update_file(exp_name, path):
     """
     qs_data = get_questionnaire_data(exp_name)
 
-    logger.debug("UpdateFile: qs_data:\n" + str(qs_data))
-
-    logger.debug("\nPath: " + str(path))
-    af_path = str(path) + "epicsArch_" + str(exp_name) + ".txt"
-    logger.debug("\nAF Path: " + str(af_path))
+    path = str(path)
     exp_name = str(exp_name)
-    file_path = ''.join((str(path), 'epicsArch_', str(exp_name), '.txt'))
-    if not os.path.exists(str(path)):
+
+    logger.debug("UpdateFile: qs_data:\n" + str(qs_data))
+    logger.debug("\nPath: " + path)
+
+    af_path = path + "epicsArch_" + str(exp_name) + ".txt"
+
+    logger.debug("\nAF Path: " + af_path)
+
+    file_path = ''.join((path, 'epicsArch_', exp_name, '.txt'))
+    if not os.path.exists(path):
         raise OSError('Invalid path: %s' % path)
     # if the path exists but archfile does not, create af and pull qsd
     elif os.path.exists(path) and not os.path.exists(af_path):
