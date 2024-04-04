@@ -55,7 +55,7 @@ def _create_parser():
                         help='Change the logging level, e.g. DEBUG to show the debug logging stream')
 
     parser.add_argument('--cds-items', nargs=2, action='store', default=None,
-                        help="Pulls all data from CDS tab in the form of a dictionary. E.g.: xppx1003221 run21 X-10032. This option will not automatically update the archfile.")
+                        help="Pulls all data from CDS tab in the form of a dictionary. E.g.: xppx1003221 --cds-items run_xx experiment_name, where xx is the run number. This option will not automatically update the archfile.")
 
     parser.add_argument('--softlink', '-sl', action='store_true', default=None, help="                   create softlink for experiment. This is run after the archfile has been updated/created.")
     parser.add_argument('--link-path', '-sl_path', action='store', default=EPICS_ARCH_FILE_PATH, help="Provide user with option to supply custom path for softlink. Defaults to: /cds/group/pcds/dist/pds/{}/misc/.")
@@ -216,7 +216,6 @@ def pull_cds_data(exp, run):
         elif re.match('pcdssetup-temp.*-name', k):
             pv = cds_dict.get(re.sub('name', 'pvbase', k), '')
             displayList.append(QStruct(v, pv, "temperature"))
-    # logger.debug("displayList", displayList)
 
     for struct in displayList:
         myTable.add_row([struct.alias, struct.pvbase, struct.pvtype])
