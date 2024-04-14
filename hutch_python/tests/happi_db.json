@@ -91,5 +91,98 @@
         "system": null,
         "type": "pcdsdevices.happi.containers.LCLSItem",
         "z": -1.0
+    },
+    "Tst:Dev:4sharebeamline": {
+        "_id": "Tst:Dev:4sharebeamline",
+        "active": true,
+        "args": [],
+        "beamline": "STS",
+        "creation": "Sat Jan 13 13:50:36 2018",
+        "device_class": "types.SimpleNamespace",
+        "input_branches": [
+            "Z0"
+        ],
+        "kwargs": {
+            "input_branches": "{{input_branches}}",
+            "name": "{{name}}",
+            "output_branches": "{{output_branches}}",
+            "z": "{{z}}"
+        },
+        "last_edit": "Tue Jan 16 13:36:13 2018",
+        "lightpath": true,
+        "macros": null,
+        "name": "tst_device_4",
+        "output_branches": [
+            "Z0"
+        ],
+        "parent": null,
+        "prefix": "Tst:Dev:4",
+        "screen": null,
+        "stand": null,
+        "system": null,
+        "type": "pcdsdevices.happi.containers.LCLSItem",
+        "z": 0.85
+    },
+    "Tst:Dev:5bend": {
+        "_id": "Tst:Dev:5bend",
+        "active": true,
+        "args": [],
+        "beamline": "STS",
+        "creation": "Sat Jan 13 13:50:36 2018",
+        "device_class": "types.SimpleNamespace",
+        "input_branches": [
+            "X0"
+        ],
+        "kwargs": {
+            "input_branches": "{{input_branches}}",
+            "name": "{{name}}",
+            "output_branches": "{{output_branches}}",
+            "z": "{{z}}"
+        },
+        "last_edit": "Tue Jan 16 13:36:13 2018",
+        "lightpath": true,
+        "macros": null,
+        "name": "tst_device_5",
+        "output_branches": [
+            "Z0", "X0"
+        ],
+        "parent": null,
+        "prefix": "Tst:Dev:5",
+        "screen": null,
+        "stand": null,
+        "system": null,
+        "type": "pcdsdevices.happi.containers.LCLSItem",
+        "z": 0.8
+    },
+    "Tst:Dev:6offbeamline": {
+        "_id": "Tst:Dev:6offbeamline",
+        "active": true,
+        "args": [],
+        "beamline": "ZZZ",
+        "creation": "Sat Jan 13 13:50:36 2018",
+        "device_class": "types.SimpleNamespace",
+        "input_branches": [
+            "Z0"
+        ],
+        "kwargs": {
+            "input_branches": "{{input_branches}}",
+            "name": "{{name}}",
+            "output_branches": "{{output_branches}}",
+            "z": "{{z}}"
+        },
+        "last_edit": "Tue Jan 16 13:36:13 2018",
+        "lightpath": true,
+        "macros": null,
+        "name": "tst_device_6",
+        "output_branches": [
+            "Z0"
+        ],
+        "parent": null,
+        "prefix": "Tst:Dev:6",
+        "screen": null,
+        "stand": null,
+        "system": null,
+        "type": "pcdsdevices.happi.containers.LCLSItem",
+        "z": 1.85
     }
 }
