@@ -28,7 +28,7 @@ from .cam_load import read_camviewer_cfg
 from .constants import CAMVIEWER_CFG, VALID_KEYS
 from .debug import load_debug
 from .exp_load import get_exp_objs
-from .happi import get_happi_objs, get_lightpath
+from .happi import DeviceLoadLevel, get_happi_objs, get_lightpath
 from .lcls import global_devices, global_device_docs
 from .namespace import class_namespace
 from .ophyd_settings import setup_ophyd
@@ -203,6 +203,14 @@ def load_conf(conf, hutch_dir=None, args=None):
     except KeyError:
         db = None
         logger.info('Missing db from conf. Will skip loading from shared database.')
+
+    try:
+        load_level_setting = conf['load_level']
+        load_level = getattr(DeviceLoadLevel, load_level_setting.upper(),
+                             DeviceLoadLevel.STANDARD)
+    except KeyError:
+        load_level = DeviceLoadLevel.STANDARD
+
     try:
         load = conf['load']
         if not isinstance(load, (str, list)):
@@ -441,7 +449,7 @@ def load_conf(conf, hutch_dir=None, args=None):
             lc = get_lightpath(db, hutch)
 
             # Gather relevant objects given the BeamPath
-            happi_objs = get_happi_objs(db, lc, hutch)
+            happi_objs = get_happi_objs(db, lc, hutch, load_level=load_level)
             cache(**happi_objs)
 
             # create and store beampath

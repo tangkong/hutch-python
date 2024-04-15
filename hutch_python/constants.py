@@ -32,6 +32,7 @@ VALID_KEYS = (
     'hutch',
     'db',
     'load',
+    'load_level',
     'experiment',
     'daq_platform',
     'daq_type',
