@@ -9,6 +9,7 @@ Features
 --------
 - Updates EpicsArch script, adding several debug/testin flags and ensuring
   information is up-to-date.  Includes:
+
   - ``update_file``: feature that updates EpicsArch based on current questionnaire
   - ``--softlink``: point arch file to new experiment via symbolic link
   - ``--level``: specify a debug level
