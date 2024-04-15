@@ -55,10 +55,18 @@ def _create_parser():
                         help='Change the logging level, e.g. DEBUG to show the debug logging stream')
 
     parser.add_argument('--cds-items', nargs=2, action='store', default=None,
-                        help="Pulls all data from CDS tab in the form of a dictionary. E.g.: xppx1003221 --cds-items run_xx experiment_name, where xx is the run number. This option will not automatically update the archfile.")
+                        help="Pulls all data from CDS tab in the form of a "
+                        "dictionary. E.g.: xppx1003221 --cds-items run_xx "
+                        "experiment_name, where xx is the run number. This option "
+                        "will not automatically update the archfile.")
 
-    parser.add_argument('--softlink', '-sl', action='store_true', default=None, help="                   create softlink for experiment. This is run after the archfile has been updated/created.")
-    parser.add_argument('--link-path', '-sl_path', action='store', default=EPICS_ARCH_FILE_PATH, help="Provide user with option to supply custom path for softlink. Defaults to: /cds/group/pcds/dist/pds/{}/misc/.")
+    parser.add_argument('--softlink', '-sl', action='store_true', default=None,
+                        help="create softlink for experiment. This is run after "
+                        "the archfile has been updated/created.")
+    parser.add_argument('--link-path', '-sl_path', action='store',
+                        default=EPICS_ARCH_FILE_PATH,
+                        help="Provide user with option to supply custom path for "
+                        "softlink. Defaults to: /cds/group/pcds/dist/pds/{}/misc/.")
     return parser
 
 
@@ -78,7 +86,8 @@ def logger_setup(args):
     logger.setLevel(args.level)
 
 
-def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=False, cds_items=None, softlink=None, link_path=None):
+def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=False,
+                     cds_items=None, softlink=None, link_path=None):
     """
     Create an epicsArch file for the experiment.
 
@@ -163,14 +172,10 @@ def pull_cds_data(exp, run):
     Outputs
     -------
         PrettyTable visualization of cds objects
-
-
     """
-    """
-    pull run data from questionnaire api, then take the data and sort it
-    create Pretty Table instance and if the values from the run data contain pcdssetup
-    then put them into a seperate dictionary as they are cds items
-    """
+    # pull run data from questionnaire api, then take the data and sort it
+    # create PrettyTable instance and if the values from the run data contain
+    # pcdssetup then put them into a seperate dictionary as they are cds items
     logger.debug('pull_cds_items(%s)', exp)
     client = QuestionnaireClient()
     logger.debug("in cds items, run numb:", str(run[1]))
@@ -182,14 +187,12 @@ def pull_cds_data(exp, run):
         if "pcdssetup" in keys:
             cds_dict[keys] = vals
 
-    """
-    names are as follows:
-    pcdssetup-motors, pcdssetup-areadet, pcdssetup-ao, pcdssetup-devs
-    pcdssetup-ps, pcdssetup-trig, pcdssetup-vacuum, pcdssetup-temp
+    # names are as follows:
+    # pcdssetup-motors, pcdssetup-areadet, pcdssetup-ao, pcdssetup-devs
+    # pcdssetup-ps, pcdssetup-trig, pcdssetup-vacuum, pcdssetup-temp
 
-    iterate through all cds items and label them based on their type
-    use the struct members to identify
-    """
+    # iterate through all cds items and label them based on their type
+    # use the struct members to identify
     displayList = []
     for k, v in cds_dict.items():
         if re.match('pcdssetup-motors.*-name', k):
@@ -224,21 +227,25 @@ def pull_cds_data(exp, run):
 
 def create_softlink(experiment, link_path):
     """
-    This removes the softlink in the /cds/group/pcds/dist/pds/{}/misc/ and overwrites it with the new active experiment.
-
+    This removes the softlink in the /cds/group/pcds/dist/pds/{}/misc/ and
+    overwrites it with the new active experiment.
     """
-
     # Defaults new softlink in /cds/group/pcds/dist/pds/{}/misc/
     if not os.path.exists(link_path):
         raise OSError('Path does not exist path: %s' % link_path)
 
-    subprocess.run(['ln', '-sf', link_path.format(experiment[0:3]) + 'epicsArch_' + experiment + '.txt', link_path.format(experiment[0:3]) + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
+    subprocess.run(['ln', '-sf', link_path.format(experiment[0:3]) + 'epicsArch_'
+                    + experiment + '.txt', link_path.format(experiment[0:3])
+                    + 'epicsArch_' + experiment[0:3].upper() + '_exp_specific.txt'])
 
 
 def check_for_duplicates(qs_data, af_data):
     """
-    Check for duplicate PVs in the questionnaire, the code already throws a warning for duplicate aliases.
-    If duplicates (PV or Alias) are found in the questionnaire throw error and prompt user to fix and re-run. If they are found in the epicsArch file then step through each match and update accordingly.
+    Check for duplicate PVs in the questionnaire, the code already throws a
+    warning for duplicate aliases.  If duplicates (PV or Alias) are found in the
+    questionnaire throw error and prompt user to fix and re-run. If they are
+    found in the epicsArch file then step through each match and update
+    accordingly.
 
     Parameters
     ----------
@@ -254,15 +261,9 @@ def check_for_duplicates(qs_data, af_data):
     updated_arch_list : list
         Updated list containing sorted alias, PVs.
     """
-
-    """
-    Part 1: Parse Data from the questionnaire and the archfile
-    Part 2: Check the questionnaire for pv duplicates
-    """
-
     # PART 1
-
-    # Convert lists to dictionaries to sort as a key - value pair while also removing any whitespice in the aliases.
+    # Convert lists to dictionaries to sort as a key - value pair while also
+    # removing any whitespice in the aliases.
 
     # Questionnaire Data, removing whitespaces and newline chars
     qsDict = dict(zip(qs_data[::2], qs_data[1::2]))
@@ -286,7 +287,6 @@ def check_for_duplicates(qs_data, af_data):
         sorted_afDict = {}
 
     # PART 2
-
     # Check the questionaire for duplicate PVs
     # Making reverse multidict to help identify duplicate values in questionnaire.
     rev_keyDict = {}
@@ -295,11 +295,12 @@ def check_for_duplicates(qs_data, af_data):
 
     pvDuplicate = [key for key, values in rev_keyDict.items() if len(values) > 1]
     # Looking for duplicates of PVs in the questionaire
-    # also print out the alias for PV, change removing to warning operater to remove dup then rerun
+    # also print out the alias for PV, change removing to warning operator to remove dup then rerun
     for dup in pvDuplicate:
         logger.debug("!Duplicate PV in questionnaire!:" + str(dup))
         for value in rev_keyDict[dup][1:]:
-            logger.debug("Found PV duplicate(s) from questionnaire: " + value + ", " + sorted_qsDict[value])
+            logger.debug("Found PV duplicate(s) from questionnaire: " + value
+                         + ", " + sorted_qsDict[value])
         raise ValueError("Please remove duplicates and re-run script!")
 
     # Check to see if the archfile has any data in it
@@ -308,7 +309,8 @@ def check_for_duplicates(qs_data, af_data):
         cleaned_qs_data = [x for item in sorted_qsDict.items() for x in item]
         return cleaned_qs_data
 
-    # Once we have cleared any duplicates in the questionnaire we moving on to updating values according to the which field matches.
+    # Once we have cleared any duplicates in the questionnaire we moving on to
+    # updating values according to the which field matches.
 
     # Checking for matching PVs in questionnaire and archfile
     # if the PV matches update the alias by removing the old key and making a new one
@@ -316,12 +318,14 @@ def check_for_duplicates(qs_data, af_data):
         # this looks up the key in the af Dictionary by finding the value
         foundKey = get_key(val, sorted_afDict)
         if k in sorted_afDict:
-            logger.debug("!Alias Match in questionnaire and archfile! Updating PV: " + k + ", " + sorted_qsDict[k])
+            logger.debug("!Alias Match in questionnaire and archfile! Updating PV: "
+                         + k + ", " + sorted_qsDict[k])
             sorted_afDict[k] = sorted_qsDict[k]
         elif foundKey:
             del sorted_afDict[foundKey]
             sorted_afDict[k] = val
-            logger.debug("!PV Match in questionnaire and archfile! Updating Alias: " + k + ", " + val)
+            logger.debug("!PV Match in questionnaire and archfile! Updating Alias: "
+                         + k + ", " + val)
 
     sorted_afDict = dict(sorted(sorted_afDict.items()))
     updated_arch_list = [x for item in sorted_afDict.items() for x in item]
