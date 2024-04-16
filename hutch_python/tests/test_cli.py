@@ -91,6 +91,7 @@ def run_hpy_and_exit(*args: str) -> subprocess.CompletedProcess:
     )
 
 
+@pytest.mark.timeout(30)
 def test_hist_file_arg():
     logger.debug("test_hist_file_arg")
     test_hist_file = (CFG_PATH.parent / "history.sqlite").resolve()
