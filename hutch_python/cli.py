@@ -4,6 +4,7 @@ This module defines the command-line interface arguments for the
 startup.
 """
 import argparse
+import dataclasses
 import logging
 import os
 import sys
@@ -41,6 +42,16 @@ parser.add_argument("script", nargs="?",
 
 # Append to module docs
 __doc__ += "\n::\n\n    " + parser.format_help().replace("\n", "\n    ")
+
+
+@dataclasses.dataclass
+class HutchPythonArgs:
+    cfg: str | None = None
+    exp: str | None = None
+    debug: bool = False
+    sim: bool = False
+    create: bool = False
+    script: str | None = None
 
 
 def configure_tab_completion(ipy_config):
@@ -120,7 +131,7 @@ def main():
     setup functions.
     """
     # Parse the user's arguments
-    args = parser.parse_args()
+    args = parser.parse_args(namespace=HutchPythonArgs())
 
     # Set up logging first
     if args.cfg is None:
