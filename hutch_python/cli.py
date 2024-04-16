@@ -136,9 +136,11 @@ def configure_ipython_session(args: HutchPythonArgs):
     if hist_file == ":memory:" or Path(hist_file).parent.exists():
         ipy_config.HistoryManager.hist_file = hist_file
     else:
-        logger.warning(
-            f"No such directory for history file {hist_file}, using ipython default instead."
-        )
+        msg = f"No such directory for history file {hist_file}, using ipython default instead."
+        if args.hist_file is None:
+            logger.debug(msg)
+        else:
+            logger.warning(msg)
 
     return ipy_config
 
