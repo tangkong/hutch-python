@@ -37,6 +37,13 @@ parser.add_argument("--sim", action="store_true", default=False,
                     help="Run with simulated DAQ (lcls1 only)")
 parser.add_argument("--create", action="store", default=False,
                     help="Create a new hutch deployment")
+parser.add_argument("--hist-file", action="store", default=None,
+                    help=(
+                        "File to store the sqlite session history in. "
+                        "Defaults to /u1/{USER}/hutch-python/history.sqlite "
+                        "if the folder exists, "
+                        "otherwise use the ipython default location."
+                    ))
 parser.add_argument("script", nargs="?",
                     help="Run a script instead of running interactively")
 
@@ -51,6 +58,7 @@ class HutchPythonArgs:
     debug: bool = False
     sim: bool = False
     create: bool = False
+    hist_file: str | None = None
     script: str | None = None
 
 
@@ -81,7 +89,7 @@ def configure_tab_completion(ipy_config):
         IPython.core.completer.dir2 = dir
 
 
-def configure_ipython_session():
+def configure_ipython_session(args: HutchPythonArgs):
     """
     Configure a new IPython session.
 
@@ -119,6 +127,18 @@ def configure_ipython_session():
         str(DIR_MODULE / "print_hint_banner.py"),
     ]
     ipy_config.InteractiveShellApp.exec_files = files
+
+    # Set up history from local disk (not NFS)
+    if args.hist_file is None:
+        hist_file = f"/u1/{os.environ['USER']}/hutch-python/history.sqlite"
+    else:
+        hist_file = args.hist_file
+    if hist_file == ":memory:" or Path(hist_file).parent.exists():
+        ipy_config.HistoryManager.hist_file = hist_file
+    else:
+        logger.warning(
+            f"No such directory for history file {hist_file}, using ipython default instead."
+        )
 
     return ipy_config
 
