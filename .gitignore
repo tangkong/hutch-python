@@ -118,3 +118,6 @@ hutch_python/tests/tst/db.txt
 
 # vscode
 .vscode
+
+# unit test artifacts
+*.sqlite
