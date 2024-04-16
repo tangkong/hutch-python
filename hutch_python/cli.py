@@ -3,6 +3,8 @@ This module defines the command-line interface arguments for the
 ``hutch-python`` script. It also provides utilities that are only used at
 startup.
 """
+from __future__ import annotations
+
 import argparse
 import dataclasses
 import logging
