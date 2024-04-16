@@ -211,7 +211,7 @@ def main():
     if script is None:
         # Finally start the interactive session
         start_ipython(argv=["--quick"], user_ns=objs,
-                      config=configure_ipython_session())
+                      config=configure_ipython_session(args))
     else:
         # Instead of setting up ipython, run the script with objs
         with open(script) as fn:
