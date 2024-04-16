@@ -10,7 +10,7 @@ import pytest
 from conftest import cli_args, restore_logging
 
 import hutch_python.cli
-from hutch_python.cli import main
+from hutch_python.cli import HutchPythonArgs, main
 from hutch_python.load_conf import load
 
 from .conftest import skip_if_win32_generic
@@ -139,7 +139,7 @@ def test_ipython_tab_completion():
 
     # Side-effect of the following is monkey-patching `dir2` to "fix" this for
     # us.
-    hutch_python.cli.configure_ipython_session()
+    hutch_python.cli.configure_ipython_session(HutchPythonArgs())
 
     completer = IPython.core.completer.Completer(namespace=ns)
     completer.limit_to__all__ = False
