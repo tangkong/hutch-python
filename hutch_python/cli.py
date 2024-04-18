@@ -47,7 +47,7 @@ def get_parser() -> argparse.ArgumentParser:
                         default=None, const=DEFAULT_HISTFILE,
                         help=(
                             "File to store the sqlite session history in. "
-                            "Bracketed variables will be substituted in "
+                            "${VARIABLES} will be substituted for "
                             "via shell environment variables, "
                             "Though in some cases these may be expanded by the shell "
                             "prior to reaching the python layer. "
