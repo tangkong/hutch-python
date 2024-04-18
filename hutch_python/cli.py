@@ -11,6 +11,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+from string import Template
 
 import IPython
 import matplotlib
@@ -25,29 +26,45 @@ from .log_setup import configure_log_directory, debug_mode, setup_logging
 
 logger = logging.getLogger(__name__)
 opts_cache = {}
+DEFAULT_HISTFILE = "/u1/${USER}/hutch-python/history.sqlite"
+
 
 # Define the parser
-parser = argparse.ArgumentParser(prog="hutch-python",
-                                 description="Launch LCLS Hutch Python")
-parser.add_argument("--cfg", required=False, default=None,
-                    help="Configuration yaml file")
-parser.add_argument("--exp", required=False, default=None,
-                    help="Experiment number override")
-parser.add_argument("--debug", action="store_true", default=False,
-                    help="Start in debug mode")
-parser.add_argument("--sim", action="store_true", default=False,
-                    help="Run with simulated DAQ (lcls1 only)")
-parser.add_argument("--create", action="store", default=False,
-                    help="Create a new hutch deployment")
-parser.add_argument("--hist-file", action="store", default=None,
-                    help=(
-                        "File to store the sqlite session history in. "
-                        "Defaults to /u1/{USER}/hutch-python/history.sqlite "
-                        "if the folder exists, "
-                        "otherwise use the ipython default location."
-                    ))
-parser.add_argument("script", nargs="?",
-                    help="Run a script instead of running interactively")
+def get_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="hutch-python",
+                                     description="Launch LCLS Hutch Python")
+    parser.add_argument("--cfg", required=False, default=None,
+                        help="Configuration yaml file")
+    parser.add_argument("--exp", required=False, default=None,
+                        help="Experiment number override")
+    parser.add_argument("--debug", action="store_true", default=False,
+                        help="Start in debug mode")
+    parser.add_argument("--sim", action="store_true", default=False,
+                        help="Run with simulated DAQ (lcls1 only)")
+    parser.add_argument("--create", action="store", default=False,
+                        help="Create a new hutch deployment")
+    parser.add_argument("--hist-file", nargs="?", action="store",
+                        default=None, const=DEFAULT_HISTFILE,
+                        help=(
+                            "File to store the sqlite session history in. "
+                            "Bracketed variables will be substituted in "
+                            "via shell environment variables, "
+                            "Though in some cases these may be expanded by the shell "
+                            "prior to reaching the python layer. "
+                            "If omitted, defaults to the ipython default location. "
+                            "If included but left blank, defaults to "
+                            f"{DEFAULT_HISTFILE} "
+                            "if the folder exists, "
+                            "otherwise uses the ipython default location. "
+                            "This folder is a local hard-drive location for lcls "
+                            "operator consoles."
+                        ))
+    parser.add_argument("script", nargs="?",
+                        help="Run a script instead of running interactively")
+    return parser
+
+
+parser = get_parser()
 
 # Append to module docs
 __doc__ += "\n::\n\n    " + parser.format_help().replace("\n", "\n    ")
@@ -130,19 +147,19 @@ def configure_ipython_session(args: HutchPythonArgs):
     ]
     ipy_config.InteractiveShellApp.exec_files = files
 
-    # Set up history from local disk (not NFS)
-    if args.hist_file is None:
-        hist_file = f"/u1/{os.environ['USER']}/hutch-python/history.sqlite"
-    else:
-        hist_file = args.hist_file
-    if hist_file == ":memory:" or Path(hist_file).parent.exists():
-        ipy_config.HistoryManager.hist_file = hist_file
-    else:
-        msg = f"No such directory for history file {hist_file}, using ipython default instead."
-        if args.hist_file is None:
-            logger.debug(msg)
+    # Custom history file with sensible non-NFS default for opr accounts
+    if args.hist_file is not None:
+        hist_file = Template(args.hist_file).safe_substitute(os.environ)
+        if hist_file == ":memory:" or Path(hist_file).parent.exists():
+            ipy_config.HistoryManager.hist_file = hist_file
         else:
-            logger.warning(msg)
+            msg = f"No such directory for history file {hist_file}, using ipython default instead."
+            if args.hist_file == DEFAULT_HISTFILE:
+                # We expect this to be missing for non-opr users
+                logger.debug(msg)
+            else:
+                # You specified a file, so we need to warn about this
+                logger.warning(msg)
 
     return ipy_config
 
