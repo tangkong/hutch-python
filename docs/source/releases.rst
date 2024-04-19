@@ -2,6 +2,21 @@ Release History
 ###############
 
 
+v1.20.0 (2024-04-19)
+====================
+
+Features
+--------
+- Allow per-session separate ipython histories via command-line argument.
+  Set this to a local operator console hard drive if available,
+  otherwise use the ipython default.
+
+Contributors
+------------
+- zllentz
+
+
+
 v1.19.0 (2024-04-15)
 ====================
 
