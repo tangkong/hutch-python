@@ -7,9 +7,11 @@ v1.20.0 (2024-04-19)
 
 Features
 --------
-- Allow per-session separate ipython histories via command-line argument.
-  Set this to a local operator console hard drive if available,
-  otherwise use the ipython default.
+- Allow per-session separate ipython histories via ``-hist-file``
+  command-line argument. If omitted, default ipython behavior is used.
+  When ``--hist-file`` is included with no argument, the history file
+  will be written a local operator console hard drive, if available.
+  An argument can be provided to use any file as the history.sqlite file.
 
 Contributors
 ------------
