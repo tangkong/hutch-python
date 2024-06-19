@@ -16,8 +16,6 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-
-
 def get_qs_objs(expname):
     """
     Gather user objects from the experiment questionnaire.
