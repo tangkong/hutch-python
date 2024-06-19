@@ -53,16 +53,15 @@ def _create_parser():
 
     parser.add_argument('--level', '-l', required=False, type=str, default="INFO",
                         help='Change the logging level, e.g. DEBUG to show the debug logging stream')
-
-    parser.add_argument('--cds-items', nargs=2, action='store', default=None,
-                        help="Pulls all data from CDS tab in the form of a "
-                        "dictionary. E.g.: xppx1003221 --cds-items run_xx "
-                        "experiment_name, where xx is the run number. This option "
-                        "will not automatically update the archfile.")
+    
+    parser.add_argument('--cds-items', action='store_true', default=None,
+                        help="Pulls all data from CDS tab. E.g.: xppx1003221 run21 X-10032"
+                        "This option will not automatically update the archfile.")
 
     parser.add_argument('--softlink', '-sl', action='store_true', default=None,
                         help="create softlink for experiment. This is run after "
                         "the archfile has been updated/created.")
+
     parser.add_argument('--link-path', '-sl_path', action='store',
                         default=EPICS_ARCH_FILE_PATH,
                         help="Provide user with option to supply custom path for "
@@ -139,7 +138,7 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
     if experiment and not dry_run:
         # set the path to write the epicsArch file to.
         if cds_items:
-            pull_cds_data(experiment, cds_items)
+            pull_cds_items(experiment)
             return
         if path:
             if path and not os.path.exists(path):
@@ -156,11 +155,11 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
         print_dry_run(experiment)
 
 
-def pull_cds_data(exp, run):
+def pull_cds_items(exp):
     """
-    Gather all user objects from the CDS tab in the questionnaire.
-    Parse objects and separate them based on type.
-    Display them in the console via PrettyTable.
+    Gather all user obejcts from the CDS tab in the questionnaire.
+    Parse objects and sperate them based on type.
+    Display them in the console vie PrettyTable.
 
     Parameters
     ----------
@@ -168,21 +167,68 @@ def pull_cds_data(exp, run):
         The experiment's name e.g. xppx1003221
     run: ''str''
         The run number e.g. run21
-
+    ----------
     Outputs
     -------
         PrettyTable visualization of cds objects
+    -------
+
     """
-    # pull run data from questionnaire api, then take the data and sort it
-    # create PrettyTable instance and if the values from the run data contain
-    # pcdssetup then put them into a seperate dictionary as they are cds items
-    logger.debug('pull_cds_items(%s)', exp)
+    """
+    pull run data from questionnaire api, then take the data and sort it
+    create Pretty Table instance and if the values from the run data contain pcdssetup
+    then put them into a seperate dictionary as they are cds items
+    """
+    logger.debug('pull_cds_items:', exp)
     client = QuestionnaireClient()
-    logger.debug("in cds items, run numb:", str(run[1]))
-    runDetails_Dict = client.getProposalDetailsForRun(str(run[0]), str(run[1]))
+
+    formatted_run_id = ''
+
+    # handle formatting of proposal id, want: e.g. X-10032
+    # Case -  Expected Format: e.g. xppx1003221
+    if re.match('^.{4}[0-9]{7}$', exp):
+        logger.debug("experiment name format")
+        run_num = 'run'+exp[-2:]
+        logger.debug('run num', run_num)
+        run_hutch = str(exp[0:3])
+        logger.debug('run_hutch', run_hutch)
+        run_id = str(exp[3:-2])
+        logger.debug('run_id', run_id)
+        formatted_run_id = run_id.capitalize()
+        formatted_run_id = formatted_run_id[:1] + '-' + formatted_run_id[1:]
+
+    elif re.match('[A-Z]{1}-[0-9]{5}$', exp) or re.match('^[A-Z]{2}[0-9]{2}$', exp):
+        # Case - Proposal ID Format, have user enter run num manually
+        logger.debug("run_id format")
+        formatted_run_id = exp
+        run_num = 'run' + str(input('Please enter run number: '))
+    else:
+        print('Unrecognized format, please follow the prompts to find experiment data.')
+        run_num = input('Please enter run number: ')
+        formatted_run_id = input('Please enter proposal ID: ')
+
+    logger.debug('formatted run_id', formatted_run_id)
+    logger.debug('run_num', run_num)
+
+    matchedKey = ''
+
+    try:
+        runDetails_Dict = client.getProposalsListForRun(run_num)
+        for key, vals in runDetails_Dict.items():
+            logger.debug(formatted_run_id, key)
+            if str(key) == str(formatted_run_id):
+                logger.debug('matched key', key)
+                matchedKey = key
+
+    except Exception as e:
+        print("An invalid https request, please check the run number, proposal id and experiment number:", e)
+
+    runDetails_Dict = client.getProposalDetailsForRun(run_num, matchedKey)
+
     sorted_runDetails_Dict = dict(sorted(runDetails_Dict.items()))
     cds_dict = {}
     myTable = PrettyTable(["Alias", "PV Base", "Type"])
+
     for keys, vals in sorted_runDetails_Dict.items():
         if "pcdssetup" in keys:
             cds_dict[keys] = vals
@@ -193,6 +239,7 @@ def pull_cds_data(exp, run):
 
     # iterate through all cds items and label them based on their type
     # use the struct members to identify
+
     displayList = []
     for k, v in cds_dict.items():
         if re.match('pcdssetup-motors.*-name', k):
@@ -219,6 +266,7 @@ def pull_cds_data(exp, run):
         elif re.match('pcdssetup-temp.*-name', k):
             pv = cds_dict.get(re.sub('name', 'pvbase', k), '')
             displayList.append(QStruct(v, pv, "temperature"))
+    # logger.debug("displayList", displayList)
 
     for struct in displayList:
         myTable.add_row([struct.alias, struct.pvbase, struct.pvtype])
