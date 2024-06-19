@@ -1,5 +1,6 @@
 import logging
 import os.path
+
 from configparser import ConfigParser, NoOptionError
 
 import happi
@@ -14,6 +15,7 @@ except ImportError:
     QSBackend = None
 
 logger = logging.getLogger(__name__)
+
 
 
 def get_qs_objs(expname):
