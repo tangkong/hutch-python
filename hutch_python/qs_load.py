@@ -1,6 +1,9 @@
 import logging
 import os.path
+<<<<<<< HEAD
 
+=======
+>>>>>>> eb930eb (trying to fix git conflict, fixed pull cds data)
 from configparser import ConfigParser, NoOptionError
 
 import happi
@@ -16,6 +19,10 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> eb930eb (trying to fix git conflict, fixed pull cds data)
 def get_qs_objs(expname):
     """
     Gather user objects from the experiment questionnaire.

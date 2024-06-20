@@ -19,6 +19,8 @@ except ImportError:
     psdm_qs_cli = None
     QuestionnaireClient = None
 
+logger = logging.getLogger(__name__)
+
 
 # Annotation with dataclass, making struct to help organize cds objects in prettytable
 @dataclass
@@ -26,9 +28,6 @@ class QStruct:
     alias: str
     pvbase: str
     pvtype: str
-
-
-logger = logging.getLogger(__name__)
 
 
 def _create_parser():
@@ -155,7 +154,13 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
         print_dry_run(experiment)
 
 
+<<<<<<< HEAD
 def pull_cds_items(exp):
+=======
+# def pull_cds_data(exp, run):
+def pull_cds_data(exp):
+    logger.debug("in client")
+>>>>>>> eb930eb (trying to fix git conflict, fixed pull cds data)
     """
     Gather all user obejcts from the CDS tab in the questionnaire.
     Parse objects and sperate them based on type.
@@ -179,6 +184,7 @@ def pull_cds_items(exp):
     create Pretty Table instance and if the values from the run data contain pcdssetup
     then put them into a seperate dictionary as they are cds items
     """
+
     logger.debug('pull_cds_items:', exp)
     client = QuestionnaireClient()
 
@@ -190,8 +196,6 @@ def pull_cds_items(exp):
         logger.debug("experiment name format")
         run_num = 'run'+exp[-2:]
         logger.debug('run num', run_num)
-        run_hutch = str(exp[0:3])
-        logger.debug('run_hutch', run_hutch)
         run_id = str(exp[3:-2])
         logger.debug('run_id', run_id)
         formatted_run_id = run_id.capitalize()
@@ -204,6 +208,7 @@ def pull_cds_items(exp):
         run_num = 'run' + str(input('Please enter run number: '))
     else:
         print('Unrecognized format, please follow the prompts to find experiment data.')
+
         run_num = input('Please enter run number: ')
         formatted_run_id = input('Please enter proposal ID: ')
 
@@ -222,8 +227,14 @@ def pull_cds_items(exp):
 
     except Exception as e:
         print("An invalid https request, please check the run number, proposal id and experiment number:", e)
+        sys.exit()
 
-    runDetails_Dict = client.getProposalDetailsForRun(run_num, matchedKey)
+    try:
+        runDetails_Dict = client.getProposalDetailsForRun(run_num, matchedKey)
+        # questionnaireFlag = True
+    except (Exception, UnboundLocalError) as e:
+        print('Could not find experiment, please check to make sure information is correct.', e)
+        sys.exit()
 
     sorted_runDetails_Dict = dict(sorted(runDetails_Dict.items()))
     cds_dict = {}
