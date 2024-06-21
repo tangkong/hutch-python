@@ -7,6 +7,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 
+from kerberos import GSSError
 from prettytable import PrettyTable
 
 from .constants import EPICS_ARCH_FILE_PATH
@@ -52,9 +53,9 @@ def _create_parser():
 
     parser.add_argument('--level', '-l', required=False, type=str, default="INFO",
                         help='Change the logging level, e.g. DEBUG to show the debug logging stream')
-    
+
     parser.add_argument('--cds-items', action='store_true', default=None,
-                        help="Pulls all data from CDS tab. E.g.: xppx1003221 run21 X-10032"
+                        help="Pulls all data from CDS tab. E.g.: epicsarch-qs xppx1003221 --cds-items"
                         "This option will not automatically update the archfile.")
 
     parser.add_argument('--softlink', '-sl', action='store_true', default=None,
@@ -65,6 +66,7 @@ def _create_parser():
                         default=EPICS_ARCH_FILE_PATH,
                         help="Provide user with option to supply custom path for "
                         "softlink. Defaults to: /cds/group/pcds/dist/pds/{}/misc/.")
+
     return parser
 
 
@@ -86,6 +88,7 @@ def logger_setup(args):
 
 def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=False,
                      cds_items=None, softlink=None, link_path=None):
+
     """
     Create an epicsArch file for the experiment.
 
@@ -154,13 +157,7 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
         print_dry_run(experiment)
 
 
-<<<<<<< HEAD
 def pull_cds_items(exp):
-=======
-# def pull_cds_data(exp, run):
-def pull_cds_data(exp):
-    logger.debug("in client")
->>>>>>> eb930eb (trying to fix git conflict, fixed pull cds data)
     """
     Gather all user obejcts from the CDS tab in the questionnaire.
     Parse objects and sperate them based on type.
@@ -186,9 +183,14 @@ def pull_cds_data(exp):
     """
 
     logger.debug('pull_cds_items:', exp)
-    client = QuestionnaireClient()
+    try:
+        client = QuestionnaireClient()
+    except GSSError:
+        print('No kerberos token found; rerun after running kinit')
+        sys.exit()
 
     formatted_run_id = ''
+    run_num = ''
 
     # handle formatting of proposal id, want: e.g. X-10032
     # Case -  Expected Format: e.g. xppx1003221
@@ -209,7 +211,7 @@ def pull_cds_data(exp):
     else:
         print('Unrecognized format, please follow the prompts to find experiment data.')
 
-        run_num = input('Please enter run number: ')
+        run_num = 'run' + input('Please enter run number: ')
         formatted_run_id = input('Please enter proposal ID: ')
 
     logger.debug('formatted run_id', formatted_run_id)
