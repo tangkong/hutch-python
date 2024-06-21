@@ -66,7 +66,6 @@ def _create_parser():
                         default=EPICS_ARCH_FILE_PATH,
                         help="Provide user with option to supply custom path for "
                         "softlink. Defaults to: /cds/group/pcds/dist/pds/{}/misc/.")
-
     return parser
 
 
@@ -158,6 +157,8 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
 
 
 def pull_cds_items(exp):
+    logger.debug("in client")
+
     """
     Gather all user obejcts from the CDS tab in the questionnaire.
     Parse objects and sperate them based on type.
