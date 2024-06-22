@@ -33,7 +33,7 @@ class IPythonSessionTimer:
     max_idle_time: int
         The maximum number of seconds a user session can be idle (currently set 
         to 172800 seconds or 48 hours).
-    
+
     last_active_time: float
         The time of the last user activity in this session.
 
@@ -43,7 +43,7 @@ class IPythonSessionTimer:
 
     def __init__(self, ipython):
         self.curr_time = 0
-        self.max_idle_time = 172800  # number of seconds in 48 hours
+        self.max_idle_time = 172800
         self.last_active_time = 0
         self.idle_time = 0
 
@@ -61,7 +61,6 @@ class IPythonSessionTimer:
         time.sleep(sleep_time)
 
     def _start_session(self):
-
         # Check if idle_time has exceeded max_idle_time
         while (self.idle_time < self.max_idle_time):
             self._timer(self.max_idle_time - self.idle_time)
@@ -90,3 +89,4 @@ def load_ipython_extension(ipython):
     UserSessionTimer = IPythonSessionTimer(ipython)
     t1 = Thread(target=UserSessionTimer._start_session, daemon=True)
     t1.start()
+
