@@ -43,7 +43,7 @@ class IPythonSessionTimer:
 
     def __init__(self, ipython):
         self.curr_time = 0
-        self.max_idle_time = 20  # 172800 is number of seconds in 46 hours
+        self.max_idle_time = 172800  # number of seconds in 48 hours
         self.last_active_time = 0
         self.idle_time = 0
 
