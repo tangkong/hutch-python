@@ -157,12 +157,11 @@ def create_arch_file(experiment, level=None, hutch=None, path=None, dry_run=Fals
 
 
 def pull_cds_items(exp):
-    logger.debug("in client")
 
     """
-    Gather all user obejcts from the CDS tab in the questionnaire.
-    Parse objects and sperate them based on type.
-    Display them in the console vie PrettyTable.
+    Gather all user objects from the CDS tab in the questionnaire.
+    Parse objects and separate them based on type.
+    Display them in the console via PrettyTable.
 
     Parameters
     ----------
@@ -170,7 +169,7 @@ def pull_cds_items(exp):
         The experiment's name e.g. xppx1003221
     run: ''str''
         The run number e.g. run21
-    ----------
+
     Outputs
     -------
         PrettyTable visualization of cds objects
@@ -182,7 +181,7 @@ def pull_cds_items(exp):
     create Pretty Table instance and if the values from the run data contain pcdssetup
     then put them into a seperate dictionary as they are cds items
     """
-
+    logger.debug("in client")
     logger.debug('pull_cds_items:', exp)
     try:
         client = QuestionnaireClient()
@@ -229,15 +228,15 @@ def pull_cds_items(exp):
                 matchedKey = key
 
     except Exception as e:
-        print("An invalid https request, please check the run number, proposal id and experiment number:", e)
-        sys.exit()
+        logger.error("An invalid https request, please check the run number, proposal id and experiment number:", e)
+        return
 
     try:
         runDetails_Dict = client.getProposalDetailsForRun(run_num, matchedKey)
         # questionnaireFlag = True
     except (Exception, UnboundLocalError) as e:
-        print('Could not find experiment, please check to make sure information is correct.', e)
-        sys.exit()
+        logger.error('Could not find experiment, please check to make sure information is correct.', e)
+        return
 
     sorted_runDetails_Dict = dict(sorted(runDetails_Dict.items()))
     cds_dict = {}
