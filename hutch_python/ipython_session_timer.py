@@ -1,13 +1,21 @@
 """
-This module modifies an ``ipython`` shell to automatically close if it has been 
-idle for 48 hours. Prior to starting hutch-python the user is alerted that the 
-shell will automatically close after another 24 hours and is given the option 
+This module modifies an ``ipython`` shell to automatically close if it has been
+idle for 48 hours. Prior to starting hutch-python the user is alerted that the
+shell will automatically close after another 24 hours and is given the option
 to enter the number of hours they want to extend the session.
 """
 
 import time
-from IPython import get_ipython
 from threading import Thread
+
+from IPython import get_ipython
+
+max_idle_time = 172800
+
+
+def configure_timeout(duration):
+    if isinstance(duration, int) and duration > 0:
+        max_idle_time = duration
 
 
 class IPythonSessionTimer:
@@ -31,7 +39,7 @@ class IPythonSessionTimer:
         The current time in seconds.
 
     max_idle_time: int
-        The maximum number of seconds a user session can be idle (currently set 
+        The maximum number of seconds a user session can be idle (currently set
         to 172800 seconds or 48 hours).
 
     last_active_time: float
@@ -43,7 +51,7 @@ class IPythonSessionTimer:
 
     def __init__(self, ipython):
         self.curr_time = 0
-        self.max_idle_time = 172800
+        self.max_idle_time = max_idle_time
         self.last_active_time = 0
         self.idle_time = 0
 
@@ -67,7 +75,7 @@ class IPythonSessionTimer:
             self._get_time_passed()
 
         # Close the user session
-        print("This hutch-python session has timed out and automatically closed. Any code that was running will continue to run until it is completed.")
+        print("This hutch-python session has timed out and automatically closed. Any code that is running will continue to run until it is completed.")
 
         # Close this ipython session
         get_ipython().ask_exit()
@@ -77,7 +85,7 @@ def load_ipython_extension(ipython):
     """
     Initialize the `IPythonSessionTimer`.
 
-    This starts a timer that checks if the user session has been 
+    This starts a timer that checks if the user session has been
     idle for 48 hours or longer. If so, close the user session.
 
     Parameters
@@ -89,4 +97,3 @@ def load_ipython_extension(ipython):
     UserSessionTimer = IPythonSessionTimer(ipython)
     t1 = Thread(target=UserSessionTimer._start_session, daemon=True)
     t1.start()
-
