@@ -10,12 +10,13 @@ from threading import Thread
 
 from IPython import get_ipython
 
-max_idle_time = 172800
+max_idle_time = 172800  # number of seconds in 48 hours
 
 
-def configure_timeout(duration):
-    if isinstance(duration, int) and duration > 0:
-        max_idle_time = duration
+def configure_timeout(session_timer):
+    global max_idle_time
+    if isinstance(session_timer, int) and session_timer > 0:
+        max_idle_time = session_timer
 
 
 class IPythonSessionTimer:
@@ -50,6 +51,7 @@ class IPythonSessionTimer:
     '''
 
     def __init__(self, ipython):
+        global max_idle_time
         self.curr_time = 0
         self.max_idle_time = max_idle_time
         self.last_active_time = 0
