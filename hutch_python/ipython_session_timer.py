@@ -43,7 +43,7 @@ class IPythonSessionTimer:
 
     def __init__(self, ipython):
         global max_idle_time
-        self.max_idle_time = 30  # max_idle_time
+        self.max_idle_time = max_idle_time
         self.user_active = False
 
         # _set_last_active_time() function will trigger every time user runs a cell
@@ -65,7 +65,7 @@ class IPythonSessionTimer:
                     break
             else:
                 # check if the user has become inactive once every minute
-                time.sleep(15)
+                time.sleep(60)
 
         # Close the user session
         print("This hutch-python session has timed out and automatically closed. Please start a new session")
