@@ -36,51 +36,44 @@ class IPythonSessionTimer:
 
     Attributes
     ----------
-    curr_time: float
-        The current time in seconds.
-
     max_idle_time: int
         The maximum number of seconds a user session can be idle (currently set
         to 172800 seconds or 48 hours).
-
-    last_active_time: float
-        The time of the last user activity in this session.
-
-    idle_time: float
-        The amount of time the user session has been idle.
     '''
 
     def __init__(self, ipython):
         global max_idle_time
-        self.curr_time = 0
-        self.max_idle_time = max_idle_time
-        self.last_active_time = 0
-        self.idle_time = 0
+        self.max_idle_time = 30  # max_idle_time
+        self.user_active = False
 
         # _set_last_active_time() function will trigger every time user runs a cell
-        ipython.events.register('pre_run_cell', self._set_last_active_time)
+        ipython.events.register('pre_run_cell', self._set_user_active)
+        ipython.events.register('post_run_cell', self._set_user_inactive)
 
-    def _set_last_active_time(self, result):
-        self.last_active_time = time.time()
+    def _set_user_active(self, result):
+        self.user_active = True
 
-    def _get_time_passed(self):
-        self.curr_time = time.time()
-        self.idle_time = self.curr_time - self.last_active_time
-
-    def _timer(self, sleep_time):
-        time.sleep(sleep_time)
+    def _set_user_inactive(self, result):
+        self.user_active = False
 
     def _start_session(self):
-        # Check if idle_time has exceeded max_idle_time
-        while (self.idle_time < self.max_idle_time):
-            self._timer(self.max_idle_time - self.idle_time)
-            self._get_time_passed()
+        # poll for user activity
+        while (1):
+            if self.user_active == False:
+                time.sleep(self.max_idle_time)
+                if self.user_active == False:
+                    break
+            else:
+                # check if the user has become inactive once every minute
+                time.sleep(15)
 
         # Close the user session
-        print("This hutch-python session has timed out and automatically closed. Any code that is running will continue to run until it is completed.")
+        print("This hutch-python session has timed out and automatically closed. Please start a new session")
 
         # Close this ipython session
-        get_ipython().ask_exit()
+        ip = get_ipython()
+        ip.ask_exit()
+        ip.pt_app.app.exit()
 
 
 def load_ipython_extension(ipython):
