@@ -59,9 +59,9 @@ class IPythonSessionTimer:
     def _start_session(self):
         # poll for user activity
         while (1):
-            if self.user_active == False:
+            if not self.user_active:
                 time.sleep(self.max_idle_time)
-                if self.user_active == False:
+                if not self.user_active:
                     break
             else:
                 # check if the user has become inactive once every minute
