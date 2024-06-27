@@ -4,3 +4,5 @@ sphinx
 sphinx_rtd_theme
 sphinxcontrib-jquery
 pypandoc
+# Temporary pin, can remove once it installs without this
+numpy <2
