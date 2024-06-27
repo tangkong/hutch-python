@@ -1,8 +1,7 @@
 """
 This module modifies an ``ipython`` shell to automatically close if it has been
-idle for 48 hours. Prior to starting hutch-python the user is alerted that the
-shell will automatically close after another 24 hours and is given the option
-to enter the number of hours they want to extend the session.
+idle for a certain number of hours. Each hutch can configure their conf.yml
+file to set a timeout duration. The default duration is 48 hours.
 """
 
 import time
@@ -63,14 +62,14 @@ class IPythonSessionTimer:
 
     def _set_user_active(self):
         self.user_active = True
-        self.last_active_time = time.time()
+        self.last_active_time = time.monotonic()
 
     def _set_user_inactive(self):
         self.user_active = False
-        self.last_active_time = time.time()
+        self.last_active_time = time.monotonic()
 
     def _get_time_passed(self):
-        self.curr_time = time.time()
+        self.curr_time = time.monotonic()
         self.idle_time = self.curr_time - self.last_active_time
 
     def _timer(self, sleep_time):
