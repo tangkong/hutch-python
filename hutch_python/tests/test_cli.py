@@ -1,14 +1,18 @@
 import logging
 import os
 import shutil
+import subprocess
+import sys
 from pathlib import Path
+from string import Template
 
 import IPython.core.completer
 import pytest
 from conftest import cli_args, restore_logging
 
 import hutch_python.cli
-from hutch_python.cli import main
+from hutch_python.cli import (HutchPythonArgs, configure_ipython_session,
+                              get_parser, main)
 from hutch_python.load_conf import load
 
 from .conftest import skip_if_win32_generic
@@ -80,6 +84,56 @@ def test_create_arg():
     shutil.rmtree(test_dir)
 
 
+def run_hpy_and_exit(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, "-m", "hutch_python"] + list(args),
+        input="exit\n",
+        universal_newlines=True,
+        capture_output=True,
+    )
+
+
+@pytest.mark.timeout(30)
+def test_hist_file_arg(monkeypatch):
+    logger.debug("test_hist_file_arg")
+    test_hist_file = (CFG_PATH.parent / "history.sqlite").resolve()
+    bad_hist_file = (CFG_PATH.parent / "aesefiudh" / "history.sqlite").resolve()
+    memory_hist_filename = ":memory:"
+
+    # Test that the sqlite file gets made
+    # First, need to remove the file if it already exists
+    if test_hist_file.exists():
+        test_hist_file.unlink()
+
+    # Run with the good arg and exit
+    run_hpy_and_exit("--hist-file", str(test_hist_file))
+    # Was the history file created?
+    assert test_hist_file.exists()
+    # Remove the file for future tests
+    test_hist_file.unlink()
+    # With the bad hist file we should still run ok with just a warning
+    run_hpy_and_exit("--hist-file", str(bad_hist_file))
+    assert not test_hist_file.exists()
+    # Same with the in-memory choice
+    run_hpy_and_exit("--hist-file", memory_hist_filename)
+    assert not test_hist_file.exists()
+
+    # Exercise the template + check default usage
+    # We can't actually write to the default default in a test context
+    # But we can check what the config would be
+    new_default = str(test_hist_file.parent / "${USER}-history.sqlite")
+    new_default_filled = Template(new_default).substitute({"USER": os.environ["USER"]})
+    monkeypatch.setattr(
+        hutch_python.cli,
+        "DEFAULT_HISTFILE",
+        new_default,
+    )
+    parser = get_parser()
+    args = parser.parse_args(["--hist-file"], namespace=HutchPythonArgs())
+    ipy_config = configure_ipython_session(args)
+    assert ipy_config.HistoryManager.hist_file == new_default_filled
+
+
 @skip_if_win32_generic
 def test_run_script():
     logger.debug('test_run_script')
@@ -102,7 +156,7 @@ def test_ipython_tab_completion():
 
     # Side-effect of the following is monkey-patching `dir2` to "fix" this for
     # us.
-    hutch_python.cli.configure_ipython_session()
+    hutch_python.cli.configure_ipython_session(HutchPythonArgs())
 
     completer = IPython.core.completer.Completer(namespace=ns)
     completer.limit_to__all__ = False

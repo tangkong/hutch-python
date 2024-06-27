@@ -1,3 +1,4 @@
+import enum
 import inspect
 import logging
 
@@ -17,10 +18,18 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 
+class DeviceLoadLevel(enum.IntEnum):
+    # HUTCH = 0  # TODO: Figure out how to gather only hutch devices
+    UPSTREAM = 1
+    STANDARD = 2
+    ALL = 3
+
+
 def get_happi_objs(
     db: str,
     light_ctrl: LightController,
     endstation: str,
+    load_level: DeviceLoadLevel = DeviceLoadLevel.STANDARD
 ) -> dict[str, ophyd.Device]:
     """
     Get the relevant items for ``endstation`` from the happi database ``db``.
@@ -55,6 +64,11 @@ def get_happi_objs(
         client = happi.Client(path=db)
     containers = list()
 
+    if load_level == DeviceLoadLevel.ALL:
+        results = client.search(active=True)
+        containers.extend(res.item for res in results)
+        return _load_devices(*containers)
+
     if light_ctrl is None or (endstation.upper() not in light_ctrl.beamlines):
         # lightpath was unavailable, search by beamline name
         reqs = dict(beamline=endstation.upper(), active=True)
@@ -73,21 +87,22 @@ def get_happi_objs(
         results = client.search(name=name)
         containers.extend(res.item for res in results)
 
-    # also any device with the same beamline name
-    # since lightpath only grabs lightpath-active devices
-    beamlines = {it.beamline for it in containers}
-    beamlines.add(endstation.upper())
+    if load_level >= DeviceLoadLevel.STANDARD:
+        # also any device with the same beamline name
+        # since lightpath only grabs lightpath-active devices
+        beamlines = {it.beamline for it in containers}
+        beamlines.add(endstation.upper())
 
-    for line in beamlines:
-        # Assume we want hutch items that are active
-        # items can be lightpath-inactive
-        reqs = dict(beamline=line, active=True)
-        results = client.search(**reqs)
-        blc = [res.item for res in results
-               if res.item.name not in dev_names]
-        # Add the beamline containers to the complete list
-        if blc:
-            containers.extend(blc)
+        for line in beamlines:
+            # Assume we want hutch items that are active
+            # items can be lightpath-inactive
+            reqs = dict(beamline=line, active=True)
+            results = client.search(**reqs)
+            blc = [res.item for res in results
+                   if res.item.name not in dev_names]
+            # Add the beamline containers to the complete list
+            if blc:
+                containers.extend(blc)
 
     if len(containers) < 1:
         logger.warning(f'{len(containers)} active devices found for '

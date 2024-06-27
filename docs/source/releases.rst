@@ -2,6 +2,45 @@ Release History
 ###############
 
 
+v1.20.0 (2024-04-19)
+====================
+
+Features
+--------
+- Allow per-session separate ipython histories via ``--hist-file``
+  command-line argument. If omitted, default ipython behavior is used.
+  When ``--hist-file`` is included with no argument, the history file
+  will be written a local operator console hard drive, if available.
+  An argument can be provided to use any file as the history.sqlite file.
+
+Contributors
+------------
+- zllentz
+
+
+
+v1.19.0 (2024-04-15)
+====================
+
+Features
+--------
+- Updates EpicsArch script, adding several debug/testin flags and ensuring
+  information is up-to-date.  Includes:
+
+  - ``update_file``: feature that updates EpicsArch based on current questionnaire
+  - ``--softlink``: point arch file to new experiment via symbolic link
+  - ``--level``: specify a debug level
+  - ``--cds-items``: displays questionnaire data for a given run and experiment
+  - ``--link-path``: allows user to provide custom filepath for softlinks
+- Adds load_level conf.yaml key for choosing the method used to gather happi devices
+
+Contributors
+------------
+- c-tsoi
+- tangkong
+
+
+
 v1.18.5 (2023-09-14)
 ====================
 
