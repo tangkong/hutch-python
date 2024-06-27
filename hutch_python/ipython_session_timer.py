@@ -53,7 +53,7 @@ class IPythonSessionTimer:
     def __init__(self, ipython):
         global max_idle_time
         self.curr_time = 0
-        self.max_idle_time = 30  # max_idle_time
+        self.max_idle_time = max_idle_time
         self.last_active_time = 0
         self.idle_time = 0
         self.user_active = False
@@ -64,12 +64,10 @@ class IPythonSessionTimer:
     def _set_user_active(self):
         self.user_active = True
         self.last_active_time = time.time()
-        print("pre_cell_run")
 
     def _set_user_inactive(self):
         self.user_active = False
         self.last_active_time = time.time()
-        print("post_cell_run")
 
     def _get_time_passed(self):
         self.curr_time = time.time()
@@ -82,8 +80,9 @@ class IPythonSessionTimer:
         # Check if idle_time has exceeded max_idle_time
         while (self.idle_time < self.max_idle_time):
 
+            # Check if user is active once every minute
             while (self.user_active):
-                time.sleep(6)
+                time.sleep(60)
                 self.idle_time = 0
 
             self._timer(self.max_idle_time - self.idle_time)
