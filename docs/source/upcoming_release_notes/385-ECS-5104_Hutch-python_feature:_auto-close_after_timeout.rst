@@ -3,7 +3,7 @@
 
 API Changes
 -----------
-- Created an IPython extension that launches a daemon thread that runs an instance of IPythonSessionTimer class object.
+- N/A
 
 Features
 --------
