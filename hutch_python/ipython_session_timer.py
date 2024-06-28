@@ -9,7 +9,7 @@ from threading import Thread
 
 from IPython import get_ipython
 
-max_idle_time = 172800  # number of seconds in 48 hours
+max_idle_time = 172800.0  # number of seconds in 48 hours
 
 
 def configure_timeout(session_timer):
@@ -38,9 +38,9 @@ class IPythonSessionTimer:
     curr_time: float
         The current time in seconds.
 
-    max_idle_time: int
-        The maximum number of seconds a user session can be idle (currently set
-        to 172800 seconds or 48 hours).
+    max_idle_time: float
+        The maximum number of seconds a user session can be idle (default is
+        172800.0 seconds or 48 hours).
 
     last_active_time: float
         The time of the last user activity in this session.
@@ -51,10 +51,10 @@ class IPythonSessionTimer:
 
     def __init__(self, ipython):
         global max_idle_time
-        self.curr_time = 0
-        self.max_idle_time = max_idle_time
-        self.last_active_time = 0
-        self.idle_time = 0
+        self.curr_time = 0.0
+        self.max_idle_time = 20.0  # max_idle_time
+        self.last_active_time = 0.0
+        self.idle_time = 0.0
         self.user_active = False
 
         ipython.events.register('pre_run_cell', self._set_user_active)
@@ -68,7 +68,7 @@ class IPythonSessionTimer:
         self.user_active = False
         self.last_active_time = time.monotonic()
 
-    def _get_time_passed(self):
+    def _set_idle_time(self):
         self.curr_time = time.monotonic()
         self.idle_time = self.curr_time - self.last_active_time
 
@@ -81,11 +81,11 @@ class IPythonSessionTimer:
 
             # Check if user is active once every minute
             while (self.user_active):
-                time.sleep(60)
+                time.sleep(6)
                 self.idle_time = 0
 
             self._timer(self.max_idle_time - self.idle_time)
-            self._get_time_passed()
+            self._set_idle_time()
 
         # Close the ipython session
         print("This hutch-python session has timed out. Please start a new session.")
