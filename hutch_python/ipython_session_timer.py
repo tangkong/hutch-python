@@ -7,8 +7,6 @@ file to set a timeout duration. The default duration is 48 hours.
 import time
 from threading import Thread
 
-from IPython import get_ipython
-
 max_idle_time = 172800.0  # number of seconds in 48 hours
 
 
@@ -52,10 +50,11 @@ class IPythonSessionTimer:
     def __init__(self, ipython):
         global max_idle_time
         self.curr_time = 0.0
-        self.max_idle_time = 20.0  # max_idle_time
+        self.max_idle_time = max_idle_time
         self.last_active_time = 0.0
         self.idle_time = 0.0
         self.user_active = False
+        self.ip = ipython
 
         ipython.events.register('pre_run_cell', self._set_user_active)
         ipython.events.register('post_run_cell', self._set_user_inactive)
@@ -81,18 +80,17 @@ class IPythonSessionTimer:
 
             # Check if user is active once every minute
             while (self.user_active):
-                time.sleep(6)
+                time.sleep(60)
                 self.idle_time = 0
 
             self._timer(self.max_idle_time - self.idle_time)
             self._set_idle_time()
 
-        # Close the ipython session
+        # End the IPython session
         print("This hutch-python session has timed out. Please start a new session.")
 
-        ip = get_ipython()
-        ip.ask_exit()
-        ip.pt_app.app.exit()
+        self.ip.ask_exit()
+        self.ip.pt_app.app.exit()
 
 
 def load_ipython_extension(ipython):
