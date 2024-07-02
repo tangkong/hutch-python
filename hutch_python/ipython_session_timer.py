@@ -71,9 +71,6 @@ class IPythonSessionTimer:
         self.curr_time = time.monotonic()
         self.idle_time = self.curr_time - self.last_active_time
 
-    def _timer(self, sleep_time):
-        time.sleep(sleep_time)
-
     def _start_session(self):
         # Check if idle_time has exceeded max_idle_time
         while (self.idle_time < self.max_idle_time):
@@ -83,7 +80,7 @@ class IPythonSessionTimer:
                 time.sleep(60)
                 self.idle_time = 0
 
-            self._timer(self.max_idle_time - self.idle_time)
+            time.sleep(self.max_idle_time - self.idle_time)
             self._set_idle_time()
 
         # End the IPython session
