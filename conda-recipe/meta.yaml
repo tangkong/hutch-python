@@ -43,6 +43,7 @@ requirements:
   - pyyaml >=5.4.0
   - requests >=2.26.0
   - simplejson >=3.17.0
+  - pykerberos
 
 test:
   commands:

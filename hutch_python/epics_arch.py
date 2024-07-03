@@ -2,12 +2,13 @@
 import argparse
 import logging
 import os
+import os.path
 import re
 import subprocess
 import sys
+from configparser import ConfigParser, NoOptionError
 from dataclasses import dataclass
 
-from kerberos import GSSError
 from prettytable import PrettyTable
 
 from .constants import EPICS_ARCH_FILE_PATH
@@ -80,8 +81,8 @@ def main():
 
 def logger_setup(args):
     # Setting up the logger, to show the level when enabled
-    logging.getLogger().addHandler(logging.NullHandler())
-    logging.basicConfig(level="INFO")
+    # logging.getLogger().addHandler(logging.NullHandler())
+    logging.basicConfig()
     logger.setLevel(args.level)
 
 
@@ -182,27 +183,46 @@ def pull_cds_items(exp):
     then put them into a seperate dictionary as they are cds items
     """
     logger.debug("in client")
-    logger.debug('pull_cds_items:', exp)
-    try:
-        client = QuestionnaireClient()
-    except GSSError:
-        print('No kerberos token found; rerun after running kinit')
-        sys.exit()
+    logger.debug('pull_cds_items: %s', exp)
+
+    cfg = ConfigParser()
+    cfgs = cfg.read(['qs.cfg', '.qs.cfg',
+                     os.path.expanduser('~/.qs.cfg'),
+                     'web.cfg', '.web.cfg',
+                     os.path.expanduser('~/.web.cfg')])
+    # Ws-auth
+    client = None
+    if cfgs:
+        user = cfg.get('DEFAULT', 'user', fallback=None)
+        try:
+            print("Trying to authenticate with cfg file.")
+            pw = cfg.get('DEFAULT', 'pw')
+            client = QuestionnaireClient(use_kerberos=False, user=user, pw=pw)
+        except NoOptionError:
+            logger.error("Could not find valid username and password in qs.cfg or web.cfg, attempting to autheticate with kerberos instead.")
+    else:
+        logger.debug("Cfgs could not be found. ")
+    if client is None:
+        try:
+            client = QuestionnaireClient(use_kerberos=True)
+        except Exception as exc:
+            logger.error("Not able to authenticate with kerberos, please make sure you have an active token.")
+            raise exc
 
     formatted_run_id = ''
     run_num = ''
 
     # handle formatting of proposal id, want: e.g. X-10032
     # Case -  Expected Format: e.g. xppx1003221
-    if re.match('^.{4}[0-9]{7}$', exp):
+    if re.match('^[a-zA-Z]{4}[0-9]+[0-9]{2}$', exp):
         logger.debug("experiment name format")
         run_num = 'run'+exp[-2:]
-        logger.debug('run num', run_num)
+        logger.debug('run num: %s', run_num)
         run_id = str(exp[3:-2])
-        logger.debug('run_id', run_id)
+        logger.debug('run_id: %s', run_id)
         formatted_run_id = run_id.capitalize()
         formatted_run_id = formatted_run_id[:1] + '-' + formatted_run_id[1:]
-
+    # Case - X-10032 or LY45
     elif re.match('[A-Z]{1}-[0-9]{5}$', exp) or re.match('^[A-Z]{2}[0-9]{2}$', exp):
         # Case - Proposal ID Format, have user enter run num manually
         logger.debug("run_id format")
@@ -214,28 +234,28 @@ def pull_cds_items(exp):
         run_num = 'run' + input('Please enter run number: ')
         formatted_run_id = input('Please enter proposal ID: ')
 
-    logger.debug('formatted run_id', formatted_run_id)
-    logger.debug('run_num', run_num)
+    logger.debug('formatted run_id: %s', formatted_run_id)
+    logger.debug('run_num: %s', run_num)
 
     matchedKey = ''
 
     try:
         runDetails_Dict = client.getProposalsListForRun(run_num)
         for key, vals in runDetails_Dict.items():
-            logger.debug(formatted_run_id, key)
+            logger.debug("%s, %s", formatted_run_id, key)
             if str(key) == str(formatted_run_id):
-                logger.debug('matched key', key)
+                logger.debug('matched key: %s', key)
                 matchedKey = key
 
     except Exception as e:
-        logger.error("An invalid https request, please check the run number, proposal id and experiment number:", e)
+        logger.error("An invalid https request, please check the run number, proposal id and experiment number: %s", e)
         return
 
     try:
         runDetails_Dict = client.getProposalDetailsForRun(run_num, matchedKey)
         # questionnaireFlag = True
     except (Exception, UnboundLocalError) as e:
-        logger.error('Could not find experiment, please check to make sure information is correct.', e)
+        logger.error('Could not find experiment, please check to make sure information is correct: %s', e)
         return
 
     sorted_runDetails_Dict = dict(sorted(runDetails_Dict.items()))
@@ -279,7 +299,7 @@ def pull_cds_items(exp):
         elif re.match('pcdssetup-temp.*-name', k):
             pv = cds_dict.get(re.sub('name', 'pvbase', k), '')
             displayList.append(QStruct(v, pv, "temperature"))
-    # logger.debug("displayList", displayList)
+    # logger.debug("displayList: %s", displayList)
 
     for struct in displayList:
         myTable.add_row([struct.alias, struct.pvbase, struct.pvtype])
@@ -358,7 +378,7 @@ def check_for_duplicates(qs_data, af_data):
     # Looking for duplicates of PVs in the questionaire
     # also print out the alias for PV, change removing to warning operator to remove dup then rerun
     for dup in pvDuplicate:
-        logger.debug("!Duplicate PV in questionnaire!:" + str(dup))
+        logger.debug("!Duplicate PV in questionnaire!: " + str(dup))
         for value in rev_keyDict[dup][1:]:
             logger.debug("Found PV duplicate(s) from questionnaire: " + value
                          + ", " + sorted_qsDict[value])
@@ -390,8 +410,7 @@ def check_for_duplicates(qs_data, af_data):
 
     sorted_afDict = dict(sorted(sorted_afDict.items()))
     updated_arch_list = [x for item in sorted_afDict.items() for x in item]
-    logger.debug("\nUpdated Arch List:\n")
-    logger.debug(updated_arch_list)
+    logger.debug("\nUpdated Arch List: %s\n", updated_arch_list)
     return updated_arch_list
 
 
