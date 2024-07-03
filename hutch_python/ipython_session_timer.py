@@ -48,7 +48,6 @@ class IPythonSessionTimer:
     '''
 
     def __init__(self, ipython):
-        global max_idle_time
         self.curr_time = 0.0
         self.max_idle_time = max_idle_time
         self.last_active_time = 0.0
@@ -72,13 +71,8 @@ class IPythonSessionTimer:
         self.idle_time = self.curr_time - self.last_active_time
 
     def _start_session(self):
-        # Check if idle_time has exceeded max_idle_time
-        while (self.idle_time < self.max_idle_time):
-
-            # Check if user is active once every minute
-            while (self.user_active):
-                time.sleep(60)
-                self.idle_time = 0
+        # Check if idle_time has exceeded max_idle_time or if user is currently active
+        while (self.idle_time < self.max_idle_time) or self.user_active:
 
             time.sleep(self.max_idle_time - self.idle_time)
             self._set_idle_time()
@@ -103,6 +97,6 @@ def load_ipython_extension(ipython):
         The active ``ipython`` ``Shell``, the one returned by
         ``IPython.get_ipython()``.
     """
-    UserSessionTimer = IPythonSessionTimer(ipython)
-    t1 = Thread(target=UserSessionTimer._start_session, daemon=True)
+    user_session_timer = IPythonSessionTimer(ipython)
+    t1 = Thread(target=user_session_timer._start_session, daemon=True)
     t1.start()
