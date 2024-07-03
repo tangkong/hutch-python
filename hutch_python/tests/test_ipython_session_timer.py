@@ -2,7 +2,6 @@ import time
 import unittest
 
 import pytest
-from IPython import get_ipython
 from test_ipython_log import FakeIPython
 
 from hutch_python.ipython_session_timer import IPythonSessionTimer
