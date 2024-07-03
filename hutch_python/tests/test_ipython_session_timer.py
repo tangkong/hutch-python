@@ -40,7 +40,7 @@ def test_get_ipython():
     pytest.skip("unsupported function")
 
 
-# Test case 1: when the user is inactive their idle time is less than the maximum allowable idle time.
+# Test case 1: the user is inactive and their idle time is less than the maximum allowable idle time.
 @unittest.mock.patch('hutch_python.ipython_session_timer.time.sleep', lambda seconds: None)
 def test_start_session_case1(session_timer):
     if (session_timer.idle_time < session_timer.max_idle_time) and not session_timer.user_active:
@@ -48,7 +48,7 @@ def test_start_session_case1(session_timer):
         assert session_timer.idle_time == 200.0
 
 
-# Test case 2: when the user is inactive their idle time is equivalent to or exceeds the maximum allowable idle time.
+# Test case 2: the user is inactive and their idle time is equivalent to or exceeds the maximum allowable idle time.
 @unittest.mock.patch('hutch_python.ipython_session_timer.time.sleep', lambda seconds: None)
 def test_start_session_case2(session_timer, capsys):
     session_timer.idle_time = session_timer.max_idle_time
