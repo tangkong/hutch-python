@@ -174,8 +174,6 @@ def pull_cds_items(exp):
     Outputs
     -------
         PrettyTable visualization of cds objects
-    -------
-
     """
     """
     pull run data from questionnaire api, then take the data and sort it
