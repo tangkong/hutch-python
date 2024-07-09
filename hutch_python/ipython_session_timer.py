@@ -74,6 +74,11 @@ class IPythonSessionTimer:
         # Check if idle_time has exceeded max_idle_time or if user is currently active
         while (self.idle_time < self.max_idle_time) or self.user_active:
 
+            # Check if user is active once every minute
+            while (self.user_active):
+                time.sleep(60)
+                self.idle_time = 0
+
             time.sleep(self.max_idle_time - self.idle_time)
             self._set_idle_time()
 
