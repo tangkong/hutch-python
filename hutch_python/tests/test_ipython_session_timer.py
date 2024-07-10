@@ -10,7 +10,6 @@ from hutch_python.ipython_session_timer import IPythonSessionTimer
 @pytest.fixture(scope='function')
 def fake_ipython():
     fake_ipython = FakeIPython()
-    fake_ipython.ask_exit = lambda *args, **kwargs: None
     return fake_ipython
 
 
@@ -49,3 +48,5 @@ def test_start_session(session_timer, fake_ipython, capsys):
 
     captured = capsys.readouterr()
     assert "timed out" in captured.out
+    assert session_timer.ip.ask_exit.called
+    assert session_timer.ip.pt_app.app.exit.called
