@@ -2,7 +2,9 @@ import dataclasses
 import logging
 import sys
 from queue import Empty, Queue
+from types import SimpleNamespace
 from typing import Any, Optional
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -53,6 +55,10 @@ class FakeExecutionResult:
     error_before_exec: bool = False
 
 
+class FakePtApp:
+    app = SimpleNamespace(exit=MagicMock())
+
+
 class FakeIPython:
     """A fake replacement of IPython's ``TerminalInteractiveShell``."""
     user_ns: dict[str, Any]
@@ -61,6 +67,8 @@ class FakeIPython:
     def __init__(self):
         self.user_ns = dict(In=[""])
         self.events = FakeIPythonEvents()
+        self.pt_app = FakePtApp()
+        self.ask_exit = MagicMock()
 
     def add_line(self, in_line, out_line=None, is_error=False):
         line_number = len(self.user_ns["In"])
@@ -76,22 +84,6 @@ class FakeIPython:
         for cb in self.events.callbacks.get("post_run_cell", []):
             logger.info(f"Calling {cb.__name__} with args {result}")
             cb(result)
-
-    def ask_exit():
-        pass
-
-    class pt_app:
-
-        def __init__(self):
-            pass
-
-        class app:
-
-            def __init__(self):
-                pass
-
-            def exit():
-                pass
 
 
 @pytest.fixture(scope='function')
