@@ -42,7 +42,7 @@ def test_set_idle_time(session_timer):
 # infinite while loop.
 
 @unittest.mock.patch('time.sleep', lambda seconds: None)
-def test_start_session_case1(session_timer, fake_ipython, capsys):
+def test_start_session(session_timer, fake_ipython, capsys):
     session_timer.user_active = False
 
     session_timer._start_session()
