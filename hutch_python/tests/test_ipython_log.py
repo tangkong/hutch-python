@@ -77,6 +77,22 @@ class FakeIPython:
             logger.info(f"Calling {cb.__name__} with args {result}")
             cb(result)
 
+    def ask_exit():
+        pass
+
+    class pt_app:
+
+        def __init__(self):
+            pass
+
+        class app:
+
+            def __init__(self):
+                pass
+
+            def exit():
+                pass
+
 
 @pytest.fixture(scope='function')
 def ipylog(log_queue, fake_ipython) -> IPythonLogger:
