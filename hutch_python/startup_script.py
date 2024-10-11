@@ -14,6 +14,8 @@ imported from.
 
 def _configure_elog_poster():
     import IPython
+
+    from elog import HutchELog
     from nabs.callbacks import ELogPoster
 
     from hutch_python.utils import safe_load
@@ -22,7 +24,8 @@ def _configure_elog_poster():
         # RE, ELog will already exist by now
         elog = globals().get('elog', None)
         RE = globals().get('RE', None)
-        assert elog is not None
+        if not isinstance(elog, HutchELog):
+            raise RuntimeError("elog not loaded, skip ELogPoster")
 
         elogc = ELogPoster(elog, IPython.get_ipython())
         RE.subscribe(elogc)
