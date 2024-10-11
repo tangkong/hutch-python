@@ -21,9 +21,16 @@ def _configure_elog_poster():
     from hutch_python.utils import safe_load
 
     with safe_load('ELogPoster'):
-        # RE, elog will already exist by now, if not we fail and skip
-        elog = globals()['elog']
-        RE = globals()['RE']
+        # RE, elog will already exist by now, if not we fail and skip.
+        # Some effort to give better error message for the logs.
+        try:
+            elog = globals()['elog']
+        except KeyError:
+            raise RuntimeError("elog not loaded, skip ElogPoster")
+        try:
+            RE = globals()['RE']
+        except KeyError:
+            raise RuntimeError("RE not loaded, skip ElogPoster")
         # Even if they exist, things can go wrong if the user accidentally clobbers the name
         if not isinstance(elog, HutchELog):
             raise RuntimeError("elog replaced, skip ELogPoster")
