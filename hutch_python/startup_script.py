@@ -14,18 +14,21 @@ imported from.
 
 def _configure_elog_poster():
     import IPython
-
+    from bluesky.run_engine import RunEngine
     from elog import HutchELog
     from nabs.callbacks import ELogPoster
 
     from hutch_python.utils import safe_load
 
     with safe_load('ELogPoster'):
-        # RE, ELog will already exist by now
-        elog = globals().get('elog', None)
-        RE = globals().get('RE', None)
+        # RE, elog will already exist by now, if not we fail and skip
+        elog = globals()['elog']
+        RE = globals()['RE']
+        # Even if they exist, things can go wrong if the user accidentally clobbers the name
         if not isinstance(elog, HutchELog):
-            raise RuntimeError("elog not loaded, skip ELogPoster")
+            raise RuntimeError("elog replaced, skip ELogPoster")
+        if not isinstance(RE, RunEngine):
+            raise RuntimeError("RE replaced, skip ELogPoster")
 
         elogc = ELogPoster(elog, IPython.get_ipython())
         RE.subscribe(elogc)
