@@ -14,13 +14,17 @@ imported from.
 
 def _configure_elog_poster():
     import IPython
-    from bluesky.run_engine import RunEngine
-    from elog import HutchELog
     from nabs.callbacks import ELogPoster
 
     from hutch_python.utils import safe_load
 
     with safe_load('ELogPoster'):
+        try:
+            from bluesky.run_engine import RunEngine
+            from elog import HutchELog
+        except ImportError:
+            raise RuntimeError("A required module is missing, skip ElogPoster")
+
         # RE, elog will already exist by now, if not we fail and skip.
         # Some effort to give better error message for the logs.
         try:
