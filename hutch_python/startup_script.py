@@ -19,10 +19,27 @@ def _configure_elog_poster():
     from hutch_python.utils import safe_load
 
     with safe_load('ELogPoster'):
-        # RE, ELog will already exist by now
-        elog = globals().get('elog', None)
-        RE = globals().get('RE', None)
-        assert elog is not None
+        try:
+            from bluesky.run_engine import RunEngine
+            from elog import HutchELog
+        except ImportError:
+            raise RuntimeError("A required module is missing, skip ElogPoster")
+
+        # RE, elog will already exist by now, if not we fail and skip.
+        # Some effort to give better error message for the logs.
+        try:
+            elog = globals()['elog']
+        except KeyError:
+            raise RuntimeError("elog not loaded, skip ElogPoster")
+        try:
+            RE = globals()['RE']
+        except KeyError:
+            raise RuntimeError("RE not loaded, skip ElogPoster")
+        # Even if they exist, things can go wrong if the user accidentally clobbers the name
+        if not isinstance(elog, HutchELog):
+            raise RuntimeError("elog replaced, skip ELogPoster")
+        if not isinstance(RE, RunEngine):
+            raise RuntimeError("RE replaced, skip ELogPoster")
 
         elogc = ELogPoster(elog, IPython.get_ipython())
         RE.subscribe(elogc)
