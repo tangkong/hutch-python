@@ -38,11 +38,11 @@ def collect_functions(modules):
 
 
 calc_namespace = HelpfulNamespace(
-    darwin_width=darwin_width,
-    bragg_angle=bragg_angle,
-    transmission=transmission,
-    lam2E=lam2E,
     E2lam=E2lam,
+    lam2E=lam2E,
+    bragg_angle=bragg_angle,
+    darwin_width=darwin_width,
+    transmission=transmission,
     be_lens=collect_functions(['pcdscalc.be_lens_calcs']),
     common=collect_functions(['pcdscalc.common']),
     diffraction=collect_functions(['pcdscalc.diffraction']),
