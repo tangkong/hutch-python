@@ -46,8 +46,12 @@ try:
     funcs['transmission'] = transmission
 except ImportError:
     print("Failed to import functions from pcdscalc.xray")
+from pcdscalc.common import energy_to_wavelength as E2lam
+from pcdscalc.common import wavelength_to_energy as lam2E
 
 calc_namespace = HelpfulNamespace(
+    lam2E=lam2E,
+    E2lam=E2lam,
     be_lens=collect_functions(['pcdscalc.be_lens_calcs']),
     common=collect_functions(['pcdscalc.common']),
     diffraction=collect_functions(['pcdscalc.diffraction']),
