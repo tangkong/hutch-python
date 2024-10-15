@@ -1,7 +1,6 @@
 from importlib import import_module
 
-from pcdscalc.common import energy_to_wavelength as E2lam
-from pcdscalc.common import wavelength_to_energy as lam2E
+from pcdscalc.common import energy_to_wavelength, wavelength_to_energy
 from pcdscalc.diffraction import bragg_angle, darwin_width
 from pcdscalc.xray import transmission
 
@@ -38,8 +37,8 @@ def collect_functions(modules):
 
 
 calc_namespace = HelpfulNamespace(
-    E2lam=E2lam,
-    lam2E=lam2E,
+    E2lam=energy_to_wavelength,
+    lam2E=wavelength_to_energy,
     bragg_angle=bragg_angle,
     darwin_width=darwin_width,
     transmission=transmission,
