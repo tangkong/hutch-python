@@ -1,5 +1,9 @@
 from importlib import import_module
 
+from pcdscalc.common import energy_to_wavelength, wavelength_to_energy
+from pcdscalc.diffraction import bragg_angle, darwin_width
+from pcdscalc.xray import transmission
+
 from .utils import HelpfulNamespace
 
 
@@ -33,7 +37,13 @@ def collect_functions(modules):
 
 
 calc_namespace = HelpfulNamespace(
+    E2lam=energy_to_wavelength,
+    lam2E=wavelength_to_energy,
+    bragg_angle=bragg_angle,
+    darwin_width=darwin_width,
+    transmission=transmission,
     be_lens=collect_functions(['pcdscalc.be_lens_calcs']),
     common=collect_functions(['pcdscalc.common']),
     diffraction=collect_functions(['pcdscalc.diffraction']),
+    xray=collect_functions(['pcdscalc.xray']),
 )
