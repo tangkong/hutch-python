@@ -297,6 +297,18 @@ def load_conf(conf, hutch_dir=None, args=None):
         daq_platform = 0
         logger.info('Selected default hutch-python daq platform: 0')
 
+    try:
+        # This is a list of all devices that should not be loaded
+        exclude_devices = conf['exclude_devices']
+        if not isinstance(exclude_devices, str):
+            logger.error(
+                'Invalid exclude_devices conf %s, must be string.', exclude_devices)
+            exclude_devices = []
+    except KeyError:
+        exclude_devices = []
+        logger.info(
+            'Missing exclude_devices from conf. Will load all devices.')
+
     # Set the session timeout duration
     try:
         hutch_python.ipython_session_timer.configure_timeout(
@@ -456,11 +468,18 @@ def load_conf(conf, hutch_dir=None, args=None):
 
     # Happi db and Lightpath
     if db is not None:
+
+        # Get the names of all devices that should not be loaded and
+        # pass it to get_happi_objs()
+        if exclude_devices:
+            exclude_devices = exclude_devices.split(',')
+
         with safe_load('database'):
             lc = get_lightpath(db, hutch)
 
             # Gather relevant objects given the BeamPath
-            happi_objs = get_happi_objs(db, lc, hutch, load_level=load_level)
+            happi_objs = get_happi_objs(
+                db, lc, hutch, load_level=load_level, exclude_devices=exclude_devices)
             cache(**happi_objs)
 
             # create and store beampath
