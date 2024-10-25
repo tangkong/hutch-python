@@ -25,11 +25,24 @@ class DeviceLoadLevel(enum.IntEnum):
     ALL = 3
 
 
+def remove_devices(results, device_names: str):
+    if device_names:
+        device_names = device_names.split(',')
+        filtered_results = []
+        for res in results:
+            if res.item.name not in device_names:
+                filtered_results.append(res)
+        return filtered_results
+    else:
+        return results
+
+
 def get_happi_objs(
     db: str,
     light_ctrl: LightController,
     endstation: str,
-    load_level: DeviceLoadLevel = DeviceLoadLevel.STANDARD
+    load_level: DeviceLoadLevel = DeviceLoadLevel.STANDARD,
+    exclude_devices: list[str] = []
 ) -> dict[str, ophyd.Device]:
     """
     Get the relevant items for ``endstation`` from the happi database ``db``.
@@ -57,6 +70,7 @@ def get_happi_objs(
     objs: ``dict``
         A mapping from item name to item
     """
+
     # Load the happi Client
     if None not in (light_ctrl, lightpath):
         client = light_ctrl.client
@@ -66,6 +80,8 @@ def get_happi_objs(
 
     if load_level == DeviceLoadLevel.ALL:
         results = client.search(active=True)
+        # Remove devices that should not be loaded
+        results = remove_devices(results, exclude_devices)
         containers.extend(res.item for res in results)
         return _load_devices(*containers)
 
@@ -73,6 +89,7 @@ def get_happi_objs(
         # lightpath was unavailable, search by beamline name
         reqs = dict(beamline=endstation.upper(), active=True)
         results = client.search(**reqs)
+        results = remove_devices(results, exclude_devices)
         containers.extend(res.item for res in results)
         return _load_devices(*containers)
 
@@ -85,6 +102,7 @@ def get_happi_objs(
     # gather happi items for each of these
     for name in dev_names:
         results = client.search(name=name)
+        results = remove_devices(results, exclude_devices)
         containers.extend(res.item for res in results)
 
     if load_level >= DeviceLoadLevel.STANDARD:
@@ -98,6 +116,7 @@ def get_happi_objs(
             # items can be lightpath-inactive
             reqs = dict(beamline=line, active=True)
             results = client.search(**reqs)
+            results = remove_devices(results, exclude_devices)
             blc = [res.item for res in results
                    if res.item.name not in dev_names]
             # Add the beamline containers to the complete list
@@ -132,7 +151,7 @@ def _load_devices(*containers: happi.HappiItem):
     return dev_namespace.__dict__
 
 
-def get_lightpath(db, hutch) -> LightController:
+def get_lightpath(db: str, hutch: str) -> LightController:
     """
     Create a ``lightpath.LightController`` from relevant ``happi`` objects.
 
@@ -155,10 +174,14 @@ def get_lightpath(db, hutch) -> LightController:
     if None in (lightpath, beamlines):
         logger.warning('Lightpath module is not available.')
         return None
+
     # Load the happi Client
     client = happi.Client(path=db)
+
     # Allow the lightpath module to create a path
     lc = lightpath.LightController(client, endstations=[hutch.upper()])
+
     # Return paths (names only) seen by the LightController
     # avoid loding the devices so hutch-python can keep track of it
+
     return lc
