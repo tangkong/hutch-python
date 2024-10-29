@@ -25,7 +25,7 @@ class DeviceLoadLevel(enum.IntEnum):
     ALL = 3
 
 
-def remove_devices(results, device_names: str):
+def remove_devices(results, device_names: list[str]):
     if device_names:
         device_names = device_names.split(',')
         filtered_results = []
@@ -80,8 +80,6 @@ def get_happi_objs(
 
     if load_level == DeviceLoadLevel.ALL:
         results = client.search(active=True)
-        # Remove devices that should not be loaded
-        results = remove_devices(results, exclude_devices)
         containers.extend(res.item for res in results)
         return _load_devices(*containers)
 
@@ -89,7 +87,6 @@ def get_happi_objs(
         # lightpath was unavailable, search by beamline name
         reqs = dict(beamline=endstation.upper(), active=True)
         results = client.search(**reqs)
-        results = remove_devices(results, exclude_devices)
         containers.extend(res.item for res in results)
         return _load_devices(*containers)
 
@@ -102,7 +99,6 @@ def get_happi_objs(
     # gather happi items for each of these
     for name in dev_names:
         results = client.search(name=name)
-        results = remove_devices(results, exclude_devices)
         containers.extend(res.item for res in results)
 
     if load_level >= DeviceLoadLevel.STANDARD:
@@ -116,7 +112,6 @@ def get_happi_objs(
             # items can be lightpath-inactive
             reqs = dict(beamline=line, active=True)
             results = client.search(**reqs)
-            results = remove_devices(results, exclude_devices)
             blc = [res.item for res in results
                    if res.item.name not in dev_names]
             # Add the beamline containers to the complete list
