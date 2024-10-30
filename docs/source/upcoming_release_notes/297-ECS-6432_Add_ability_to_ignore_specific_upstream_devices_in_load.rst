@@ -3,11 +3,11 @@
 
 API Changes
 -----------
-- In happi.py the get_happi_objs() function now accepts a new parameter 'exclude_devices: list[str]' that defaults to an empty list.
+- N/A
 
 Features
 --------
-- hutch-python can now ignore specific upstream devices if the device name is added to 'exclude_devices' in conf.yml.
+- Hutches can prevent specific upstream devices from loading. The devices to exclude are set in conf.yml for each hutch. If no value is set all upstream devices are loaded.
 
 Bugfixes
 --------
