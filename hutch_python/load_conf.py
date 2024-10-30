@@ -307,7 +307,7 @@ def load_conf(conf, hutch_dir=None, args=None):
     except KeyError:
         exclude_devices = []
         logger.info(
-            'Missing exclude_devices from conf. Will load all devices.')
+            'Missing exclude_devices in conf. Will load all devices.')
 
     # Set the session timeout duration
     try:
@@ -472,7 +472,8 @@ def load_conf(conf, hutch_dir=None, args=None):
         # Get the names of all devices that should not be loaded and
         # pass it to get_happi_objs()
         if exclude_devices:
-            exclude_devices = exclude_devices.split(',')
+            exclude_devices = [
+                device_name.strip() for device_name in exclude_devices.split(',')]
 
         with safe_load('database'):
             lc = get_lightpath(db, hutch)
