@@ -63,3 +63,39 @@ def test_get_lightpath():
     # Check that we created a valid BeamPath with no inactive objects
     assert obj.name == 'TST'
     assert len(obj.devices) == 3
+
+
+# run test_happi_objs() without the excluded devices
+@conftest.requires_lightpath
+def test_happi_objs_remove_devices_all_devices():
+    logger.debug("test_happi_objs")
+    db = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                      'happi_db.json')
+    # patch lightpath configs to include test db beamline
+    conftest.beamlines['TST'] = ['X0']
+    conftest.sources.append('X0')
+    # Only select active objects
+    lc = get_lightpath(db, 'tst')
+    objs = get_happi_objs(db, lc, 'tst', DeviceLoadLevel.STANDARD)
+    print(objs)
+    assert len(objs) == 4
+    assert all([obj.md.active for obj in objs.values()])
+
+
+# run test_happi_objs() with exclude_devices
+@conftest.requires_lightpath
+def test_happi_objs_remove_devices_exclude_devices():
+    logger.debug("test_happi_objs")
+    db = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                      'happi_db.json')
+    # patch lightpath configs to include test db beamline
+    conftest.beamlines['TST'] = ['X0']
+    conftest.sources.append('X0')
+    # Only select active objects
+    lc = get_lightpath(db, 'tst')
+    # get devices not in excluded_devices list
+    exclude_devices = ['tst_device_5', 'tst_device_1']
+    objs = get_happi_objs(db, lc, 'tst', DeviceLoadLevel.STANDARD, exclude_devices)
+    print(objs)
+    assert len(objs) == 2
+    assert all([obj.md.active for obj in objs.values()])
