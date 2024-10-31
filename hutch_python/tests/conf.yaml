@@ -1,5 +1,13 @@
 hutch: tst
 
+# Our test happi database has the following configuration:
+# tst_device_3 (inactive)
+
+# z +-> (0.8)               (1.0)           (2.0)
+# X0 -- tst_device_5 ------ tst_device_1 -- test_device_2 -- "TST"
+#                  \
+# Z0                -- tst_device_4 -- tst_device_6
+# z +->                (0.85)          (1.85)
 db: happi_db.json
 
 load: tst.beamline
