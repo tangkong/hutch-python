@@ -38,7 +38,7 @@ def get_happi_objs(
     light_ctrl: LightController,
     endstation: str,
     load_level: DeviceLoadLevel = DeviceLoadLevel.STANDARD,
-    exclude_devices: list[str] = []
+    exclude_devices: list[str] = None
 ) -> dict[str, ophyd.Device]:
     """
     Get the relevant items for ``endstation`` from the happi database ``db``.
@@ -66,6 +66,10 @@ def get_happi_objs(
     objs: ``dict``
         A mapping from item name to item
     """
+
+    # Explicitly set exclude_devices to empty list to avoid mutable default arguments issue.
+    if not exclude_devices:
+        exclude_devices = []
 
     # Load the happi Client
     if None not in (light_ctrl, lightpath):
