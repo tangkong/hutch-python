@@ -25,14 +25,6 @@ class DeviceLoadLevel(enum.IntEnum):
     ALL = 3
 
 
-def remove_devices(results, device_names: list[str]):
-    if device_names:
-        for res in results.copy():
-            if res.item.name in device_names:
-                results.remove(res)
-    return results
-
-
 def get_happi_objs(
     db: str,
     light_ctrl: LightController,
@@ -80,54 +72,51 @@ def get_happi_objs(
 
     if load_level == DeviceLoadLevel.ALL:
         results = client.search(active=True)
-        results = remove_devices(results, exclude_devices)
         containers.extend(res.item for res in results)
-        return _load_devices(*containers)
 
-    if light_ctrl is None or (endstation.upper() not in light_ctrl.beamlines):
+    elif light_ctrl is None or (endstation.upper() not in light_ctrl.beamlines):
         # lightpath was unavailable, search by beamline name
         reqs = dict(beamline=endstation.upper(), active=True)
         results = client.search(**reqs)
-        results = remove_devices(results, exclude_devices)
-        containers.extend(res.item for res in results)
-        return _load_devices(*containers)
-
-    # if lightpath exists, we can grab upstream devices
-    dev_names = set()
-    paths = light_ctrl.beamlines[endstation.upper()]
-    for path in paths:
-        # do not load excluded devices
-        for name in path.copy():
-            if name in exclude_devices:
-                path.remove(name)
-        dev_names.update(path)
-
-    # gather happi items for each of these
-    for name in dev_names:
-        results = client.search(name=name)
         containers.extend(res.item for res in results)
 
-    if load_level >= DeviceLoadLevel.STANDARD:
-        # also any device with the same beamline name
-        # since lightpath only grabs lightpath-active devices
-        beamlines = {it.beamline for it in containers}
-        beamlines.add(endstation.upper())
+    else:
+        # if lightpath exists, we can grab upstream devices
+        dev_names = set()
+        paths = light_ctrl.beamlines[endstation.upper()]
+        for path in paths:
+            dev_names.update(path)
 
-        for line in beamlines:
-            # Assume we want hutch items that are active
-            # items can be lightpath-inactive
-            reqs = dict(beamline=line, active=True)
-            results = client.search(**reqs)
-            results = remove_devices(results, exclude_devices)
-            blc = [res.item for res in results
-                   if res.item.name not in dev_names]
-            # Add the beamline containers to the complete list
-            if blc:
-                containers.extend(blc)
+        # gather happi items for each of these
+        for name in dev_names:
+            results = client.search(name=name)
+            containers.extend(res.item for res in results)
+
+        if load_level >= DeviceLoadLevel.STANDARD:
+            # also any device with the same beamline name
+            # since lightpath only grabs lightpath-active devices
+            beamlines = {it.beamline for it in containers}
+            beamlines.add(endstation.upper())
+
+            for line in beamlines:
+                # Assume we want hutch items that are active
+                # items can be lightpath-inactive
+                reqs = dict(beamline=line, active=True)
+                results = client.search(**reqs)
+                blc = [res.item for res in results
+                       if res.item.name not in dev_names]
+                # Add the beamline containers to the complete list
+                if blc:
+                    containers.extend(blc)
 
     if len(containers) < 1:
         logger.warning(f'{len(containers)} active devices found for '
                        'this beampath')
+
+    # Do not load excluded devices
+    for device in containers.copy():
+        if device.name in exclude_devices:
+            containers.remove(device)
 
     return _load_devices(*containers)
 
