@@ -7,7 +7,7 @@ API Changes
 
 Features
 --------
-- Hutches can prevent specific upstream devices from loading. The devices to exclude are set in conf.yml for each hutch. If no value is set all upstream devices are loaded.
+- Added ability to ignore specific upstream devices when loading hutch-python
 
 Bugfixes
 --------
