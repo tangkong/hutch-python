@@ -3,7 +3,7 @@
 
 API Changes
 -----------
-- N/A
+- In conf.yml list the devices to exclude with 'exclude_devices'. 
 
 Features
 --------
