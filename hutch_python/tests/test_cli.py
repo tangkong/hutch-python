@@ -69,7 +69,9 @@ def test_sim_arg(no_ipython_launch):
 def test_create_arg():
     logger.debug('test_create_arg_dev')
     hutch = 'temp_create'
-    test_dir = CFG_PATH.parent.parent.parent / hutch
+    # CLI invocation will create the hutch folder in the folder pytest was
+    # called from.  We should check and clean that folder.
+    test_dir = Path.cwd() / hutch
     if test_dir.exists():
         shutil.rmtree(test_dir)
 
