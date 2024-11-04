@@ -96,7 +96,6 @@ def test_happi_objs_with_exclude_devices():
     exclude_devices = ['tst_device_5', 'tst_device_1']
     objs = get_happi_objs(
         db, lc, 'tst', DeviceLoadLevel.STANDARD, exclude_devices)
-    exclude_devices = ['tst_device_5', 'tst_device_1']
     assert len(objs) == 2
     for obj in objs:
         assert obj not in exclude_devices
