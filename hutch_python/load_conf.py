@@ -300,10 +300,12 @@ def load_conf(conf, hutch_dir=None, args=None):
     try:
         # This is a list of all devices that should not be loaded
         exclude_devices = conf['exclude_devices']
-        if not isinstance(exclude_devices, str):
+        if not isinstance(exclude_devices, list):
             logger.error(
-                'Invalid exclude_devices conf %s, must be string.', exclude_devices)
+                'Invalid exclude_devices conf, must be a list.')
             exclude_devices = []
+        else:
+            exclude_devices = [device_name.strip() for device_name in exclude_devices]
     except KeyError:
         exclude_devices = []
         logger.info(
@@ -468,13 +470,6 @@ def load_conf(conf, hutch_dir=None, args=None):
 
     # Happi db and Lightpath
     if db is not None:
-
-        # Get the names of all devices that should not be loaded and
-        # pass it to get_happi_objs()
-        if exclude_devices:
-            exclude_devices = [
-                device_name.strip() for device_name in exclude_devices.split(',')]
-
         with safe_load('database'):
             lc = get_lightpath(db, hutch)
 
