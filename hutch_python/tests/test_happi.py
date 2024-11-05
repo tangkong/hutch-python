@@ -73,11 +73,11 @@ def test_happi_objs_with_exclude_devices():
     # Only select active objects
     lc = get_lightpath(db, 'tst')
 
-    # Load all devices
+    # Call get_happi_objs() without exclude_devices
     objs = get_happi_objs(db, lc, 'tst', DeviceLoadLevel.STANDARD)
     assert len(objs) == 4
 
-    # Do not load excluded devices
+    # Call get_happi_objs() with exclude_devices
     objs_exclude_devices = get_happi_objs(db, lc, 'tst', DeviceLoadLevel.STANDARD, exclude_devices)
     assert len(objs_exclude_devices) == 2
 
