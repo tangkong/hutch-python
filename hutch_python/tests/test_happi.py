@@ -59,31 +59,28 @@ def test_get_lightpath():
     assert len(obj.devices) == 3
 
 
-# run test_happi_objs() without the excluded devices
-@conftest.requires_lightpath
-def test_happi_objs_without_exclude_devices():
-    logger.debug("test_happi_objs")
-    db = os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                      'happi_db.json')
-    # Only select active objects
-    lc = get_lightpath(db, 'tst')
-    # in DeviceLoadLevel.STANDARD you search happi and look for devices with same beamline name
-    objs = get_happi_objs(db, lc, 'tst', DeviceLoadLevel.STANDARD)
-    assert len(objs) == 4
-
-
 # run test_happi_objs() with exclude_devices
 @conftest.requires_lightpath
 def test_happi_objs_with_exclude_devices():
+    # This test checks whether devices from exclude_devices have been removed from the
+    # output of get_happi_objs(). For comparison, get_happi_objs() is first called without
+    # exclude_devices and then called again with exclude_devices.
+    exclude_devices = ['tst_device_5', 'tst_device_1']
+
     logger.debug("test_happi_objs")
     db = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                       'happi_db.json')
     # Only select active objects
     lc = get_lightpath(db, 'tst')
-    # get devices not in excluded_devices list
-    exclude_devices = ['tst_device_5', 'tst_device_1']
-    objs = get_happi_objs(
-        db, lc, 'tst', DeviceLoadLevel.STANDARD, exclude_devices)
-    assert len(objs) == 2
-    for obj in objs:
+
+    # Load all devices
+    objs = get_happi_objs(db, lc, 'tst', DeviceLoadLevel.STANDARD)
+    assert len(objs) == 4
+
+    # Do not load excluded devices
+    objs_exclude_devices = get_happi_objs(db, lc, 'tst', DeviceLoadLevel.STANDARD, exclude_devices)
+    assert len(objs_exclude_devices) == 2
+
+    # Check that none of the loaded devices are in the exclude_devices list
+    for obj in objs_exclude_devices:
         assert obj not in exclude_devices
