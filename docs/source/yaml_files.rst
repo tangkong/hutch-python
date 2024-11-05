@@ -163,11 +163,11 @@ secondary elog.
 
 exclude_devices
 ------------
-The ``exclude_devices`` key is optional. This is a list of strings
-containing names of upstream devices that should not be loaded. It helps
-speed up loading times and reduces unnecessary information shown in the
-console. The list can be created as a multi-line array of strings or all
-on one line using the following formats.
+The ``exclude_devices`` key is optional. ``exclude_devices`` expects a list
+of strings containing names of upstream devices that should not be loaded.
+It reduces the amount of unnecessary information shown in the console at
+load time. The list can be created as a multi-line array of strings or all
+on one line using the following formats:
 
 .. code-block:: YAML
 
